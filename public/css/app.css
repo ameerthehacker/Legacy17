@@ -1,4 +1,12 @@
 @import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);body {
-  margin-top: 60px;
+  background: #ecf0f1;
+}
+
+.rounded-box {
+  border-radius: 5px;
+}
+
+.rules-list ul {
+  list-style: circle;
 }
 

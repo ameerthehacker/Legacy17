@@ -13,11 +13,11 @@
             <i class="material-icons right">close</i>                    
             {{ $event->title }} Rules
         </span>
-        {!! $event->rules !!}
+        {!! $event->rules !!}        
         @if(Auth::check())
-            {{ link_to_route('#', 'Register', ['class' => 'btn waves-effect waves-light green']) }}        
+            {{ link_to('#', 'Register', ['class' => 'btn waves-effect waves-light green']) }}        
         @else
-            {{ link_to_route('auth.register', 'Login to Register', null,  ['class' => 'btn waves-effect waves-light red']) }}
+            {{ link_to_route('auth.login', 'Login to Register', null,  ['class' => 'btn waves-effect waves-light red']) }}
         @endif
     </div>
 </div>

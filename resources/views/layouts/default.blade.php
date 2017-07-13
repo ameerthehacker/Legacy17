@@ -8,6 +8,7 @@
         {{ HTML::Style("css/font-awesome.min.css") }}                       
         {{ HTML::Script("js/jquery.min.js") }}        
         {{ HTML::Script("js/materialize.min.js") }} 
+        {{ HTML::Style("css/app.css") }}        
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">            
     </head>
     <body>
