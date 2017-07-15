@@ -11,18 +11,32 @@
 |
 */
 
-Route::get('/', ['as' => 'root', 'uses' => 'PagesController@events']);
-Route::get('/about', ['as' => 'pages.about', 'uses' => 'PagesController@about']);
-Route::get('/events', ['as' => 'pages.events', 'uses' => 'PagesController@events']);
+Route::group(['middleware' => 'auth.redirect_admin'], function(){
+    Route::get('/', ['as' => 'pages.root', 'uses' => 'PagesController@events']);
+    Route::get('/about', ['as' => 'pages.about', 'uses' => 'PagesController@about']);
+    Route::get('/events', ['as' => 'pages.events', 'uses' => 'PagesController@events']);
+});
 
 // Authentication routes
-Route::get('/auth/login', ['as' => 'auth.login', 'uses' => 'Auth\LoginController@showLoginForm']);
-Route::post('/auth/login', 'Auth\LoginController@login');
+Route::group(['namespace' => 'Auth', 'prefix' => 'auth'], function(){
+    // Login routes
+    Route::get('login', ['as' => 'auth.login', 'uses' => 'LoginController@showLoginForm']);
+    Route::post('login', 'LoginController@login');
+    // Logout route
+    Route::get('logout', ['as' => 'auth.logout', 'uses' => 'LoginController@logout']);
+    // Registration routes
+    Route::get('register', ['as' => 'auth.register', 'uses' => 'RegisterController@showRegistrationForm']);
+    Route::post('register', 'RegisterController@register');
+});
 
-Route::get('/auth/logout', ['as' => 'auth.logout', 'uses' => 'Auth\LoginController@logout']);
-Route::get('/auth/register', ['as' => 'auth.register', 'uses' => 'Auth\RegisterController@showRegistrationForm']);
-Route::post('/auth/register', 'Auth\RegisterController@register');
-
-
+// Routes for administrators
+Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','auth.admin']], function(){
+    Route::get('/', ['as' => 'root', 'uses' => function(){
+        echo 'Root';
+    }]);
+    Route::get('events', function(){
+        echo 'Admin route';
+    });
+});
 
 

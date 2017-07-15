@@ -15,6 +15,7 @@ class CreateEventsTable extends Migration
     {
         Schema::create('events', function(Blueprint $table){
             $table->increments('id');
+            $table->integer('category_id');    
             $table->string('title');            
             $table->text('description');   
             $table->string('image_url');
@@ -24,7 +25,8 @@ class CreateEventsTable extends Migration
             $table->time('end_time');            
             $table->integer('min_members');
             $table->integer('max_members');           
-            $table->integer('max_limit');  
+            $table->integer('max_limit');
+            $table->string('contact_email');            
             $table->timestamps();
         });
     }

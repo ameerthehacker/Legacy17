@@ -18,9 +18,13 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
-            return redirect('/home');
+            if(Auth::user()->type == 'student'){
+                return redirect()->route('pages.root');
+            }
+            else{
+                return redirect()->route('admin::root');
+            }
         }
-
         return $next($request);
     }
 }
