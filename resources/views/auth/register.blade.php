@@ -3,7 +3,7 @@
 @section('content')
     <div class="row">
         <div class="col offset-m2 m8 s12">
-            @include('layouts.partials.errors')
+            @include('partials.errors')
             <div class="card z-depth-2 rounded-box">
                 <div class="card-content">
                     <span class="card-title">
@@ -16,16 +16,22 @@
                                 {!! Form::label('full_name') !!}
                                 {!! Form::text('full_name') !!}
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col s12 input-field">
                                 <i class="material-icons prefix">email</i>                    
                                 {!! Form::label('email') !!}
                                 {!! Form::text('email') !!}
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col s12 input-field">
                                 <i class="material-icons prefix">vpn_key</i>                        
                                 {!! Form::label('password') !!}
                                 {!! Form::password('password') !!}
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col s12 input-field">
                                 <i class="material-icons prefix">dialpad</i>
                                 {!! Form::label('password_confirmation') !!}
@@ -47,7 +53,9 @@
                                 {!! Form::label('college_name') !!}
                                 {!! Form::text('college_name') !!}
                             </div>
-                            <div class="col s12 input-field">
+                        </div>
+                        <div class="row">
+                             <div class="col s12 input-field">
                                 <i class="material-icons prefix">call</i>
                                 {!! Form::label('mobile_number') !!}
                                 {!! Form::text('mobile_number') !!}

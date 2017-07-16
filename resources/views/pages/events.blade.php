@@ -5,7 +5,7 @@
 <div class="row">
     @foreach($events as $event)
         <div class="col m6 s12">
-            @include('pages.partials.event', ['event' => $event])
+            @include('partials.event', ['event' => $event])
         </div>
     @endforeach
 </div>

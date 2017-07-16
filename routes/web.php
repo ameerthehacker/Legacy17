@@ -13,8 +13,8 @@
 
 Route::group(['middleware' => 'auth.redirect_admin'], function(){
     Route::get('/', ['as' => 'pages.root', 'uses' => 'PagesController@events']);
-    Route::get('/about', ['as' => 'pages.about', 'uses' => 'PagesController@about']);
-    Route::get('/events', ['as' => 'pages.events', 'uses' => 'PagesController@events']);
+    Route::get('about', ['as' => 'pages.about', 'uses' => 'PagesController@about']);
+    Route::get('events', ['as' => 'pages.events', 'uses' => 'PagesController@events']);
 });
 
 // Authentication routes
@@ -34,9 +34,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','a
     Route::get('/', ['as' => 'root', 'uses' => function(){
         echo 'Root';
     }]);
-    Route::get('events', function(){
-        echo 'Admin route';
-    });
+    //CRUD routes for events
+    Route::resource('events', 'EventsController');
 });
 
 

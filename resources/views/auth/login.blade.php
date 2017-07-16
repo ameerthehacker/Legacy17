@@ -3,7 +3,7 @@
 @section('content')
     <div class="row">
         <div class="col offset-m2 m8 s12">
-            @include('layouts.partials.errors')
+            @include('partials.errors')
             <div class="card z-depth-2 rounded-box">
                 <div class="card-content">
                     <span class="card-title">

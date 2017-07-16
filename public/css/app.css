@@ -6,7 +6,7 @@
   border-radius: 5px;
 }
 
-.rules-list ul {
-  list-style: circle;
+.event-details p + p {
+  padding-top: 5px;
 }
 

@@ -12,7 +12,7 @@
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">            
     </head>
     <body>
-        @include('layouts.partials.nav')
+        @include('layouts.partials.default_nav')
         <div class="container">
             @yield('content')
         </div>

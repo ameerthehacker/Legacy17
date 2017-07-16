@@ -17,8 +17,8 @@ class CreateEventsTable extends Migration
             $table->increments('id');
             $table->integer('category_id');    
             $table->string('title');            
-            $table->text('description');   
-            $table->string('image_url');
+            $table->text('description');
+            $table->string('image_name')->nullable();                        
             $table->text('rules');                                    
             $table->date('event_date');
             $table->time('start_time');
