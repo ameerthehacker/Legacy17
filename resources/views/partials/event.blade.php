@@ -1,4 +1,7 @@
 <div class="card hoverable">
+     <div class="progress hide" id="event-{{ $event->id }}-progress">
+        <div class="indeterminate"></div>
+    </div>
     <div class="card-image waves-effect waves-light waves-block">
         <img src="{{ url($event->getImageUrl()) }}" alt="{{ $event->title }} image" class="activator">
     </div>
@@ -11,6 +14,13 @@
             <p><i class="fa fa-calendar"></i> {{ $event->getDate() }}</p>
             <p><i class="fa fa-clock-o"></i> {{ $event->getStartTime() }} to {{ $event->getEndTime() }}</p>
             <p><i class="fa fa-child"> 2 Registration / 5 Slots</i></p>
+            <p>
+                @if(Auth::check() && Auth::user()->type == 'student')
+                    @if(Auth::user()->hasRegisteredEvent($event->id))
+                        {{ link_to_route('pages.unregister', 'Remove', ['id' => $event->id], ['class' => 'btn red btn-waves-effect waves-light']) }}
+                    @endif
+                @endif
+            </p>
         </div>
         @if(Auth::check() && Auth::user()->type == 'admin')
             <a href="{{ route('admin::events.edit', ['id' => $event->id]) }}" class="btn blue waves-effect waves-light">Edit</a>
@@ -31,7 +41,9 @@
         </ul>      
         @if(Auth::check())
             @if(Auth::user()->type == 'student')
-                {{ link_to('#', 'Register', ['class' => 'btn waves-effect waves-light green']) }}        
+                @if(!Auth::user()->hasRegisteredEvent($event->id))
+                    {{ link_to('#', 'Register', ['class' => 'btn waves-effect waves-light green btn-register-event', 'data-event' => $event->id]) }}
+                @endif
             @endif
         @else
             {{ link_to_route('auth.login', 'Login to Register', null,  ['class' => 'btn waves-effect waves-light red']) }}

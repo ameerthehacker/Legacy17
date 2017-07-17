@@ -15,6 +15,11 @@ Route::group(['middleware' => 'auth.redirect_admin'], function(){
     Route::get('/', ['as' => 'pages.root', 'uses' => 'PagesController@events']);
     Route::get('about', ['as' => 'pages.about', 'uses' => 'PagesController@about']);
     Route::get('events', ['as' => 'pages.events', 'uses' => 'PagesController@events']);
+    Route::group(['middleware' => 'auth'], function(){
+        Route::get('events/{id}/register', ['as' => 'pages.register', 'uses' => 'PagesController@register']);
+        Route::get('events/{id}/unregister', ['as' => 'pages.unregister', 'uses' => 'PagesController@unregister']);
+        Route::get('dashboard', ['as' => 'pages.dashboard', 'uses' => 'PagesController@dashboard']);
+    });
 });
 
 // Authentication routes
