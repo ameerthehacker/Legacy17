@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRegistrationsTable extends Migration
+class CreateCollegesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class CreateRegistrationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('registrations', function(Blueprint $table){
-            $table->integer('event_id');                    
-            $table->integer('registration_id');                        
-            $table->string('registration_type');
+        Schema::create('colleges', function(Blueprint $table){
+            $table->increments('id');
+            $table->string('name');
         });
     }
 
@@ -27,6 +26,6 @@ class CreateRegistrationsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('registrations');
+        Schema::drop('colleges');
     }
 }

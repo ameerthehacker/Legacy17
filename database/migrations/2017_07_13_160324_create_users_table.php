@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('email');
             $table->string('password');
             $table->enum('gender', ['male', 'female']);
-            $table->string('college_name');
+            $table->integer('college_id');
             $table->string('mobile');
             $table->enum('type', ['student', 'admin']);
             $table->rememberToken();

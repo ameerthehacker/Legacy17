@@ -6,8 +6,8 @@
             @include('partials.errors')
             <div class="card z-depth-2 rounded-box">
                 <div class="card-content">
-                    <span class="card-title">
-                        <h4 class="center-align"> <i class="material-icons">perm_identity</i> Register</h4>
+                    <span class="card-title center-align">
+                        <i class="material-icons">perm_identity</i> Register
                     </span>
                     {!! Form::open(['url' => route('auth.register')]) !!}
                         <div class="row">
@@ -50,8 +50,7 @@
                         <div class="row">
                             <div class="col s12 input-field">
                                 <i class="fa fa-2x fa-graduation-cap prefix"></i>                     
-                                {!! Form::label('college_name') !!}
-                                {!! Form::text('college_name') !!}
+                                {!! Form::select('college_id', $colleges) !!}
                             </div>
                         </div>
                         <div class="row">

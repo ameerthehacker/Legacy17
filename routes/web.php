@@ -16,8 +16,18 @@ Route::group(['middleware' => 'auth.redirect_admin'], function(){
     Route::get('about', ['as' => 'pages.about', 'uses' => 'PagesController@about']);
     Route::get('events', ['as' => 'pages.events', 'uses' => 'PagesController@events']);
     Route::group(['middleware' => 'auth'], function(){
-        Route::get('events/{id}/register', ['as' => 'pages.register', 'uses' => 'PagesController@register']);
-        Route::get('events/{id}/unregister', ['as' => 'pages.unregister', 'uses' => 'PagesController@unregister']);
+        // Routes for team registration
+        Route::group(['prefix' => 'events/{event_id}'], function(){
+            // Registration routes for single participation events
+            Route::get('register', ['as' => 'pages.register', 'uses' => 'PagesController@register']);
+            Route::get('unregister', ['as' => 'pages.unregister', 'uses' => 'PagesController@unregister']);
+            // Routes for team participation
+            Route::get('teams/register', ['as' => 'pages.registerteam', 'uses' => 'PagesController@createTeam']);
+            Route::post('teams/register', 'PagesController@registerTeam');        
+            Route::get('teams/{id}/unregister', ['as' => 'pages.unregisterteam', 'uses' => 'PagesController@unregisterTeam']);
+        });
+        Route::get('teams/get_college_mates', 'PagesController@getCollegeMates');
+        // Route for the user's dashboard
         Route::get('dashboard', ['as' => 'pages.dashboard', 'uses' => 'PagesController@dashboard']);
     });
 });
@@ -40,7 +50,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','a
         echo 'Root';
     }]);
     //CRUD routes for events
-    Route::resource('events', 'EventsController');
+    Route::resource('events', 'EventsController', ['except' => 'show']);
 });
 
 

@@ -6,8 +6,8 @@
             @include('partials.errors')
             <div class="card z-depth-2 rounded-box">
                 <div class="card-content">
-                    <span class="card-title">
-                        <h4 class="center-align"> <i class="material-icons">perm_identity</i> Login</h4>
+                    <span class="card-title center-align">
+                        <i class="material-icons">perm_identity</i> Login
                     </span>
                     {!! Form::open(['url' => route('auth.login')]) !!}
                         <div class="row">

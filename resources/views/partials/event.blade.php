@@ -17,7 +17,27 @@
             <p>
                 @if(Auth::check() && Auth::user()->type == 'student')
                     @if(Auth::user()->hasRegisteredEvent($event->id))
-                        {{ link_to_route('pages.unregister', 'Remove', ['id' => $event->id], ['class' => 'btn red btn-waves-effect waves-light']) }}
+                        @if($event->isGroupEvent())
+                            <ul class="collapsible" data-collapsible="accordion">
+                                <li>
+                                    <div class="collapsible-header">
+                                        <strong>{{ Auth::user()->teamForEvent($event->id)->name }} Details</strong>
+                                    </div>
+                                    <div class="collapsible-body">
+                                        <ul class="collection">
+                                            @foreach(Auth::user()->teamForEvent($event->id)->teamMembers as $teamMember)
+                                                <li class="collection-item">
+                                                    {{ $teamMember->user->full_name }}
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                            {{ link_to_route('pages.unregisterteam', 'Remove', ['event_id' => $event->id, 'id' => Auth::user()->teamForEvent($event->id)->id], ['class' => 'btn red btn-waves-effect waves-light']) }}
+                        @else
+                            {{ link_to_route('pages.unregister', 'Remove', ['event_id' => $event->id], ['class' => 'btn red btn-waves-effect waves-light']) }} 
+                        @endif 
                     @endif
                 @endif
             </p>
@@ -42,7 +62,11 @@
         @if(Auth::check())
             @if(Auth::user()->type == 'student')
                 @if(!Auth::user()->hasRegisteredEvent($event->id))
-                    {{ link_to('#', 'Register', ['class' => 'btn waves-effect waves-light green btn-register-event', 'data-event' => $event->id]) }}
+                    @if($event->max_members == 1)
+                        {{ link_to('#', 'Register', ['class' => 'btn waves-effect waves-light green btn-register-event', 'data-event' => $event->id]) }}
+                    @else
+                        {{ link_to_route('pages.registerteam', 'Register Team', ['event_id' => $event->id], ['class' => 'btn waves-effect waves-light green btn-registerteam-event', 'data-event' => $event->id]) }}
+                    @endif
                 @endif
             @endif
         @else

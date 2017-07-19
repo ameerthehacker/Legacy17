@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Registration;
+use App\Team;
 use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
@@ -10,6 +12,12 @@ class Event extends Model
     protected $image_path = '/images/events/';
     function category(){
         return $this->belongsTo('App\Category');
+    }
+    function users(){
+        return $this->morphedByMany('App\User', 'registration');
+    }
+    function teams(){
+        return $this->morphedByMany('App\Team', 'registration');
     }
     function getRulesList(){
         $rules = explode(',', $this->rules);
@@ -38,5 +46,8 @@ class Event extends Model
         else{
             return $this->image_path . $this->image_name;            
         }
+    }
+    function isGroupEvent(){
+        return $this->max_members>1;
     }
 }

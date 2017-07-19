@@ -76,7 +76,9 @@ module.exports = __webpack_require__(2);
 /***/ (function(module, exports) {
 
 $(function () {
+    $(".modal").modal();
     $('select').material_select();
+    $('.collapsible').collapsible();
 });
 
 /***/ }),

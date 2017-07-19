@@ -2,28 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Event;
+use Request;
+use App\Http\Requests\TeamRequest;
+use App\Team;
 use App\Registration;
+use App\TeamMember;
+use App\User;
+use App\Event;
 use Auth;
-
+use Session;
 
 class PagesController extends Controller
 {
     function dashboard(){
         $events = Auth::user()->events;
-        return view('pages.dashboard')->with('events', $events);
+        $teamEvents = Auth::user()->teamEvents();        
+        return view('pages.dashboard')->with('events', $events)->with('teamEvents', $teamEvents);
     }
     function about(){
         return view('pages.about');
     }
     function events(){
+        $registeredTeam = null;
         if(Auth::check()){
-            $user  = Auth::user();
-            // Get ids of registered events
-            $registeredEventIds = Registration::all()->where('registration_id', $user->id)->pluck('event_id');
-            // Get only events that are not registered
-            $events = Event::all()->whereNotIn('id', $registeredEventIds);
+            $events = Event::all()->reject(function($event, $key){          
+                return Auth::user()->hasRegisteredEvent($event->id);
+            });
+            $events = $events->all();
         }
         else{
             $events = Event::all();                 
@@ -39,6 +44,12 @@ class PagesController extends Controller
             $response['message'] = 'You have already registered for this event';
         }
         else{
+            // Check whether it is a single participation type event
+            if($event->isGroupEvent()){
+                $response['error'] = true;
+                $response['message'] = "Sorry! this is a group event";
+                return response()->json($response);                    
+            }
             $registered_events = $user->events;
             foreach($registered_events as $registered_event){
                 // Date of the event to be registered
@@ -55,7 +66,7 @@ class PagesController extends Controller
                 if($event_date == $registered_event_date){
                     if(($registered_start_time <= $start_time && $start_time < $registered_end_time) || ($end_time > $registered_start_time && $end_time <= $registered_end_time)){
                         $response['error'] = true;
-                        $response['message'] = "Sorry! you have a registered a parallel event $registered_event->title";
+                        $response['message'] = "Sorry! you have registered a parallel event $registered_event->title";
                         return response()->json($response);                    
                     }                    
                 }
@@ -66,13 +77,74 @@ class PagesController extends Controller
         return response()->json($response);
     }
     function unregister($id){
-        $event = Event::findOrFail($id);
+        $event = Event::find($id);
         $user = Auth::user();
-        $response = [];
         if($user->events->find($id)){   
-            $registration = Registration::all()->where('registration_id', $user->id)->where('event_id', $event->id)->first();
-            $registration->delete();
+            $event->users()->detach($user->id);
         }
         return  redirect()->route('pages.dashboard');
+    }
+    function createTeam($event_id){
+        // Check the team registration
+        if(!$this->checkTeamRegistration($event_id)){
+            return redirect()->route('pages.events');            
+        }
+        $team = new Team();
+        return view('teams.create')->with('team', $team);
+    }
+    function registerTeam(TeamRequest $request, $event_id){
+        // Check the team registraion
+        if(!$this->checkTeamRegistration($event_id)){
+            return redirect()->route('pages.events');            
+        }
+        $event  = Event::find($event_id);                 
+        $input = Request::all();
+        $team  = new Team($input);
+        $team->user_id = Auth::user()->id;
+        $team->save();
+        $team_members_emails = explode(',', $input['team_members']);
+        $team_members_users = User::all()->whereIn('email', $team_members_emails);
+        foreach($team_members_users as $team_member_user){
+            $team_member = new TeamMember();
+            $team_member->team_id = $team->id;
+            $team_member->user_id = $team_member_user->id;
+            $team->teamMembers()->save($team_member);
+        }
+        $team->events()->save($event);
+        Session::flash('success', 'Team registered and event added to dashboard!');
+        return redirect()->route('pages.events');
+    }
+    private function checkTeamRegistration($event_id){
+        $event  = Event::find($event_id);         
+        if(!$event || !$event->isGroupEvent()){
+            Session::flash('success', "Sorry! this is a single event");            
+            return false;
+        }
+        $user = Auth::user();
+        foreach($user->teams as $team){
+            if($team->hasRegisteredEvent($event->id)){
+                Session::flash('success', "Sorry! You have already registered a team for this event");
+                return false;
+            }
+        }
+        return true;
+    }
+    function unregisterTeam($event_id, $id){
+        $event = Event::find($event_id);
+        $team = Team::find($id);
+        if(!$team){
+            return redirect()->route('pages.dashboard');
+        }
+        if($team->events->find($event_id)){   
+            $event->teams()->detach($id);
+            $team->teamMembers()->delete();
+            Team::destroy($team->id);
+        }
+        return  redirect()->route('pages.dashboard');
+    }
+    function getCollegeMates(){
+        $user  = Auth::user();
+        $userEmails = User::where('college_id', $user->college_id)->where('id', '<>', $user->id)->get(['email']);
+        return response()->json($userEmails);
     }
 }

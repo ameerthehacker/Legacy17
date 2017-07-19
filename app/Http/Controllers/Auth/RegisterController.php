@@ -48,14 +48,15 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+        $messages = ['college_id.required' => 'The college name field is required'];
         return Validator::make($data, [
             'full_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|confirmed',
             'gender' => 'required',
-            'college_name' => 'required',
+            'college_id' => 'required',
             'mobile_number' => 'required|digits:10'
-        ]);
+        ], $messages);
     }
     /**
      * Create a new user instance after a valid registration.
@@ -70,7 +71,7 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
             'gender' => $data['gender'],
-            'college_name' => $data['college_name'],
+            'college_id' => $data['college_id'],
             'mobile' => $data['mobile_number'],
             'type' => 'student'
         ]);
