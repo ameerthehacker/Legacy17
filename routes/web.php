@@ -19,12 +19,16 @@ Route::group(['middleware' => 'auth.redirect_admin'], function(){
         // Routes for team registration
         Route::group(['prefix' => 'events/{event_id}'], function(){
             // Registration routes for single participation events
-            Route::get('register', ['as' => 'pages.register', 'uses' => 'PagesController@register']);
-            Route::get('unregister', ['as' => 'pages.unregister', 'uses' => 'PagesController@unregister']);
+            // Middleware registrations to check whether the user has or not registered events
+            Route::get('register', ['as' => 'pages.register', 'uses' => 'PagesController@register'])->middleware('registrations:single,no');
+            Route::get('unregister', ['as' => 'pages.unregister', 'uses' => 'PagesController@unregister'])->middleware('registrations:single,yes');
             // Routes for team participation
-            Route::get('teams/register', ['as' => 'pages.registerteam', 'uses' => 'PagesController@createTeam']);
-            Route::post('teams/register', 'PagesController@registerTeam');        
-            Route::get('teams/{id}/unregister', ['as' => 'pages.unregisterteam', 'uses' => 'PagesController@unregisterTeam']);
+            // Middleware registrations to check whether the team has or not registered events            
+            Route::group(['middleware' => 'registrations:team,no'], function(){
+                Route::get('teams/register', ['as' => 'pages.registerteam', 'uses' => 'PagesController@createTeam']);
+                Route::post('teams/register', 'PagesController@registerTeam');  
+            });    
+            Route::get('teams/{id}/unregister', ['as' => 'pages.unregisterteam', 'uses' => 'PagesController@unregisterTeam'])->middleware('registrations:team,yes');
         });
         Route::get('teams/get_college_mates', 'PagesController@getCollegeMates');
         // Route for the user's dashboard
