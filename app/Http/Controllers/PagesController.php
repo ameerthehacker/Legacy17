@@ -67,9 +67,7 @@ class PagesController extends Controller
     function unregister($id){
         $event = Event::find($id);
         $user = Auth::user();
-        if($user->events->find($id)){   
-            $event->users()->detach($user->id);
-        }
+        $event->users()->detach($user->id);        
         return  redirect()->route('pages.dashboard');
     }
     function createTeam($event_id){
