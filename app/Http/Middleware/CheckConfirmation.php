@@ -18,14 +18,23 @@ class CheckConfirmation
     public function handle($request, Closure $next, $confirmed)
     {
         // Check if user has confirmed his registrations
+        $user = Auth::user();
         if($confirmed == 'no'){
-            if(Auth::user()->hasConfirmed()){
+            if(!$user->isParticipating()){
+                Session::flash('success', 'You need to participate in atleast one single or team event to confirm the registration!');         
+                return redirect()->route('pages.dashboard');   
+            }
+            if(!$user->hasConfirmedTeams()){
+                Session::flash('success', 'All your team members should confirm their registration inorder to confirm your registration!');         
+                return redirect()->route('pages.dashboard');   
+            }
+            if($user->hasConfirmed()){
                 Session::flash('success', 'Sorry! you have already confirmed your events');         
                 return redirect()->route('pages.dashboard');                                          
             }
         }
         else if($confirmed == 'yes'){
-            if(!Auth::user()->hasConfirmed()){
+            if(!$user->hasConfirmed()){
                 Session::flash('success', 'Sorry! you have not yet confirmed your events');         
                 return redirect()->route('pages.dashboard');                                          
             }

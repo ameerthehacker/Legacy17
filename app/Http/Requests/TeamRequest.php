@@ -21,11 +21,16 @@ class TeamRequest extends FormRequest
      *
      * @return array
      */
+    public function messages(){
+        return [
+            'team_members.required' => 'The team members field is required'
+        ];
+    }
     public function rules()
     {
         return [
             'name' => 'required',
-            'team_members' => 'required'
+            'team_members' => 'required|teamMembersExist|isCollegeMate|isNotConfirmed|hasNoParallelEvent:' . $this->route('event_id')
         ];
     }
 }

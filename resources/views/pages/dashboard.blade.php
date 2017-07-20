@@ -3,42 +3,38 @@
 @section('content')
 
 <div class="row">
-    <div class="col s12">
-        <ul class="tabs">
-            <li class="col s6 tab">
-                <a href="#tab-solo-events">Solo Events</a>
-            </li>
-            <li class="col s6 tab">
-                <a href="#tab-team-events">Team Events</a>
-            </li>
-        </ul>
-    </div>
-    <div class="col s12">
-        <div id="tab-solo-events" class="row">
-            @foreach($events as $event)
-                <div class="col m6 s12">
-                    @include('partials.event', ['event' => $event])
-                </div>
-            @endforeach
+    @foreach($events as $event)
+        <div class="col m6 s12">
+            @include('partials.event', ['event' => $event])
         </div>
-        <div id="tab-team-events" class="row">
-            @foreach($teamEvents as $event)
-                <div class="col m6 s12">
-                    @include('partials.event', ['event' => $event])
-                </div>
-            @endforeach
+    @endforeach
+    @foreach($teamEvents as $event)
+        <div class="col m6 s12">
+            @include('partials.event', ['event' => $event])
         </div>
-    </div>
+    @endforeach
 </div>
 <div class="row">
     <div class="col s12">
         <ul class="collection z-depth-4">
             <li class="collection-item"><strong>Step 1: Confirm your event registrations</strong></li>
             <li class="collection-item">
+                <p>
+                    <ul>
+                        <li>
+                            <i class="fa {{ Auth::user()->isParticipating()?'fa-check':'fa-times' }}"></i> Participate in atleast one single or team event
+                        </li>
+                        @if(Auth::user()->hasTeams())
+                           <li>
+                                <i class="fa {{ Auth::user()->hasConfirmedTeams()?'fa-check':'fa-times' }}"></i> All your team members have confirmed their registration
+                           </li>
+                        @endif
+                    </ul>
+                </p>
                 @if(Auth::user()->hasConfirmed())
                     {{ link_to_route('pages.ticket.download', 'Download Ticket', null, ['class' => 'btn waves-effect waves-light green']) }}
                 @else
-                    <a class="btn waves-effect waves-light green modal-trigger" href="#modal-confirm">Confirm and generate ticket</a>
+                    <a class="btn waves-effect waves-light green modal-trigger {{ Auth::user()->canConfirm()?'':'disabled' }}" href="#modal-confirm">Confirm and generate ticket</a>
                 @endif
             </li>
             @if(Auth::user()->needApproval())

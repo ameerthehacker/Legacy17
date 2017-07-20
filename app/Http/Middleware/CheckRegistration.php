@@ -48,7 +48,20 @@ class CheckRegistration
             }
             if($registered == 'no'){
                 if(!$user->hasRegisteredEvent($event->id)){
-                    return $next($request);
+                    if($registered_event = $this->userHasParallelEvent($event->id)){
+                        if($request->ajax()){
+                            $response['error'] = true;
+                            $response['message'] = "Sorry! you have registered a parallel event $registered_event->title";
+                            return response()->json($response); 
+                        }
+                        else{
+                             Session::flash('success', "Sorry! you have registered a parallel event $registered_event->title");
+                             return redirect()->route('pages.events');  
+                        }
+                    }
+                    else{
+                        return $next($request);                        
+                    }
                 }
                 else{
                     Session::flash('success', 'Sorry! you have already registered for this event');                
@@ -56,10 +69,22 @@ class CheckRegistration
             }
             else if($registered == 'yes'){
                 if($user->hasRegisteredEvent($event->id)){
-                    return $next($request);
+                    if($event->isGroupEvent()){
+                        if($user->isTeamLeader($event->id)){
+                            return $next($request);
+                        }
+                        else{
+                            Session::flash('success', 'Sorry! only team leaders can unregister teams');
+                            return redirect()->route('pages.dashboard');   
+                        }                   
+                    }
+                    else{
+                        return $next($request);                                           
+                    }
                 }
                 else{
                     Session::flash('success', 'Sorry! you have not registered for this event');                
+                    return redirect()->route('pages.dashboard'); 
                 }
             }
             return redirect()->route('pages.events');                                            
@@ -67,5 +92,30 @@ class CheckRegistration
         else{
             return redirect()->route('pages.events');                                
         }
+    }
+    private function userHasParallelEvent($event_id){
+        $user = Auth::user();
+        $event = Event::find($event_id);
+        $registered_events = collect($user->events);
+        $registered_events->merge($user->teamEvents());
+        foreach($registered_events as $registered_event){
+            // Date of the event to be registered
+            $event_date = date_create($event->event_date);
+            // Date of the registered event
+            $registered_event_date = date_create($registered_event->event_date);
+            // Start and end time of event being registered
+            $start_time = strtotime($event->start_time);
+            $end_time = strtotime($event->end_time);       
+            //  Start and end time of event already registered
+            $registered_start_time = strtotime($registered_event->start_time);
+            $registered_end_time = strtotime($registered_event->end_time);                
+            // Check whether they occur in parallel
+            if($event_date == $registered_event_date){
+                if(($registered_start_time <= $start_time && $start_time < $registered_end_time) || ($end_time > $registered_start_time && $end_time <= $registered_end_time)){
+                    return $registered_event;                 
+                }                    
+            }
+        }
+        return false;
     }
 }

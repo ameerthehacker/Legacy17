@@ -21,8 +21,8 @@
                         <div class="col s12 input-field">
                             <div class="chips-autocomplete">
                             </div>
-                            {!! Form::hidden('team_members', null, ['id' => 'team-members']) !!}
                         </div>
+                        {!! Form::hidden('team_members', null, ['id' => 'team-members']) !!}                        
                     </div>
                     <div class="row">
                         <div class="col s12 input-field">
@@ -46,6 +46,9 @@
                     suggestions[val.email] = null;
                 });
                 chips.material_chip({
+                    placeholder: '+Team Members',
+                    secondaryPlaceholder: 'Email ids',
+                    data: loadChips(),
                     autocompleteOptions:{
                         data: suggestions,
                         limit: Infinity,
@@ -65,6 +68,17 @@
                 tags.push(val.tag);
             });
             $("#team-members").val(tags.join(','));
+        }
+        function loadChips(){
+            var teamMembers = $("#team-members").val().split(',');
+            var initialChips  = [];
+            $.each(teamMembers, function(index, val){
+                if(val != ""){
+                    var chip = { 'tag': val }
+                    initialChips.push(chip);
+                }
+            });
+            return initialChips;
         }
         // Update team members hidden field on changes to chips
         chips.on('chip.add', updateTeamMembers);

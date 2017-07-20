@@ -10,7 +10,7 @@ class User extends Authenticatable
     protected $fillable = ['full_name', 'email', 'password', 'gender', 'college_id', 'mobile'];
 
     function events(){
-        return $this->morphToMany('App\Event', 'registration');
+        return $this->morphToMany('\App\Event', 'registration');
     }
     function confirmation(){
         return $this->hasOne('App\Confirmation');
@@ -106,5 +106,36 @@ class User extends Authenticatable
         else{
             return false;
         }
+    }
+    function isParticipating(){
+        if($this->events()->count() == 0 && $this->teams()->count() == 0 && $this->teamMembers()->count() == 0){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+    function hasConfirmedTeams(){
+        $confirmed = true;
+        foreach($this->teams as $team){
+            foreach($team->teamMembers as $teamMember){
+                if(!$teamMember->user->hasConfirmed()){
+                    $confirmed = false;
+                }
+            }
+        }
+        return $confirmed;
+    }
+    function canConfirm(){
+        if($this->isParticipating() && $this->hasConfirmedTeams()){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    function hasTeams(){
+        $teamCount = $this->teams->count();  
+        return $teamCount; 
     }
 }

@@ -42,27 +42,6 @@ class PagesController extends Controller
         $event = Event::find($id);
         $user = Auth::user();                                  
         $response = [];  
-        $registered_events = $user->events;
-        foreach($registered_events as $registered_event){
-            // Date of the event to be registered
-            $event_date = date_create($event->event_date);
-            // Date of the registered event
-            $registered_event_date = date_create($registered_event->event_date);
-            // Start and end time of event being registered
-            $start_time = strtotime($event->start_time);
-            $end_time = strtotime($event->end_time);       
-            //  Start and end time of event already registered
-            $registered_start_time = strtotime($registered_event->start_time);
-            $registered_end_time = strtotime($registered_event->end_time);                
-            // Check whether they occur in parallel
-            if($event_date == $registered_event_date){
-                if(($registered_start_time <= $start_time && $start_time < $registered_end_time) || ($end_time > $registered_start_time && $end_time <= $registered_end_time)){
-                    $response['error'] = true;
-                    $response['message'] = "Sorry! you have registered a parallel event $registered_event->title";
-                    return response()->json($response);                    
-                }                    
-            }
-        }
         $user->events()->save($event);
         $response['error'] = false;
         return response()->json($response);
@@ -78,7 +57,7 @@ class PagesController extends Controller
         return view('teams.create')->with('team', $team);
     }
     function registerTeam(TeamRequest $request, $event_id){
-        $event  = Event::find($event_id);                 
+        $event  = Event::find($event_id);              
         $input = Request::all();
         $team  = new Team($input);
         $team->user_id = Auth::user()->id;
