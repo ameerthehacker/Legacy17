@@ -15,8 +15,7 @@ class CreateRegistrationsTable extends Migration
     {
         Schema::create('registrations', function(Blueprint $table){
             $table->integer('event_id');                    
-            $table->integer('registration_id');                        
-            $table->string('registration_type');
+            $table->morph('registration');
         });
     }
 

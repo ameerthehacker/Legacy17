@@ -33,6 +33,13 @@ Route::group(['middleware' => 'auth.redirect_admin'], function(){
         Route::get('teams/get_college_mates', 'PagesController@getCollegeMates');
         // Route for the user's dashboard
         Route::get('dashboard', ['as' => 'pages.dashboard', 'uses' => 'PagesController@dashboard']);
+        // Route for event confirmation
+        Route::get('confirm', ['as' => 'pages.confirm', 'uses' => 'PagesController@confirm'])->middleware('registrations.confirm:no');
+        // Route for ticket generation
+        Route::group(['middleware' => 'registrations.confirm:yes'], function(){
+            Route::get('download-ticket', ['as' => 'pages.ticket.download', 'uses' => 'PagesController@downloadTicket']);
+            Route::post('upload-ticket', ['as' => 'pages.ticket.upload', 'uses' => 'PagesController@uploadTicketImage']);
+        });        
     });
 });
 

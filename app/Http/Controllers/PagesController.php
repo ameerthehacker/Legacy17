@@ -4,13 +4,16 @@ namespace App\Http\Controllers;
 
 use Request;
 use App\Http\Requests\TeamRequest;
+use App\Http\Requests\UploadTicketRequest;
 use App\Team;
 use App\Registration;
 use App\TeamMember;
 use App\User;
 use App\Event;
+use App\Confirmation;
 use Auth;
 use Session;
+use PDF;
 
 class PagesController extends Controller
 {
@@ -104,5 +107,28 @@ class PagesController extends Controller
         $user  = Auth::user();
         $userEmails = User::where('college_id', $user->college_id)->where('id', '<>', $user->id)->get(['email']);
         return response()->json($userEmails);
+    }
+    function confirm(){
+        $confirmation = new Confirmation();
+        Auth::user()->confirmation()->save($confirmation);
+        return redirect()->route('pages.dashboard');
+    }
+    function downloadTicket(){
+        $pdf = PDF::loadView('pages.ticket');
+        return $pdf->download('ticket.pdf');
+    }
+    function uploadTicketImage(UploadTicketRequest $request){
+        // Check if the student can upload ticket for approval
+        if(!Auth::user()->needApproval()){
+            Session::flash('success', 'Sorry! Your verification and payment will be done by one of your team leaders');
+            return redirect()->route('pages.dashboard');            
+        }
+        $extension = $request->file('ticket')->getClientOriginalExtension();
+        $filename = 'ticket_' . Auth::user()->id . '.' . $extension;
+        $confirmation = Auth::user()->confirmation;
+        $request->file('ticket')->move('uploads/tickets', $filename);
+        $confirmation->file_name = $filename;
+        $confirmation->save();
+        return redirect()->route('pages.dashboard');
     }
 }

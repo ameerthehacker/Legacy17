@@ -177,6 +177,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        // service provider for pdf generation from DOM
+        Barryvdh\DomPDF\ServiceProvider::class,
 
     ],
 
@@ -227,7 +229,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'HTML' => Collective\Html\HtmlFacade::class,
-        'Form' => Collective\Html\FormFacade::class        
+        'Form' => Collective\Html\FormFacade::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,  
     ],
 
 ];

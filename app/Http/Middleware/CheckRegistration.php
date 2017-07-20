@@ -19,6 +19,11 @@ class CheckRegistration
      */
     public function handle($request, Closure $next, $type, $registered)
     {
+        // Check if user has confirmed his registrations
+        if(Auth::user()->hasConfirmed()){
+            Session::flash('success', 'Sorry! you have already confirmed your events');         
+            return redirect()->route('pages.dashboard');                                            
+        }
         $event_id = $request->route('event_id');
         $event = Event::find($event_id);
         // Check if team exists
