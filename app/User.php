@@ -15,6 +15,20 @@ class User extends Authenticatable
     function confirmation(){
         return $this->hasOne('App\Confirmation');
     }
+    function payment(){
+        return $this->hasOne('App\Payment');
+    }
+    function hasPaid(){
+        if($this->payment == null){
+            return false;
+        }
+        else{
+            return  true;
+        }
+    }
+    function payments(){
+        return $this->hasMany('App\Payment', 'paid_by');
+    }
     // Find the team a user has registered for an event
     function teamLeaderFor($event_id){
         $event = Event::find($event_id);
@@ -78,7 +92,7 @@ class User extends Authenticatable
     }
     function hasUploadedTicket(){
         if($this->hasConfirmed()){
-            if($this->confirmation->file_name != ""){
+            if(!empty($this->confirmation->file_name)){
                 return true;
             }
         }
@@ -116,18 +130,15 @@ class User extends Authenticatable
         }
     }
     function hasConfirmedTeams(){
-        $confirmed = true;
         foreach($this->teams as $team){
-            foreach($team->teamMembers as $teamMember){
-                if(!$teamMember->user->hasConfirmed()){
-                    $confirmed = false;
-                }
+            if(!$team->isConfirmed()){
+                return false;
             }
         }
-        return $confirmed;
+        return true;
     }
     function canConfirm(){
-        if($this->isParticipating() && $this->hasConfirmedTeams()){
+        if($this->isParticipating()){
             return true;
         }
         else{
@@ -137,5 +148,80 @@ class User extends Authenticatable
     function hasTeams(){
         $teamCount = $this->teams->count();  
         return $teamCount; 
+    }
+    function isAcknowledged(){
+        if($this->hasConfirmed()){
+            if($this->confirmation->acknowledged){
+                return true;
+            }
+        }
+        return false;
+    }
+    function hasPaidForTeams(){
+        foreach($this->teams as $team){
+            if(!$team->isPaid()){
+                return false;
+            }
+        }
+        return true;
+    }
+    function getTotalAmount(){
+        $transactionFee = 0.04;
+        $totalAmount = 0;
+        $amount = 200;
+        // Amount for the actual user
+        if(!$this->hasPaid()){
+            $totalAmount += $amount;
+        }
+        // Amount for teams in  which he is a leader
+        foreach($this->teams as $team){
+            $totalAmount += $team->getTotalAmount();
+        }
+        // Very Very important Add the transaction fee
+        $totalAmount += $totalAmount*$transactionFee;
+        return $totalAmount;
+    }
+    function doPayment($txnid){
+        // Amount for the actual user
+        if(!$this->hasPaid()){
+            $payment = new Payment();
+            $payment->paid_by = $this->id;
+            $payment->user_id = $this->id;
+            $payment->transaction_id = $txnid;
+            $this->payment()->save($payment);
+        }
+        // Amount for teams in  which he is a leader
+        foreach($this->teams as $team){
+            $team->doPayment($txnid);
+        }
+    }
+    function getTransactionId(){
+        $uid = "LG17_" . $this->id . '_' . strrev(time());
+        $uid = substr($uid, 0,25);
+        return $uid;
+    }
+    function getProductInfo(){
+        $productInfo = "Legacy17 Event";
+        return $productInfo;
+    }
+    function getKey(){
+        $key = "gtKFFx";
+        return $key;        
+    }
+    function getSalt(){
+        $salt = "eCwWELxi";
+        return $salt;
+    }
+    function getHash(){
+        $key = $this->getKey();
+        $salt = $this->getSalt();
+        $txnid = $this->getTransactionId();
+        $amount = $this->getTotalAmount();
+        $productInfo = $this->getProductInfo()        ;
+        $firstname = $this->full_name;
+        $email = $this->email;
+        $hashFormat = "$key|$txnid|$amount|$productInfo|$firstname|$email|||||||||||$salt";
+        $hash = strtolower(hash('sha512', $hashFormat));
+        return $hash;
     }
 }

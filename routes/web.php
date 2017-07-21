@@ -39,7 +39,10 @@ Route::group(['middleware' => 'auth.redirect_admin'], function(){
         Route::group(['middleware' => 'registrations.confirm:yes'], function(){
             Route::get('download-ticket', ['as' => 'pages.ticket.download', 'uses' => 'PagesController@downloadTicket']);
             Route::post('upload-ticket', ['as' => 'pages.ticket.upload', 'uses' => 'PagesController@uploadTicketImage']);
-        });        
+        });  
+        Route::post('/payment/success', ['as' => 'pages.payment.success', 'uses' => 'PagesController@paymentSuccess']);
+        Route::post('/payment/failure', ['as' => 'pages.payment.failure', 'uses' => 'PagesController@paymentFailure']);
+        Route::get('/payment/reciept', ['as' => 'pages.payment.reciept', 'uses' => 'PagesController@paymentReciept']);        
     });
 });
 

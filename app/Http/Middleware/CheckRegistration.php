@@ -96,8 +96,19 @@ class CheckRegistration
     private function userHasParallelEvent($event_id){
         $user = Auth::user();
         $event = Event::find($event_id);
-        $registered_events = collect($user->events);
-        $registered_events->merge($user->teamEvents());
+        $registered_events = $user->events;
+        // Check for single events
+        if($parallel_event = $this->checkIsParralelEvent($registered_events, $event)){
+            return $parallel_event;
+        }
+        $registered_events = $user->teamEvents();
+        // Check for group events
+        if($parallel_event = $this->checkIsParralelEvent($registered_events, $event)){
+            return $parallel_event;
+        }
+        return false;
+    }
+    private function checkIsParralelEvent($registered_events, $event){
         foreach($registered_events as $registered_event){
             // Date of the event to be registered
             $event_date = date_create($event->event_date);

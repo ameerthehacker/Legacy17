@@ -28,9 +28,10 @@ class TeamRequest extends FormRequest
     }
     public function rules()
     {
+        $event_id = $this->route('event_id');
         return [
             'name' => 'required',
-            'team_members' => 'required|teamMembersExist|isCollegeMate|isNotConfirmed|hasNoParallelEvent:' . $this->route('event_id')
+            'team_members' => 'required|teamMembersExist|isCollegeMate|isNotConfirmed|hasNoParallelEvent:' . $event_id . "|teamMembersCount:" . $event_id
         ];
     }
 }
