@@ -19,4 +19,7 @@
     @if(Auth::user()->hasRole('root'))
         <li>{{ link_to_route('admin::requests', 'Requests') }}</li>
     @endif
+    @if(Auth::user()->hasRole('hospitality'))
+        <li>{{ link_to_route('admin::accomodations', 'Accomodation Requests') }}</li>
+    @endif
 </ul>

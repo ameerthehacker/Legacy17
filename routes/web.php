@@ -33,6 +33,9 @@ Route::group(['middleware' => 'auth.redirect_admin'], function(){
         Route::get('teams/get_college_mates', 'PagesController@getCollegeMates');
         // Route for the user's dashboard
         Route::get('dashboard', ['as' => 'pages.dashboard', 'uses' => 'PagesController@dashboard']);
+        // Route for requesting hospitality
+        Route::get('hospitality', ['as' => 'pages.hospitality', 'uses' => 'PagesController@hospitality']);
+        Route::get('hospitality/request', ['as' => 'pages.hospitality.request', 'uses' => 'PagesController@requestHospitality']);
         // Route for event confirmation
         Route::get('confirm', ['as' => 'pages.confirm', 'uses' => 'PagesController@confirm'])->middleware('registrations.confirm:no');
         // Route for ticket generation
@@ -40,10 +43,14 @@ Route::group(['middleware' => 'auth.redirect_admin'], function(){
             Route::get('download-ticket', ['as' => 'pages.ticket.download', 'uses' => 'PagesController@downloadTicket']);
             Route::post('upload-ticket', ['as' => 'pages.ticket.upload', 'uses' => 'PagesController@uploadTicketImage']);
         });  
-        Route::post('/payment/success', ['as' => 'pages.payment.success', 'uses' => 'PagesController@paymentSuccess']);
-        Route::post('/payment/failure', ['as' => 'pages.payment.failure', 'uses' => 'PagesController@paymentFailure']);
         Route::get('/payment/reciept', ['as' => 'pages.payment.reciept', 'uses' => 'PagesController@paymentReciept']);        
     });
+});
+
+// Payment routes and wont be using csrf
+Route::group(['middleware' => 'payment.check'], function(){
+    Route::post('/payment/success', ['as' => 'pages.payment.success', 'uses' => 'PagesController@paymentSuccess']);
+    Route::post('/payment/failure', ['as' => 'pages.payment.failure', 'uses' => 'PagesController@paymentFailure']);
 });
 
 // Authentication routes
@@ -63,6 +70,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','a
     Route::group(['middleware' => 'auth.admin:root'], function(){
         Route::get('requests', ['as' => 'requests', 'uses' => 'AdminPagesController@requests']);
         Route::post('requests', 'AdminPagesController@replyRequest');        
+    });
+    Route::group(['middleware' => 'auth.admin:hospitality'], function(){
+        Route::get('accomodations', ['as' => 'accomodations', 'uses' => 'AdminPagesController@accomodationRequests']);
+        Route::post('accomodations', 'AdminPagesController@replyAccomodationRequest');        
     });
     Route::get('/', ['as' => 'root', 'uses' => 'AdminPagesController@root']);
     //CRUD routes for events

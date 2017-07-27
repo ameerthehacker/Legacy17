@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Request;
 use App\Confirmation;
 use App\User;
+use App\Accomodation;
 
 class AdminPagesController extends Controller
 {
@@ -29,6 +30,24 @@ class AdminPagesController extends Controller
             $user->confirmation->message = $inputs['message'];
         }
         $user->confirmation->save();
-        return redirect()->route('admin::requests');
+        return redirect()->back();
+    }
+    function accomodationRequests(){
+        $requests = Accomodation::all()->where('status', null);
+        return view('pages.admin.accomodations')->with('requests', $requests);
+    }
+    function replyAccomodationRequest(Request $request){
+        $inputs = Request::all();
+        $user_id = $inputs['user_id'];
+        $user = User::find($user_id);
+        if($inputs['submit'] == 'Accept'){
+            $user->accomodation->status = 'ack';
+        }
+        else if($inputs['submit'] == 'Reject'){
+            $user->accomodation->status = 'nack';
+            $user->accomodation->message = $inputs['message'];
+        }
+        $user->accomodation->save();
+        return redirect()->back();
     }
 }

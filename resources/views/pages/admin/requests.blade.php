@@ -2,7 +2,7 @@
 
 @section('content')
     @if($requests->count() == 0)
-        <h4>No new requests!</h4>
+        <h5>No new requests!</h5>
     @endif
     <ul class="collapsible popout" data-collapsible="accordion">
         @foreach($requests as $request)

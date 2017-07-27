@@ -8,7 +8,6 @@ use Auth;
 class User extends Authenticatable
 {
     protected $fillable = ['full_name', 'email', 'password', 'gender', 'college_id', 'mobile'];
-
     function events(){
         return $this->morphToMany('\App\Event', 'registration');
     }
@@ -20,6 +19,25 @@ class User extends Authenticatable
     }
     function roles(){
         return $this->belongsToMany('App\Role');
+    }
+    function accomodation(){
+        return $this->hasOne('App\Accomodation');
+    }
+    function hasRequestedAccomodation(){
+        if($this->accomodation){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    function hasAccomodationAcknowledged(){
+        if($this->hasRequestedAccomodation() && $this->accomodation->status){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
     function hasPaid(){
         if($this->payment == null){
@@ -169,9 +187,9 @@ class User extends Authenticatable
         return true;
     }
     function getTotalAmount(){
-        $transactionFee = 0.04;
+        $transactionFee = Payment::getTransactionFee();
         $totalAmount = 0;
-        $amount = 200;
+        $amount = Payment::getEventAmount();
         // Amount for the actual user
         if(!$this->hasPaid()){
             $totalAmount += $amount;
@@ -203,24 +221,14 @@ class User extends Authenticatable
         $uid = substr($uid, 0,25);
         return $uid;
     }
-    function getProductInfo(){
-        $productInfo = "Legacy17 Event";
-        return $productInfo;
+    function getAccomodationAmount(){
+        return Payment::getAccomodationAmount() + Payment::getAccomodationAmount()*0.04;
     }
-    function getPaymentKey(){
-        $key = "gtKFFx";
-        return $key;        
-    }
-    function getSalt(){
-        $salt = "eCwWELxi";
-        return $salt;
-    }
-    function getHash(){
-        $key = $this->getPaymentKey();
-        $salt = $this->getSalt();
+    function getHash($amount){
+        $key = Payment::getPaymentKey();
+        $salt = Payment::getPaymentSalt();
         $txnid = $this->getTransactionId();
-        $amount = $this->getTotalAmount();
-        $productInfo = $this->getProductInfo()        ;
+        $productInfo = Payment::getProductInfo()        ;
         $firstname = $this->full_name;
         $email = $this->email;
         $hashFormat = "$key|$txnid|$amount|$productInfo|$firstname|$email|||||||||||$salt";
@@ -229,9 +237,7 @@ class User extends Authenticatable
     }
     // Check if the user has the given role
     function hasRole($role_name){
-        // Check if the user is root if so he has all the roles
-        $root_role_name = Role::first()->role_name;
-        if($this->roles()->where('role_name', $root_role_name)->count() || $this->roles()->where('role_name', $role_name)->count()){
+        if($this->roles()->where('role_name', $role_name)->count()){
             return true;
         }
         return false;

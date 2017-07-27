@@ -5,8 +5,8 @@
             <ul class="right">
                 <li>{{ link_to_route('pages.events', 'Events') }}</li>
                 @if(Auth::Check())
-                    <li>{{ link_to_route('pages.dashboard', 'Dashboard') }}</li>                                    
-                    <li><a href="#">Hospitality</a></li>
+                    <li>{{ link_to_route('pages.dashboard', 'Dashboard') }}</li>  
+                    <li>{{ link_to_route('pages.hospitality', 'Hospitality') }}</li>
                     <li>{{ link_to_route('auth.logout', 'Logout') }}</li>
                 @else
                     <li>{{ link_to_route('auth.login', 'Login') }}</li>

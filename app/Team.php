@@ -37,7 +37,7 @@ class Team extends Model
     }
     function getTotalAmount(){
         $totalAmount = 0;
-        $amount = 200;
+        $amount = Payment::getEventAmount();
         foreach($this->teamMembers as $teamMember){
             if(!$teamMember->user->hasPaid()){
                 $totalAmount += $amount;

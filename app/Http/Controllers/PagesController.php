@@ -11,6 +11,7 @@ use App\TeamMember;
 use App\User;
 use App\Event;
 use App\Confirmation;
+use App\Accomodation;
 use Auth;
 use Session;
 use PDF;
@@ -21,6 +22,9 @@ class PagesController extends Controller
         $events = Auth::user()->events;
         $teamEvents = Auth::user()->teamEvents();        
         return view('pages.dashboard')->with('events', $events)->with('teamEvents', $teamEvents);
+    }
+    function hospitality(){
+        return view('pages.hospitality');
     }
     function about(){
         return view('pages.about');
@@ -37,6 +41,18 @@ class PagesController extends Controller
             $events = Event::all();                 
         }
         return view('pages.events')->with('events', $events);
+    }
+    function requestHospitality(){
+        $user = Auth::user();
+        if($user->hasRequestedAccomodation()){
+            Session::flash('success', 'You have already requested accomodation');
+        }
+        else{
+            $accomodation = new Accomodation();
+            $user->accomodation()->save($accomodation);
+            Session::flash('success', 'You request for accomodation has been sent!');            
+        }
+        return redirect()->route('pages.hospitality');
     }
     function register($id){
         $event = Event::find($id);
@@ -113,57 +129,29 @@ class PagesController extends Controller
     }
     function paymentSuccess(Request $request){
         $inputs = $request::all();
-        if($this->verifyPaymentRequest($request)){
-            if(strtolower($inputs['status']) == 'success' || strtolower($inputs['status']) == 'captured' ){
-                Auth::user()->doPayment($inputs['txnid']);
-                return view('pages.payment.success')->with('info', 'Your payment was successful!');
+        if(strtolower($inputs['status']) == 'success' || strtolower($inputs['status']) == 'captured' ){
+            $user = User::where('email', $inputs['email'])->first();
+            if(isset($inputs['type']) && $inputs['type'] == 'accomodation'){
+                $user->accomodation->transaction_id = $inputs['txnid'];
+                $user->accomodation->paid = true;
+                $user->accomodation->save();
             }
             else{
-                return view('pages.payment.failure')->with('info', 'Sorry! your transaction failed please try again!');
+                 $user->doPayment($inputs['txnid']);
             }
+            return view('pages.payment.success')->with('info', 'Your payment was successful!');
         }
         else{
-            return view('pages.payment.failure')->with('info', 'Invalid transaction!');
+            return view('pages.payment.failure')->with('info', 'Sorry! your transaction failed please try again!');
         }
     }
     function paymentFailure(Request $request){
         $errorInfo = "";     
         $inputs = $request::all();           
-        if($this->verifyPaymentRequest($request)){
-            if(isset($inputs['error']) && !empty($inputs['error'])){
-                $errorInfo = $inputs['error'];
-            }
-            return view('pages.payment.failure')->with('info', 'Sorry! your transaction failed')->with('errorInfo', $errorInfo);            
+        if(isset($inputs['error']) && !empty($inputs['error'])){
+            $errorInfo = $inputs['error'];
         }
-        else{
-            return view('pages.payment.failure')->with('info', 'Invalid transaction!')->with('errorInfo', $errorInfo);
-        }
-    }
-    function verifyPaymentRequest(Request $request){
-        $inputs = $request::all();
-        if(isset($inputs['key']) && !empty($inputs['key']) && isset($inputs['txnid']) && !empty($inputs['txnid']) && isset($inputs['amount']) && !empty($inputs['amount']) && isset($inputs['productinfo']) && !empty($inputs['productinfo']) && isset($inputs['email']) && !empty($inputs['email']) && isset($inputs['firstname']) && !empty($inputs['firstname']) && isset($inputs['hash']) && !empty($inputs['hash']) && isset($inputs['status']) && !empty($inputs['status'])){
-
-            $key = $inputs['key'];
-            $txnid = $inputs['txnid'];
-            $amount = $inputs['amount'];
-            $productInfo = $inputs['productinfo'];
-            $email = $inputs['email'];
-            $firstname = $inputs['firstname'];
-            $salt = Auth::user()->getSalt();
-            $status = $inputs['status'];
-            $postback_hash = $inputs['hash'];
-            $hashFormat = "$salt|$status|||||||||||$email|$firstname|$productInfo|$amount|$txnid|$key";
-            $hash = strtolower(hash('sha512', $hashFormat));
-            if($hash == $postback_hash){
-                return true;
-            }
-            else{
-                return false;                
-            }
-        }
-        else{
-            return false;                            
-        }
+        return view('pages.payment.failure')->with('info', 'Sorry! your transaction failed')->with('errorInfo', $errorInfo);      
     }
     function paymentReciept(){
         $pdf = PDF::loadView('pages.payment.reciept');
