@@ -66,6 +66,7 @@ class PagesController extends Controller
         $team_members_users = User::all()->whereIn('email', $team_members_emails);
         foreach($team_members_users as $team_member_user){
             $team_member = new TeamMember();
+            
             $team_member->team_id = $team->id;
             $team_member->user_id = $team_member_user->id;
             $team->teamMembers()->save($team_member);
@@ -161,7 +162,7 @@ class PagesController extends Controller
             }
         }
         else{
-            return true;                            
+            return false;                            
         }
     }
     function paymentReciept(){

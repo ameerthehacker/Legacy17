@@ -9,7 +9,8 @@
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "~5.0",
-        "barryvdh/laravel-dompdf": "*"
+        "barryvdh/laravel-dompdf": "*",
+        "graham-campbell/htmlmin": "*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

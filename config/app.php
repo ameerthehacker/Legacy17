@@ -179,7 +179,8 @@ return [
         App\Providers\RouteServiceProvider::class,
         // service provider for pdf generation from DOM
         Barryvdh\DomPDF\ServiceProvider::class,
-
+        // service provider for minifying html
+        GrahamCampbell\HTMLMin\HTMLMinServiceProvider::class,
     ],
 
     /*
@@ -230,7 +231,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'HTML' => Collective\Html\HtmlFacade::class,
         'Form' => Collective\Html\FormFacade::class,
-        'PDF' => Barryvdh\DomPDF\Facade::class,  
+        'PDF' => Barryvdh\DomPDF\Facade::class,
+        'HTMLMin' => GrahamCampbell\HTMLMin\Facades\HTMLMin::class,  
     ],
 
 ];

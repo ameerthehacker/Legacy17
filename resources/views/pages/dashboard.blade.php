@@ -116,9 +116,9 @@
                                     <input type="hidden" name="txnid" value="{{ Auth::user()->getTransactionId() }}">    
                                     <input type="hidden" name="amount" value="{{ Auth::user()->getTotalAmount() }}">   
                                     <input type="hidden" name="productinfo" value="{{ Auth::user()->getProductInfo() }}">
-                                    <input type="hidden" name="firstname" value="{{ Auth::user()->full_name }}">         
+                                    <input type="hidden" name="firstname" value="{{ Auth::user()->full_name }}">
                                     <input type="hidden" name="email" value="{{ Auth::user()->email }}">
-                                    <input type="hidden" name="phone" value="{{ Auth::user()->mobile }}">                <input type="hidden" name="surl" value="{{ route('pages.payment.success') }}">       <input type="hidden" name="furl" value="{{ route('pages.payment.failure') }}">
+                                    <input type="hidden" name="phone" value="{{ Auth::user()->mobile }}">            <input type="hidden" name="surl" value="{{ route('pages.payment.success') }}">   <input type="hidden" name="furl" value="{{ route('pages.payment.failure') }}">
                                     <input type="hidden" name="hash" value="{{ Auth::user()->getHash() }}">
                                     <button type="submit" class="btn waves-effect waves-light green"><i class="fa fa-credit-card"></i> Pay by PayUmoney</button>
                                 </form>
