@@ -6,16 +6,28 @@ use Request;
 use App\Confirmation;
 use App\User;
 use App\Accomodation;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class AdminPagesController extends Controller
 {
     function root(){
         return view('pages.admin.root');
     }
-    function requests(){
-        $requests = Confirmation::all()->where('status', null)->where('file_name', '<>',  null)->reject(function($confirmation){
-            return !$confirmation->user->hasTeams();
+    function requests(\Illuminate\Http\Request $request){
+        $requests = Confirmation::all()->where('status', null)->where('file_name', '<>',  null)->filter(function($confirmation){
+            return $confirmation->user->hasTeams();
         });
+        $page = Input::get('page', 1);
+        $perPage = 10;
+        $offset = ($page * $perPage) - $perPage;
+        $requests =  new LengthAwarePaginator(
+            $requests->splice($offset, $perPage, true),
+            count($requests), 
+            $perPage,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
         return view('pages.admin.requests')->with('requests', $requests);
     }
     function replyRequest(Request $request){
@@ -33,7 +45,7 @@ class AdminPagesController extends Controller
         return redirect()->back();
     }
     function accomodationRequests(){
-        $requests = Accomodation::all()->where('status', null);
+        $requests = Accomodation::where('status', null)->paginate(10);
         return view('pages.admin.accomodations')->with('requests', $requests);
     }
     function replyAccomodationRequest(Request $request){

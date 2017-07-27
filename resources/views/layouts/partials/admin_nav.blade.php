@@ -17,9 +17,31 @@
 </div>
 <ul class="side-nav" id="slide-out">
     @if(Auth::user()->hasRole('root'))
-        <li>{{ link_to_route('admin::requests', 'Requests') }}</li>
+        <li class="no-padding">
+            <ul class="collapsible collapsible-accordion">
+                <li>
+                    <a class="collapsible-header">Confirmation</a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li>{{ link_to_route('admin::requests', 'Requests') }}</li>                        
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </li>
     @endif
     @if(Auth::user()->hasRole('hospitality'))
-        <li>{{ link_to_route('admin::accomodations', 'Accomodation Requests') }}</li>
+        <li class="no-padding">
+            <ul class="collapsible collapsible-accordion">
+                <li>
+                    <a class="collapsible-header">Accomodations</a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li>{{ link_to_route('admin::accomodations', 'Requests') }}</li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </li>
     @endif
 </ul>
