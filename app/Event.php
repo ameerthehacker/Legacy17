@@ -50,4 +50,22 @@ class Event extends Model
     function isGroupEvent(){
         return $this->max_members>1;
     }
+    function noOfConfirmedRegistration(){
+        $count = 0;
+        if($this->isGroupEvent()){
+            foreach($this->teams as $team){
+                if($team->isPaid()){
+                    $count++;
+                }
+            }
+        }
+        else{
+            foreach($this->users as $user){
+                if($user->hasPaid()){
+                    $count++;
+                }
+            }
+        }
+        return $count;
+    }
 }

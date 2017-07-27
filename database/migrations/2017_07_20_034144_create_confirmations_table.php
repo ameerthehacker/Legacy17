@@ -17,7 +17,7 @@ class CreateConfirmationsTable extends Migration
             $table->increments('id');
             $table->string('message')->nullable();
             $table->string('file_name')->nullable();                        
-            $table->boolean('acknowledged')->default(false);
+            $table->enum('status', ['ack', 'nack'])->nullable();
             $table->integer('user_id');
             $table->timestamps();
         });

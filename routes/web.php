@@ -59,10 +59,12 @@ Route::group(['namespace' => 'Auth', 'prefix' => 'auth'], function(){
 });
 
 // Routes for administrators
-Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','auth.admin']], function(){
-    Route::get('/', ['as' => 'root', 'uses' => function(){
-        echo 'Root';
-    }]);
+Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','auth.admin:']], function(){
+    Route::group(['middleware' => 'auth.admin:root'], function(){
+        Route::get('requests', ['as' => 'requests', 'uses' => 'AdminPagesController@requests']);
+        Route::post('requests', 'AdminPagesController@replyRequest');        
+    });
+    Route::get('/', ['as' => 'root', 'uses' => 'AdminPagesController@root']);
     //CRUD routes for events
     Route::resource('events', 'EventsController', ['except' => 'show']);
 });

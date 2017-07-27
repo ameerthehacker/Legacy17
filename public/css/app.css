@@ -1,8 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);body {
-  background: #ecf0f1;
-}
-
-.rounded-box {
+@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);.rounded-box {
   border-radius: 5px;
 }
 

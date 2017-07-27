@@ -112,7 +112,7 @@
                             </table>
                             @if(Auth::user()->hasConfirmedTeams())
                                 <form action="https://test.payu.in/_payment" method="post">
-                                    <input type="hidden" name="key" value="{{ Auth::user()->getKey() }}">
+                                    <input type="hidden" name="key" value="{{ Auth::user()->getPaymentKey() }}">
                                     <input type="hidden" name="txnid" value="{{ Auth::user()->getTransactionId() }}">    
                                     <input type="hidden" name="amount" value="{{ Auth::user()->getTotalAmount() }}">   
                                     <input type="hidden" name="productinfo" value="{{ Auth::user()->getProductInfo() }}">

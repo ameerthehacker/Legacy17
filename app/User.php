@@ -18,6 +18,9 @@ class User extends Authenticatable
     function payment(){
         return $this->hasOne('App\Payment');
     }
+    function roles(){
+        return $this->belongsToMany('App\Role');
+    }
     function hasPaid(){
         if($this->payment == null){
             return false;
@@ -151,7 +154,7 @@ class User extends Authenticatable
     }
     function isAcknowledged(){
         if($this->hasConfirmed()){
-            if($this->confirmation->acknowledged){
+            if($this->confirmation->status == 'ack'){
                 return true;
             }
         }
@@ -204,7 +207,7 @@ class User extends Authenticatable
         $productInfo = "Legacy17 Event";
         return $productInfo;
     }
-    function getKey(){
+    function getPaymentKey(){
         $key = "gtKFFx";
         return $key;        
     }
@@ -213,7 +216,7 @@ class User extends Authenticatable
         return $salt;
     }
     function getHash(){
-        $key = $this->getKey();
+        $key = $this->getPaymentKey();
         $salt = $this->getSalt();
         $txnid = $this->getTransactionId();
         $amount = $this->getTotalAmount();
@@ -223,5 +226,17 @@ class User extends Authenticatable
         $hashFormat = "$key|$txnid|$amount|$productInfo|$firstname|$email|||||||||||$salt";
         $hash = strtolower(hash('sha512', $hashFormat));
         return $hash;
+    }
+    // Check if the user has the given role
+    function hasRole($role_name){
+        // Check if the user is root if so he has all the roles
+        $root_role_name = Role::first()->role_name;
+        if($this->roles()->where('role_name', $root_role_name)->count() || $this->roles()->where('role_name', $role_name)->count()){
+            return true;
+        }
+        return false;
+    }
+    function LGId(){
+        return 'LG' . $this->id;
     }
 }
