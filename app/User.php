@@ -154,7 +154,7 @@ class User extends Authenticatable
     }
     function isAcknowledged(){
         if($this->hasConfirmed()){
-            if($this->confirmation->status == 'ack'){
+            if($this->confirmation->status){
                 return true;
             }
         }

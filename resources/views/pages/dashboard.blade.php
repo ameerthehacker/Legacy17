@@ -52,83 +52,92 @@
                 @endif    
                 <li class="collection-item"><strong>Step 3: Payment Process</strong></li> 
                 @if(Auth::user()->isAcknowledged())
-                    <li class="collection-item">                    
-                        @if(Auth::user()->hasTeams())
-                            <i class="fa {{ Auth::user()->hasConfirmedTeams()?'fa-check':'fa-times' }}"></i> All your team members have confirmed their registration
-                        @endif
-                        @if(!Auth::user()->hasPaidForTeams() || !Auth::user()->hasPaid())
-                            <p><strong>You will be paying for the following!</strong></p>
-                            <table class="bordered highlight responsive-table">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Registration Status</th>
-                                        <th>Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @if(!Auth::user()->hasPaid())
-                                        <tr>
-                                            <td>{{ Auth::user()->full_name }}</td>
-                                            <td>{{ Auth::user()->email }}</td>
-                                            <td>
-                                                @if(Auth::user()->hasConfirmed())
-                                                    <span class="green-text">Confirmed</span>
-                                                @else
-                                                    <span class="red-text">Not Confirmed</span>
-                                                @endif
-                                            </td>
-                                            <td><i class="fa fa-inr"></i> 200</td>
-                                        </tr>
-                                    @endif
-                                    {{-- Get all teams   --}}
-                                    @foreach(Auth::user()->teams as $team)
-                                        {{-- Get all team members  --}}
-                                        @foreach($team->teamMembers as $teamMember)
-                                            @if(!$teamMember->user->hasPaid())
-                                                <tr>
-                                                    <td>{{ $teamMember->user->full_name }}</td>
-                                                    <td>{{ $teamMember->user->email }}</td>
-                                                    <td>
-                                                        @if($teamMember->user->hasConfirmed())
-                                                            <span class="green-text">Confirmed</span>
-                                                        @else
-                                                            <span class="red-text">Not Confirmed</span>
-                                                        @endif
-                                                    </td>
-                                                    <td><i class="fa fa-inr"></i> 200</td>
-                                                </tr>
-                                            @endif
-                                        @endforeach
-                                    @endforeach
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th colspan="3">Total Amount (Includes 4% transaction fee)</th>
-                                        <th><i class="fa fa-inr"></i> {{ Auth::user()->getTotalAmount() }}</th>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                            @if(Auth::user()->hasConfirmedTeams())
-                                <form action="https://test.payu.in/_payment" method="post">
-                                    <input type="hidden" name="key" value="{{ Auth::user()->getPaymentKey() }}">
-                                    <input type="hidden" name="txnid" value="{{ Auth::user()->getTransactionId() }}">    
-                                    <input type="hidden" name="amount" value="{{ Auth::user()->getTotalAmount() }}">   
-                                    <input type="hidden" name="productinfo" value="{{ Auth::user()->getProductInfo() }}">
-                                    <input type="hidden" name="firstname" value="{{ Auth::user()->full_name }}">
-                                    <input type="hidden" name="email" value="{{ Auth::user()->email }}">
-                                    <input type="hidden" name="phone" value="{{ Auth::user()->mobile }}">            <input type="hidden" name="surl" value="{{ route('pages.payment.success') }}">   <input type="hidden" name="furl" value="{{ route('pages.payment.failure') }}">
-                                    <input type="hidden" name="hash" value="{{ Auth::user()->getHash() }}">
-                                    <button type="submit" class="btn waves-effect waves-light green"><i class="fa fa-credit-card"></i> Pay by PayUmoney</button>
-                                </form>
-                            @else
-                                <button type="submit" class="btn waves-effect waves-light green disabled"><i class="fa fa-credit-card"></i> Pay by PayUmoney</button>
+                    @if(Auth::user()->confirmation->status == 'ack')
+                        <li class="collection-item">                    
+                            @if(Auth::user()->hasTeams())
+                                <i class="fa {{ Auth::user()->hasConfirmedTeams()?'fa-check':'fa-times' }}"></i> All your team members have confirmed their registration
                             @endif
-                        @else
-                            <p><i class="fa fa-check"></i> Hurray! your payment is confirmed, we are excited to see you at Legacy17</p>
-                        @endif
-                    </li>
+                            @if(!Auth::user()->hasPaidForTeams() || !Auth::user()->hasPaid())
+                                <p><strong>You will be paying for the following!</strong></p>
+                                <table class="bordered highlight responsive-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Registration Status</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if(!Auth::user()->hasPaid())
+                                            <tr>
+                                                <td>{{ Auth::user()->full_name }}</td>
+                                                <td>{{ Auth::user()->email }}</td>
+                                                <td>
+                                                    @if(Auth::user()->hasConfirmed())
+                                                        <span class="green-text">Confirmed</span>
+                                                    @else
+                                                        <span class="red-text">Not Confirmed</span>
+                                                    @endif
+                                                </td>
+                                                <td><i class="fa fa-inr"></i> 200</td>
+                                            </tr>
+                                        @endif
+                                        {{-- Get all teams   --}}
+                                        @foreach(Auth::user()->teams as $team)
+                                            {{-- Get all team members  --}}
+                                            @foreach($team->teamMembers as $teamMember)
+                                                @if(!$teamMember->user->hasPaid())
+                                                    <tr>
+                                                        <td>{{ $teamMember->user->full_name }}</td>
+                                                        <td>{{ $teamMember->user->email }}</td>
+                                                        <td>
+                                                            @if($teamMember->user->hasConfirmed())
+                                                                <span class="green-text">Confirmed</span>
+                                                            @else
+                                                                <span class="red-text">Not Confirmed</span>
+                                                            @endif
+                                                        </td>
+                                                        <td><i class="fa fa-inr"></i> 200</td>
+                                                    </tr>
+                                                @endif
+                                            @endforeach
+                                        @endforeach
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="3">Total Amount (Includes 4% transaction fee)</th>
+                                            <th><i class="fa fa-inr"></i> {{ Auth::user()->getTotalAmount() }}</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                                @if(Auth::user()->hasConfirmedTeams())
+                                    <form action="https://test.payu.in/_payment" method="post">
+                                        <input type="hidden" name="key" value="{{ Auth::user()->getPaymentKey() }}">
+                                        <input type="hidden" name="txnid" value="{{ Auth::user()->getTransactionId() }}">    
+                                        <input type="hidden" name="amount" value="{{ Auth::user()->getTotalAmount() }}">   
+                                        <input type="hidden" name="productinfo" value="{{ Auth::user()->getProductInfo() }}">
+                                        <input type="hidden" name="firstname" value="{{ Auth::user()->full_name }}">
+                                        <input type="hidden" name="email" value="{{ Auth::user()->email }}">
+                                        <input type="hidden" name="phone" value="{{ Auth::user()->mobile }}">            <input type="hidden" name="surl" value="{{ route('pages.payment.success') }}">   <input type="hidden" name="furl" value="{{ route('pages.payment.failure') }}">
+                                        <input type="hidden" name="hash" value="{{ Auth::user()->getHash() }}">
+                                        <button type="submit" class="btn waves-effect waves-light green"><i class="fa fa-credit-card"></i> Pay by PayUmoney</button>
+                                    </form>
+                                @else
+                                    <button type="submit" class="btn waves-effect waves-light green disabled"><i class="fa fa-credit-card"></i> Pay by PayUmoney</button>
+                                @endif
+                            @else
+                                <p><i class="fa fa-check"></i> Hurray! your payment is confirmed, we are excited to see you at Legacy17</p>
+                            @endif
+                        </li>
+                    @else
+                        <li class="collection-item">
+                            <p class="red-text">Sorry your request has been rejected!</p>
+                            @if(Auth::user()->confirmation->message)
+                                <p class="red-text">{{ Auth::user()->confirmation->message }}</p>
+                            @endif
+                        </li>
+                    @endif
                 @endif
             @else
                 <li class="collection-item">
