@@ -9,7 +9,12 @@
             </ul>
             <ul class="right">            
                 @if(Auth::Check())
-                    <li>{{ link_to_route('auth.logout', 'Logout') }}</li>                                  
+                    <li>
+                        <a href="#" class="dropdown-button" data-activates="user-dropdown">Hi, {{ Auth::user()->full_name }} <i class="material-icons right">arrow_drop_down</i></a>
+                        <ul id="user-dropdown" class="dropdown-content">
+                            <li>{{ link_to_route('auth.logout', 'Logout') }}</li>
+                        </ul>
+                    </li>                                
                 @endif
             </ul>
         </div>
