@@ -15,7 +15,10 @@ class AdminPagesController extends Controller
         return view('pages.admin.root');
     }
     function requests(\Illuminate\Http\Request $request){
-        $requests = Confirmation::all()->where('status', null)->where('file_name', '<>',  null)->filter(function($confirmation){
+        $search = Input::get('search', '');
+        $search = $search . '%';
+        $user_ids = User::search($search)->pluck('id')->toArray();
+        $requests = Confirmation::all()->where('status', null)->where('file_name', '<>',  null)->whereIn('user_id', $user_ids)->filter(function($confirmation){
             return $confirmation->user->hasTeams();
         });
         $page = Input::get('page', 1);
@@ -45,7 +48,10 @@ class AdminPagesController extends Controller
         return redirect()->back();
     }
     function accomodationRequests(){
-        $requests = Accomodation::where('status', null)->paginate(10);
+        $search = Input::get('search', '');
+        $search = $search . '%';
+        $user_ids = User::search($search)->pluck('id')->toArray();
+        $requests = Accomodation::where('status', null)->whereIn('user_id', $user_ids)->paginate(10);
         return view('pages.admin.accomodations')->with('requests', $requests);
     }
     function replyAccomodationRequest(Request $request){
