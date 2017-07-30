@@ -18,6 +18,9 @@ use PDF;
 
 class PagesController extends Controller
 {
+    function root(){
+        return view('pages.root');
+    }
     function dashboard(){
         $events = Auth::user()->events;
         $teamEvents = Auth::user()->teamEvents();        

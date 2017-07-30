@@ -14,7 +14,7 @@
     </head>
     <body>
         @include('layouts.partials.default_nav')
-        @include('layouts.partials.flash')        
+        @include('layouts.partials.flash')    
         <div class="container">
             @yield('content')
         </div>
