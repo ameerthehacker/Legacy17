@@ -4,7 +4,7 @@
             <a href="/" class="brand-logo"><i class="fa fa-rocket"></i> Legacy17 Admin</a>
             <ul class="left">
                 <li>
-                    <a href="#" id="btn-collapse-sidebar" data-activates="slide-out"><i class="material-icons">menu</i></a>
+                    <a href="#" class="btn-collapse-sidebar" data-activates="slide-out"><i class="material-icons">menu</i></a>
                 </li>
             </ul>
             <ul class="right">            
@@ -17,36 +17,36 @@
                     </li>                                
                 @endif
             </ul>
+            <ul class="side-nav" id="slide-out">
+                @if(Auth::user()->hasRole('root'))
+                    <li class="no-padding">
+                        <ul class="collapsible collapsible-accordion">
+                            <li>
+                                <a class="collapsible-header">Confirmation</a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li>{{ link_to_route('admin::requests', 'Requests') }}</li>                        
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                @endif
+                @if(Auth::user()->hasRole('hospitality'))
+                    <li class="no-padding">
+                        <ul class="collapsible collapsible-accordion">
+                            <li>
+                                <a class="collapsible-header">Accomodations</a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li>{{ link_to_route('admin::accomodations', 'Requests') }}</li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                @endif
+            </ul>
         </div>
     </nav>
 </div>
-<ul class="side-nav" id="slide-out">
-    @if(Auth::user()->hasRole('root'))
-        <li class="no-padding">
-            <ul class="collapsible collapsible-accordion">
-                <li>
-                    <a class="collapsible-header">Confirmation</a>
-                    <div class="collapsible-body">
-                        <ul>
-                            <li>{{ link_to_route('admin::requests', 'Requests') }}</li>                        
-                        </ul>
-                    </div>
-                </li>
-            </ul>
-        </li>
-    @endif
-    @if(Auth::user()->hasRole('hospitality'))
-        <li class="no-padding">
-            <ul class="collapsible collapsible-accordion">
-                <li>
-                    <a class="collapsible-header">Accomodations</a>
-                    <div class="collapsible-body">
-                        <ul>
-                            <li>{{ link_to_route('admin::accomodations', 'Requests') }}</li>
-                        </ul>
-                    </div>
-                </li>
-            </ul>
-        </li>
-    @endif
-</ul>

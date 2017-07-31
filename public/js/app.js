@@ -79,7 +79,7 @@ $(function () {
     $(".modal").modal();
     $('select').material_select();
     $('.collapsible').collapsible();
-    $('#btn-collapse-sidebar').sideNav();
+    $('.btn-collapse-sidebar').sideNav();
 });
 
 /***/ }),
