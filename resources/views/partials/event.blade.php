@@ -1,5 +1,5 @@
 <div class="card hoverable">
-     <div class="progress hide" id="event-{{ $event->id }}-progress">
+    <div class="progress hide" id="event-{{ $event->id }}-progress">
         <div class="indeterminate"></div>
     </div>
     <div class="card-image waves-effect waves-light waves-block">
@@ -11,6 +11,7 @@
             <i class="material-icons right activator">more_vert</i>            
         </span>
         <div class="event-details">
+            <p> {{ $event->description }}</p>
             <p><i class="fa fa-calendar"></i> {{ $event->getDate() }}</p>
             <p><i class="fa fa-clock-o"></i> {{ $event->getStartTime() }} to {{ $event->getEndTime() }}</p>
             <p><i class="fa fa-child"> 2 Registration / 5 Slots</i></p>

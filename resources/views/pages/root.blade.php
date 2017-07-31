@@ -14,10 +14,10 @@
                 <h1>Legacy 17</h1>
                 <h3>MEPCO Schlenk Engineering College</h3>
                 <p class="flow-text">
-                    The 2<sup>nd</sup> biggest cultural fest is here
+                    One of the biggest cultural fests is here
                 </p>
                 {{ link_to_route('pages.about', 'About US', null, ['class' => 'waves-effect waves-light btn blue']) }} 
-                <p class="flow-text"><i class="fa fa-calendar"></i> 7 September 2017</p>                
+                <p class="flow-text"><i class="fa fa-calendar"></i> 8 September 2017</p>                
             </div>
         </li>
         <li>
@@ -33,7 +33,7 @@
                     Rock the stage with your music!
                 </p>
                 {{ link_to_route('auth.login', 'Participate', null, ['class' => 'waves-effect waves-light btn blue']) }} 
-                <p class="flow-text"><i class="fa fa-calendar"></i> 7 September 2017</p>                
+                <p class="flow-text"><i class="fa fa-calendar"></i> 8 September 2017</p>                
             </div>
         </li>
         <li>
@@ -49,7 +49,7 @@
                     Set the stage on fire with your dance!
                 </p>
                 {{ link_to_route('auth.login', 'Participate', null, ['class' => 'waves-effect waves-light btn blue']) }} 
-                <p class="flow-text"><i class="fa fa-calendar"></i> 7 September 2017</p>                
+                <p class="flow-text"><i class="fa fa-calendar"></i> 8 September 2017</p>                
             </div>     
         </li>
         <li>
@@ -63,7 +63,7 @@
                 <h3>Almost 30 events to be organized</h3>
                 <p class="flow-text">A record of 1000 participants from 54 colleges</p>
                 {{ link_to_route('auth.login', 'Participate', null, ['class' => 'waves-effect waves-light btn blue']) }} 
-                <p class="flow-text"><i class="fa fa-calendar"></i> 7 September 2017</p>                
+                <p class="flow-text"><i class="fa fa-calendar"></i> 8 September 2017</p>                
             </div>     
         </li>
     </ul>    
