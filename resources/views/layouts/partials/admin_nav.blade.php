@@ -22,7 +22,8 @@
                     <li class="no-padding">
                         <ul class="collapsible collapsible-accordion">
                             <li>
-                                <a class="collapsible-header">Confirmation</a>
+                                <a class="collapsible-header">Confirmation <i class="material-icons right">arrow_drop_down
+                                </i></a>
                                 <div class="collapsible-body">
                                     <ul>
                                         <li>{{ link_to_route('admin::requests', 'Requests') }}</li>                        
@@ -36,7 +37,8 @@
                     <li class="no-padding">
                         <ul class="collapsible collapsible-accordion">
                             <li>
-                                <a class="collapsible-header">Accomodations</a>
+                                <a class="collapsible-header">Accomodations <i class="material-icons right">arrow_drop_down
+                                </i></a>
                                 <div class="collapsible-body">
                                     <ul>
                                         <li>{{ link_to_route('admin::accomodations', 'Requests') }}</li>

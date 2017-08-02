@@ -63,6 +63,7 @@ Route::group(['namespace' => 'Auth', 'prefix' => 'auth'], function(){
     // Registration routes
     Route::get('register', ['as' => 'auth.register', 'uses' => 'RegisterController@showRegistrationForm']);
     Route::post('register', 'RegisterController@register');
+    Route::get('activate', ['as' => 'auth.activate', 'uses' => 'RegisterController@activate']);
 });
 
 // Routes for administrators

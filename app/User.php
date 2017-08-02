@@ -7,7 +7,7 @@ use Auth;
 
 class User extends Authenticatable
 {
-    protected $fillable = ['full_name', 'email', 'password', 'gender', 'college_id', 'mobile'];
+    protected $fillable = ['full_name', 'email', 'password', 'gender', 'college_id', 'mobile', 'activated', 'activation_code'];
     function events(){
         return $this->morphToMany('\App\Event', 'registration');
     }

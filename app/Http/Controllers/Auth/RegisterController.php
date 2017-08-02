@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Request;
+use Illuminate\Support\Facades\Input;
 
 class RegisterController extends Controller
 {
@@ -28,7 +29,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/events';
+    protected $redirectTo = '/auth/register';
 
     /**
      * Create a new controller instance.
@@ -66,6 +67,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $activation_code = substr(hash('SHA512', rand(100000, 1000000)), 15);
         User::create([
             'full_name' => $data['full_name'],
             'email' => $data['email'],
@@ -73,7 +75,24 @@ class RegisterController extends Controller
             'gender' => $data['gender'],
             'college_id' => $data['college_id'],
             'mobile' => $data['mobile_number'],
-            'type' => 'student'
+            'type' => 'student',
+            'activated' => false,
+            'activation_code' => $activation_code
         ]);
+    }
+    public function activate(){
+        $email = Input::get('email', false);
+        $activation_code = Input::get('activation_code', false);
+        if($email && $activation_code){
+            $user = User::where('email', $email)->first();
+            if($user){
+                if($user->activation_code == $activation_code){
+                    $user->activated = true;
+                    $user->save();
+                    return view('auth.activate')->with('info', "Your account has been confirmed");   
+                }
+            }
+        }
+        return redirect()->route('pages.root');
     }
 }

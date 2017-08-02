@@ -23,6 +23,8 @@ class CreateUsersTable extends Migration
             $table->string('mobile');
             $table->enum('type', ['student', 'admin']);
             $table->rememberToken();
+            $table->boolean('activated')->default(false);
+            $table->string('activation_code')->nullable();            
             $table->timestamps();
         });
     }

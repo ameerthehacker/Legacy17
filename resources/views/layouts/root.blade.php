@@ -18,17 +18,6 @@
                 bottom: 150px;
                 height: 0px;
             }
-            @media only screen and (max-width: 640px){
-                h1{
-                    font-size: 30px;
-                }
-                h3,h4{
-                    font-size: 15px;
-                }
-                .small-font-awesome{
-                    font-size: 30px;
-                }
-            }
         </style>
     </head>
     <body> 

@@ -15,7 +15,7 @@ class CreateRegistrationsTable extends Migration
     {
         Schema::create('registrations', function(Blueprint $table){
             $table->integer('event_id');                    
-            $table->morph('registration');
+            $table->morphs('registration');
         });
     }
 

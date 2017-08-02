@@ -13,9 +13,13 @@
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">            
     </head>
     <body>
-        @include('layouts.partials.default_nav')
-        @include('layouts.partials.flash')    
+        @include('layouts.partials.default_nav')    
         <div class="container">
+            <div class="row">
+                <div class="col s12">
+                    @include('layouts.partials.flash')
+                </div>
+            </div>
             @yield('content')
         </div>
     </body>

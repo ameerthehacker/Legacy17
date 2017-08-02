@@ -47,14 +47,20 @@ class PagesController extends Controller
     }
     function requestHospitality(){
         $user = Auth::user();
-        if($user->hasRequestedAccomodation()){
-            Session::flash('success', 'You have already requested accomodation');
+        if($user->hasConfirmed()){
+            if($user->hasRequestedAccomodation()){
+                Session::flash('success', 'You have already requested accomodation');
+            }
+            else{
+                $accomodation = new Accomodation();
+                $user->accomodation()->save($accomodation);
+                Session::flash('success', 'You request for accomodation has been sent!');            
+            }
         }
         else{
-            $accomodation = new Accomodation();
-            $user->accomodation()->save($accomodation);
-            Session::flash('success', 'You request for accomodation has been sent!');            
+            Session::flash('success', 'You need to confirm your registrations to request accomodation');
         }
+       
         return redirect()->route('pages.hospitality');
     }
     function register($id){

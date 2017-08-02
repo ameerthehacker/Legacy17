@@ -13,10 +13,17 @@
                 @if(Auth::Check())
                     <li>{{ link_to_route('pages.dashboard', 'Dashboard') }}</li>  
                     <li>{{ link_to_route('pages.hospitality', 'Hospitality') }}</li>
-                    <li>
-                        <a href="#" class="dropdown-button" data-activates="user-dropdown">Hi, {{ Auth::user()->full_name }} <i class="material-icons right">arrow_drop_down</i></a>
-                        <ul id="user-dropdown" class="dropdown-content">
-                            <li>{{ link_to_route('auth.logout', 'Logout') }}</li>
+                    <li class="no-padding">
+                        <ul class="collapsible collapsible-accordion">
+                            <li>
+                                <a class="collapsible-header">{{ Auth::user()->full_name }} <i class="material-icons right">arrow_drop_down
+                                </i></a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li>{{ link_to_route('auth.logout', 'Logout') }}</li>
+                                    </ul>
+                                </div>
+                            </li>
                         </ul>
                     </li>
                 @else

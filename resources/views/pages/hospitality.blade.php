@@ -8,7 +8,10 @@
     </li>
     <li class="collection-item"><strong>Step 1: Request For Accomadation</strong></li>
     <li class="collection-item">
-        {{ link_to_route('pages.hospitality.request', 'Send Request', null, ['class' => "btn waves-effect waves-light green " . (Auth::user()->hasRequestedAccomodation()?'disabled':'')]) }}
+        <p>
+            <i class="fa {{ Auth::user()->hasConfirmed()?'fa-check':'fa-times' }}"></i> Confirm your registration
+        </p>
+        {{ link_to_route('pages.hospitality.request', 'Send Request', null, ['class' => "btn waves-effect waves-light green " . (Auth::user()->hasRequestedAccomodation()||!Auth::user()->hasConfirmed()?'disabled':'')]) }}
         @if(Auth::user()->hasRequestedAccomodation())
             @if(Auth::user()->hasAccomodationAcknowledged())
                 @if(Auth::user()->accomodation->status == 'ack')
