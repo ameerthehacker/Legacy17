@@ -119,7 +119,8 @@ class PagesController extends Controller
         return redirect()->route('pages.dashboard');
     }
     function downloadTicket(){
-        $pdf = PDF::loadView('pages.ticket');
+        $user = Auth::user();
+        $pdf = PDF::loadView('pages.ticket', [ 'user' => $user]);
         return $pdf->download('ticket.pdf');
     }
     function uploadTicketImage(UploadTicketRequest $request){
@@ -163,7 +164,14 @@ class PagesController extends Controller
         return view('pages.payment.failure')->with('info', 'Sorry! your transaction failed')->with('errorInfo', $errorInfo);      
     }
     function paymentReciept(){
-        $pdf = PDF::loadView('pages.payment.reciept');
-        return $pdf->download('payment-details.pdf');
+        if(Auth::user()->hasPaid()){
+            $user = Auth::user();
+            $pdf = PDF::loadView('pages.payment.reciept', ['user' => $user]);
+            return $pdf->download('payment-details.pdf');
+        }
+        else{
+            Session::flash('success', 'You need to complete the payment first');
+            return  redirect()->route('pages.dashboard');
+        }
     }
 }

@@ -24,13 +24,13 @@ class UploadTicketRequest extends FormRequest
     public function messages(){
         return [
             'ticket.required' => 'Choose the file to be uploaded',
-            'ticket.mimetypes:image/jpeg,images/png' => 'The ticket must be either a scanned jpeg/png or pdf format'
+            'ticket.mimetypes' => 'The ticket must be a scanned pdf of the attested ticket'
         ];
     }
     public function rules()
     {
         return [
-            'ticket' => 'required|mimetypes:image/jpeg,images/png'
+            'ticket' => 'required|mimetypes:application/pdf'
         ];
     }
 }

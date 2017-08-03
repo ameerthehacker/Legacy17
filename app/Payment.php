@@ -13,7 +13,7 @@ class Payment extends Model
     private static $transactionFee = 0.04;
     private static $accomodationAmount = 100;    
     function user(){
-        return $this->belonsTo('App\User');
+        return $this->belongsTo('App\User');
     }
     function paidBy(){
         return $this->belongsTo('App\User', 'paid_by');

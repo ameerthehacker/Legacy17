@@ -202,6 +202,17 @@ class User extends Authenticatable
         $totalAmount += $totalAmount*$transactionFee;
         return $totalAmount;
     }
+    function getTotalAmountPaid(){
+        $transactionFee = Payment::getTransactionFee();
+        $totalAmount = 0;
+        $amount = Payment::getEventAmount();
+        foreach($this->payments as $payment){
+            $totalAmount += $amount;
+        }
+        // Very Very important Add the transaction fee
+        $totalAmount += $totalAmount*$transactionFee;
+        return $totalAmount;
+    }
     function doPayment($txnid){
         // Amount for the actual user
         if(!$this->hasPaid()){

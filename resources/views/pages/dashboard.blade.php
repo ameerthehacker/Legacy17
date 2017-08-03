@@ -129,6 +129,9 @@
                                 @endif
                             @else
                                 <p class="green-text"><i class="fa fa-check"></i> Hurray! your payment is confirmed, we are excited to see you at Legacy17</p>
+                                <p>
+                                    {{ link_to_route('pages.payment.reciept', 'Download Payment Reciept', null, ['class' => 'waves-effect waves-light btn green']) }}
+                                </p>
                             @endif
                         </li>
                     @else
