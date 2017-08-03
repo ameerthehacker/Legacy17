@@ -9,6 +9,6 @@
 @endif
 @if(Session('success'))
     <script>
-        Materialize.toast("{{ Session('success') }}", 3000);
+        Materialize.toast("{{ Session('success') }}", 8000);
     </script>
 @endif

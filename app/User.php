@@ -20,6 +20,9 @@ class User extends Authenticatable
     function roles(){
         return $this->belongsToMany('App\Role');
     }
+    function rejections(){
+        return $this->hasMany('App\Rejection');
+    }
     function accomodation(){
         return $this->hasOne('App\Accomodation');
     }
@@ -90,7 +93,12 @@ class User extends Authenticatable
             }
         }
         else{
-             return $this->events()->find($event_id);      
+             if($this->events()->find($event_id)){
+                 return true;
+             }
+             else{
+                 return false;
+             }
         }
         return false;
     }
@@ -174,6 +182,21 @@ class User extends Authenticatable
         if($this->hasConfirmed()){
             if($this->confirmation->status){
                 return true;
+            }
+        }
+        return false;
+    }
+    function isConfirmed(){
+        if($this->needApproval()){
+            if($this->hasConfirmed() && $this->confirmation->status == 'ack'){
+                return true;                
+            }
+        }
+        else{
+            foreach($this->teamMembers as $teamMember){
+                if($teamMember->team->user->isConfirmed()){
+                    return true;
+                }
             }
         }
         return false;

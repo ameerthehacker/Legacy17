@@ -11,10 +11,22 @@ class College extends Model
     }
     function noOfParticipantsForEvent($event_id){
         $count = 0;
-        foreach($this->users() as $user){
-            if($user->hasRegisteredEvent($event_id)){
-                if($user->hasPaid()){
-                    $count++;
+        $event = Event::find($event_id);
+        if($event->isGroupEvent()){
+            foreach($this->users as $user){
+                if($user->hasRegisteredEvent($event_id)){
+                    if($user->isTeamLeader($event_id) && $user->hasPaidForTeams()){
+                        $count++;
+                    }
+                }
+            }
+        }
+        else{
+            foreach($this->users as $user){
+                if($user->hasRegisteredEvent($event_id)){
+                    if($user->hasPaid()){
+                        $count++;
+                    }
                 }
             }
         }

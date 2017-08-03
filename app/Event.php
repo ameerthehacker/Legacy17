@@ -19,6 +19,9 @@ class Event extends Model
     function teams(){
         return $this->morphedByMany('App\Team', 'registration');
     }
+    function rejections(){
+        return $this->hasMany('App\Rejection');
+    }
     function getRulesList(){
         $rules = explode(',', $this->rules);
         $rules_list = [];
@@ -54,14 +57,14 @@ class Event extends Model
         $count = 0;
         if($this->isGroupEvent()){
             foreach($this->teams as $team){
-                if($team->isPaid()){
+                if($team->user->isConfirmed()){
                     $count++;
                 }
             }
         }
         else{
             foreach($this->users as $user){
-                if($user->hasPaid()){
+                if($user->isConfirmed()){
                     $count++;
                 }
             }

@@ -6,6 +6,8 @@ use Request;
 use App\Confirmation;
 use App\User;
 use App\Accomodation;
+use App\Rejection;
+use App\Team;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -19,7 +21,7 @@ class AdminPagesController extends Controller
         $search = $search . '%';
         $user_ids = User::search($search)->pluck('id')->toArray();
         $requests = Confirmation::all()->where('status', null)->where('file_name', '<>',  null)->whereIn('user_id', $user_ids)->filter(function($confirmation){
-            return $confirmation->user->hasTeams();
+            return $confirmation->user->needApproval();
         });
         $page = Input::get('page', 1);
         $perPage = 10;
@@ -47,6 +49,7 @@ class AdminPagesController extends Controller
         $user->confirmation->save();
         return redirect()->back();
     }
+    
     function accomodationRequests(){
         $search = Input::get('search', '');
         $search = $search . '%';
@@ -68,4 +71,5 @@ class AdminPagesController extends Controller
         $user->accomodation->save();
         return redirect()->back();
     }
+    
 }

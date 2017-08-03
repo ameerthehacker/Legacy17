@@ -14,6 +14,20 @@
         </div>
     @endforeach
 </div>
+@if($user->rejections()->count())
+    <div class="row">
+        <div class="col s12">
+            <ul class="collection with-header z-depth-4">
+                <li class="collection-header">
+                    <strong>Your registration for following events is rejected as maximum participants have already been confirmed</strong>
+                </li>
+                @foreach($user->rejections as $rejection)
+                    <li class="collection-item">{{ $rejection->event->title }}</li>
+                @endforeach
+            </ul>
+        </div>
+    </div>
+@endif
 <div class="row">
     <div class="col s12">
         <ul class="collection z-depth-4">
@@ -22,42 +36,49 @@
                 <p>
                     <ul>
                         <li>
-                            <i class="fa {{ Auth::user()->isParticipating()?'fa-check':'fa-times' }}"></i> Participate in atleast one single or team event
+                            <i class="fa {{ $user->isParticipating()?'fa-check':'fa-times' }}"></i> Participate in atleast one single or team event
                         </li>
                     </ul>
                 </p>
-                @if(Auth::user()->hasConfirmed())
+                @if($user->hasConfirmed())
                     {{ link_to_route('pages.ticket.download', 'Download Ticket', null, ['class' => 'btn waves-effect waves-light green']) }}
                 @else
-                    <a class="btn waves-effect waves-light green modal-trigger {{ Auth::user()->canConfirm()?'':'disabled' }}" href="#modal-confirm">Confirm and generate ticket</a>
+                    <a class="btn waves-effect waves-light green modal-trigger {{ $user->canConfirm()?'':'disabled' }}" href="#modal-confirm">Confirm and generate ticket</a>
                 @endif
             </li>
-            @if(Auth::user()->needApproval())
+            @if($user->needApproval())
                 <li class="collection-item"><strong>Step 2: Upload ticket for acknowledgement</strong></li>        
-                @if(Auth::user()->hasConfirmed())
+                @if($user->hasConfirmed())
                     <li class="collection-item">
                         @include('partials.errors')
                         {!! Form::open(['url' => route('pages.ticket.upload'), 'files' => true, 'id' => 'form-upload-ticket']) !!}
                             {!! Form::file('ticket', ['class' => 'hide', 'id' => 'file-ticket']) !!}
                         {!! Form::close() !!}
                         <button class="btn waves-effect waves-light green" id="btn-upload-ticket">Upload Ticket</button>
-                        @if(Auth::user()->hasUploadedTicket())                     
-                            @if(!Auth::user()->isAcknowledged())
+                        @if($user->hasUploadedTicket())                     
+                            @unless($user->isAcknowledged())
                                 <p>Sit back and relax we will be verifying your ticket within a day, <strong>dont forget to check back!</strong></p>
                             @else
-                                <p><i class="fa fa-check"></i> Hurray! your ticket has been verified</p>
+                                @if($user->isConfirmed())
+                                    <p><i class="fa fa-check"></i> Hurray! your ticket has been verified</p>
+                                @else
+                                    <p class="red-text">Sorry your request has been rejected!</p>
+                                    @if($user->confirmation->message)
+                                        <p class="red-text">{{ $user->confirmation->message }}</p>
+                                    @endif
+                                @endif
                             @endif
                         @endif
                     </li>
                 @endif    
                 <li class="collection-item"><strong>Step 3: Payment Process</strong></li> 
-                @if(Auth::user()->isAcknowledged())
-                    @if(Auth::user()->confirmation->status == 'ack')
+                @if($user->isAcknowledged())
+                    @if($user->confirmation->status == 'ack')
                         <li class="collection-item">                    
-                            @if(Auth::user()->hasTeams())
-                                <i class="fa {{ Auth::user()->hasConfirmedTeams()?'fa-check':'fa-times' }}"></i> All your team members have confirmed their registration
+                            @if($user->hasTeams())
+                                <i class="fa {{ $user->hasConfirmedTeams()?'fa-check':'fa-times' }}"></i> All your team members have confirmed their registration
                             @endif
-                            @if(!Auth::user()->hasPaidForTeams() || !Auth::user()->hasPaid())
+                            @if(!$user->hasPaidForTeams() || !$user->hasPaid())
                                 <p><strong>You will be paying for the following!</strong></p>
                                 <table class="bordered highlight responsive-table">
                                     <thead>
@@ -69,12 +90,12 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if(!Auth::user()->hasPaid())
+                                        @if(!$user->hasPaid())
                                             <tr>
-                                                <td>{{ Auth::user()->full_name }}</td>
-                                                <td>{{ Auth::user()->email }}</td>
+                                                <td>{{ $user->full_name }}</td>
+                                                <td>{{ $user->email }}</td>
                                                 <td>
-                                                    @if(Auth::user()->hasConfirmed())
+                                                    @if($user->hasConfirmed())
                                                         <span class="green-text">Confirmed</span>
                                                     @else
                                                         <span class="red-text">Not Confirmed</span>
@@ -84,7 +105,7 @@
                                             </tr>
                                         @endif
                                         {{-- Get all teams   --}}
-                                        @foreach(Auth::user()->teams as $team)
+                                        @foreach($user->teams as $team)
                                             {{-- Get all team members  --}}
                                             @foreach($team->teamMembers as $teamMember)
                                                 @if(!$teamMember->user->hasPaid())
@@ -107,21 +128,21 @@
                                     <tfoot>
                                         <tr>
                                             <th colspan="3">Total Amount (Includes 4% transaction fee)</th>
-                                            <th><i class="fa fa-inr"></i> {{ Auth::user()->getTotalAmount() }}</th>
+                                            <th><i class="fa fa-inr"></i> {{ $user->getTotalAmount() }}</th>
                                         </tr>
                                     </tfoot>
                                 </table>
-                                @if(Auth::user()->hasConfirmedTeams())
+                                @if($user->hasConfirmedTeams())
                                     <form action="https://test.payu.in/_payment" method="post">
                                         <input type="hidden" name="key" value="{{ App\Payment::getPaymentKey() }}">
-                                        <input type="hidden" name="txnid" value="{{ Auth::user()->getTransactionId() }}">    
-                                        <input type="hidden" name="amount" value="{{ Auth::user()->getTotalAmount() }}">   
+                                        <input type="hidden" name="txnid" value="{{ $user->getTransactionId() }}">    
+                                        <input type="hidden" name="amount" value="{{ $user->getTotalAmount() }}">   
                                         <input type="hidden" name="productinfo" value="{{ App\Payment::getProductInfo() }}">
-                                        <input type="hidden" name="firstname" value="{{ Auth::user()->full_name }}">
-                                        <input type="hidden" name="email" value="{{ Auth::user()->email }}">
-                                        <input type="hidden" name="phone" value="{{ Auth::user()->mobile }}">            <input type="hidden" name="surl" value="{{ route('pages.payment.success') }}">   
+                                        <input type="hidden" name="firstname" value="{{ $user->full_name }}">
+                                        <input type="hidden" name="email" value="{{ $user->email }}">
+                                        <input type="hidden" name="phone" value="{{ $user->mobile }}">            <input type="hidden" name="surl" value="{{ route('pages.payment.success') }}">   
                                         <input type="hidden" name="furl" value="{{ route('pages.payment.failure') }}">
-                                        <input type="hidden" name="hash" value="{{ Auth::user()->getHash(Auth::user()->getTotalAmount()) }}">
+                                        <input type="hidden" name="hash" value="{{ $user->getHash($user->getTotalAmount()) }}">
                                         <button type="submit" class="btn waves-effect waves-light green"><i class="fa fa-credit-card"></i> Pay by PayUmoney</button>
                                     </form>
                                 @else
@@ -134,13 +155,6 @@
                                 </p>
                             @endif
                         </li>
-                    @else
-                        <li class="collection-item">
-                            <p class="red-text">Sorry your request has been rejected!</p>
-                            @if(Auth::user()->confirmation->message)
-                                <p class="red-text">{{ Auth::user()->confirmation->message }}</p>
-                            @endif
-                        </li>
                     @endif
                 @endif
             @else
@@ -148,10 +162,10 @@
                     <strong>Your verification and payment will be done by one of your team leaders</strong>
                 </li>
             @endif
-            @if(Auth::user()->hasPaid() && Auth::user()->payment->paidBy->id != Auth::user()->id)
+            @if($user->hasPaid() && $user->payment->paidBy->id != $user->id)
                 <li class="collection-item">
                     <div class="chip">
-                        You have been paid by {{ Auth::user()->payment->paidBy->full_name }} [ {{ Auth::user()->payment->paidBy->email }} ]
+                        You have been paid by {{ $user->payment->paidBy->full_name }} [ {{ $user->payment->paidBy->email }} ]
                     </div>
                 </li>
             @endif

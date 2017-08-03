@@ -60,7 +60,20 @@ class CheckRegistration
                         }
                     }
                     else{
-                        return $next($request);                        
+                        if($user->college->noOfParticipantsForEvent($event->id) >= $event->max_limit){
+                            if($request->ajax()){
+                                $response['error'] = true;
+                                $response['message'] = "Sorry! the maximum registration limit for this event from your college is reached";
+                                return response()->json($response); 
+                            }
+                            else{
+                                Session::flash('success', "Sorry! the maximum registration limit for this event from your college is reached");
+                                return redirect()->route('pages.events');  
+                            }
+                        }
+                        else{
+                            return $next($request);                                                    
+                        }
                     }
                 }
                 else{
