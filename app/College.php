@@ -9,6 +9,9 @@ class College extends Model
     function users(){
         return $this->hasMany('App\User');
     }
+    function getQualifiedName(){
+        return $this->name. ", " .$this->location;
+    }
     function noOfParticipantsForEvent($event_id){
         $count = 0;
         $event = Event::find($event_id);

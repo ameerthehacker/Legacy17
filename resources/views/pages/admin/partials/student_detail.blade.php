@@ -13,7 +13,7 @@
                 </tr>
                 <tr>
                     <th>College</th>
-                    <td>{{ $user->college->name }}</td>
+                    <td>{{ $user->college->getQualifiedName() }}</td>
                 </tr>
                 <tr>
                     <th>Email</th>

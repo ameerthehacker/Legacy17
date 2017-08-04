@@ -31,6 +31,13 @@
 <div class="row">
     <div class="col s12">
         <ul class="collection z-depth-4">
+            <li class="collection-item">
+                <div class="chip"><i class="fa {{ $user->hasConfirmed()?'fa-check':'fa-times' }}"></i> Confirm Registration</div>              
+                @if($user->needApproval())
+                    <div class="chip"><i class="fa {{ $user->hasUploadedTicket()?'fa-check':'fa-times' }}"></i> Upload Ticket for verification</div>
+                    <div class="chip"><i class="fa {{ ($user->hasPaid() && $user->hasPaidForTeams())?'fa-check':'fa-times' }}"></i> Do Payment</div>
+                @endif
+            </li>
             <li class="collection-item"><strong>Step 1: Confirm your event registrations</strong></li>
             <li class="collection-item">
                 <p>
@@ -40,6 +47,18 @@
                         </li>
                     </ul>
                 </p>
+                @if($user->isParticipating())
+                    <ul class="collection with-header">
+                        <li class="collection-header"><strong>You are participating in the following events</strong></li>
+                        @foreach($user->events as $event)
+                            <li class="collection-item">{{ $event->title }}</li>
+                        @endforeach
+                        @foreach($user->teamEvents() as $event)
+                            <li class="collection-item">{{ $event->title }}</li>
+                        @endforeach
+                    </ul>
+                    <p class="red-text">After clicking on confirm and generate ticket you wont be able to further add or remove any other events</p>
+                @endif
                 @if($user->hasConfirmed())
                     {{ link_to_route('pages.ticket.download', 'Download Ticket', null, ['class' => 'btn waves-effect waves-light green']) }}
                 @else

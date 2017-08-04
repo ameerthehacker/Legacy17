@@ -19,10 +19,11 @@
                     </div>
                     <div class="row">
                         <div class="col s12 input-field">
+                            {!! Form::label('team_members', 'Email ids of all team members') !!}                                       
                             <div class="chips-autocomplete">
                             </div>
                         </div>
-                        {!! Form::hidden('team_members', null, ['id' => 'team-members']) !!}                        
+                        {!! Form::hidden('team_members', null, ['id' => 'team-members']) !!}
                     </div>
                     <div class="row">
                         <div class="col s12 input-field">
@@ -47,7 +48,6 @@
                 });
                 chips.material_chip({
                     placeholder: '+Team Members',
-                    secondaryPlaceholder: 'Email ids',
                     data: loadChips(),
                     autocompleteOptions:{
                         data: suggestions,

@@ -12,9 +12,9 @@ class CollegesSeeder extends Seeder
     public function run()
     {
         DB::table('colleges')->insert([
-            ['name' => 'Mepco Schlenk Engineering College'],
-            ['name' => 'Thiagaraja College of Engineering'],
-            ['name' => 'Velammal College of Engineering']
+            ['name' => 'Mepco Schlenk Engineering College', 'location' => 'Sivakasi'],
+            ['name' => 'Thiagaraja College of Engineering', 'location' => 'Madurai'],
+            ['name' => 'Velammal College of Engineering', 'location' => 'Chennai']
         ]);
     }
 }
