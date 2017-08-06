@@ -10,6 +10,14 @@
                 <span class="card-title center-align">
                     Register Team
                 </span>
+                <div class="row">
+                    <div class="col s12">
+                        <ul class="collection with-header">
+                            <li class="collection-header"><strong>Note</strong></li>
+                            <li class="collection-item">You are the team leader and you are already included, dont enter your email id in team members list</li>                            
+                        </ul>
+                    </div>
+                </div>
                 {!! Form::model($team, ['url' => route('pages.registerteam', ['event_id' => Route::Input('event_id')])]) !!}
                     <div class="row">
                         <div class="col s12 input-field">
@@ -18,8 +26,8 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col s12 input-field">
-                            {!! Form::label('team_members', 'Email ids of all team members') !!}                                       
+                        <div class="col s12">
+                            {!! Form::label('team_members', 'Email ids of all team members') !!}
                             <div class="chips-autocomplete">
                             </div>
                         </div>

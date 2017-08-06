@@ -103,6 +103,7 @@ class User extends Authenticatable
         return false;
     }
     function college(){
+        // Get the college of the student
         return $this->belongsTo('App\College');
     }
     function teams(){
@@ -278,6 +279,14 @@ class User extends Authenticatable
     }
     function LGId(){
         return 'LG' . $this->id;
+    }
+    function hasActivated(){
+        if($this->activated == true){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
     static function search($term){
         $college_ids = College::where('name', 'LIKE', $term)->pluck('id')->toArray();        

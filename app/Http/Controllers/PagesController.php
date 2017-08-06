@@ -16,9 +16,12 @@ use App\Rejection;
 use Auth;
 use Session;
 use PDF;
+use App\Traits\Utilities;
 
 class PagesController extends Controller
 {
+    use Utilities;
+    
     function root(){
         return view('pages.root');
     }
@@ -112,7 +115,7 @@ class PagesController extends Controller
     }
     function getCollegeMates(){
         $user  = Auth::user();
-        $userEmails = User::where('college_id', $user->college_id)->where('id', '<>', $user->id)->get(['email']);
+        $userEmails = User::where('college_id', $user->college_id)->where('id', '<>', $user->id)->where('activated', true)->get(['email']);
         return response()->json($userEmails);
     }
     function confirm(){
@@ -150,16 +153,7 @@ class PagesController extends Controller
             }
             else{
                 $user->doPayment($inputs['txnid']);
-                // Reject events for other users which are filled
-                $this->rejectOtherUsers($user);
-                // Reject team events for other users which are filled
-                $this->rejectOtherTeams($user);
-                // Reject the individual events that are confirmed for his teammembers
-                foreach($user->teams as $team){
-                    foreach($team->teamMembers as $teamMember){
-                        $this->rejectOtherUsers($teamMember->user);
-                    }
-                }
+                $this->rejectOtherRegistrations($user);
             }
             return view('pages.payment.success')->with('info', 'Your payment was successful!');
         }
@@ -184,56 +178,6 @@ class PagesController extends Controller
         else{
             Session::flash('success', 'You need to complete the payment first');
             return  redirect()->route('pages.dashboard');
-        }
-    }
-
-    private function rejectOtherUsers($user){
-         foreach($user->events as $event){
-            if($user->college->noOfParticipantsForEvent($event->id) >= $event->max_limit){
-                // Take all students from this college
-                foreach($user->college->users as $user){
-                    if($user->hasRegisteredEvent($event->id) && !$user->hasPaid()){
-                        $user->events()->detach($event->id);
-                        $rejection = new Rejection();
-                        $rejection->event_id = $event->id;
-                        $rejection->user_id = $user->id;
-                        $user->rejections()->save($rejection);
-                        // Remove the confirmation request if not participating
-                        if($user->needApproval() && !$user->isParticipating() && $user->hasConfirmed()){
-                            $user->confirmation->status = 'nack';
-                            $user->confirmation->message = 'Your request was rejected as maximum registrations from your college is reached';                            
-                            $user->confirmation->save();
-                        }
-                    }
-                }
-            }
-        }
-    }
-    private function rejectOtherTeams($user){
-        foreach($user->teamEvents() as $event){
-            if($user->college->noOfParticipantsForEvent($event->id) >= $event->max_limit){
-                // Take all students from this college
-                foreach($user->college->users as $user){
-                    if($user->hasRegisteredEvent($event->id) && $user->isTeamLeader($event->id) && !$user->hasPaidForTeams()){
-                        // Remove the team
-                        $team = $user->teamLeaderFor($event->id);
-                        $event->teams()->detach($team->id);
-                        $team->teamMembers()->delete();
-                        Team::destroy($team->id);
-                        $user->events()->detach($event->id);
-                        $rejection = new Rejection();
-                        $rejection->event_id = $event->id;
-                        $rejection->user_id = $user->id;
-                        $user->rejections()->save($rejection);
-                        if(!$user->isParticipating() && $user->hasConfirmed()){
-                            // Remove the confirmation request if not participating           
-                            $user->confirmation->status = 'nack';
-                            $user->confirmation->message = 'Your request was rejected as maximum registrations from your college is reached';                            
-                            $user->confirmation->save();
-                        }
-                    }
-                }
-            }
         }
     }
 }

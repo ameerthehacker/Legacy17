@@ -67,7 +67,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $activation_code = substr(hash('SHA512', rand(100000, 1000000)), 15);
+        $activation_code = substr(hash('SHA512', rand(100000, 1000000)), 0, 15);
         User::create([
             'full_name' => $data['full_name'],
             'email' => $data['email'],

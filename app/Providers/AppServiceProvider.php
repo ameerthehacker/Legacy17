@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use App\User;
 use App\Event;
 use Auth;
+use App\Traits\Utilities;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,6 +16,8 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
+    use Utilities;
+
     public function boot()
     {
         // Validator for checking team members have registered
@@ -146,50 +149,50 @@ class AppServiceProvider extends ServiceProvider
             }
         });
         Validator::replacer('teamMembersCount', function($message, $attribute, $rule, $parameters, $validator){
-            $value = array_get($validator->getData(), $attribute);
             $event = Event::find($parameters[0]);
             if($event->min_members == $event->max_members){
                 return str_replace(':event_name', $event->title, ":event_name requires exactly $event->max_members participants");  
             }
             return str_replace(':event_name', $event->title, ":event_name requires minimum $event->min_members and maximum of $event->max_members participants");
         });
-    }
-    
-    private function userHasParallelEvent($user_id, $event_id){
-        $user = User::find($user_id);
-        $event = Event::find($event_id);
-        $registered_events = $user->events;
-        // Check for single events
-        if($parallel_event = $this->checkIsParralelEvent($registered_events, $event)){
-            return $parallel_event;
-        }
-        $registered_events = $user->teamEvents();
-        // Check for group events
-        if($parallel_event = $this->checkIsParralelEvent($registered_events, $event)){
-            return $parallel_event;
-        }
-        return false;
-    }
-    private function checkIsParralelEvent($registered_events, $event){
-        foreach($registered_events as $registered_event){
-            // Date of the event to be registered
-            $event_date = date_create($event->event_date);
-            // Date of the registered event
-            $registered_event_date = date_create($registered_event->event_date);
-            // Start and end time of event being registered
-            $start_time = strtotime($event->start_time);
-            $end_time = strtotime($event->end_time);       
-            //  Start and end time of event already registered
-            $registered_start_time = strtotime($registered_event->start_time);
-            $registered_end_time = strtotime($registered_event->end_time);                
-            // Check whether they occur in parallel
-            if($event_date == $registered_event_date){
-                if(($registered_start_time <= $start_time && $start_time < $registered_end_time) || ($end_time > $registered_start_time && $end_time <= $registered_end_time)){
-                    return $registered_event;                 
-                }                    
+        Validator::extend('noTeamLeader', function($attribute, $value, $parameters, $validator){
+            $team_members_emails = explode(',', $value);       
+            foreach($team_members_emails as $team_member_email){
+                $team_member = User::where('email', $team_member_email)->first();
+                if(Auth::user()->id == $team_member->id){
+                    return false;
+                }
             }
-        }
-        return false;
+            return true;
+        });
+        Validator::replacer('noTeamLeader', function($message, $attribute, $rule, $parameters, $validator){
+            return "Team leader email should not be included";
+        });
+        Validator::extend('hasActivated', function($attribute, $value, $parameters, $validator){
+            $team_members_emails = explode(',', $value);       
+            foreach($team_members_emails as $team_member_email){
+                $team_member = User::where('email', $team_member_email)->first();
+                if(!$team_member->hasActivated()){
+                    return false;
+                }
+            }
+            return true;
+        });
+        Validator::replacer('hasActivated', function($message, $attribute, $rule, $parameters, $validator){
+            $value = array_get($validator->getData(), $attribute);
+            $team_members_emails = explode(',', $value);
+            $invalid_emails = [];
+            foreach($team_members_emails as $team_member_email){
+                $team_member = User::where('email', $team_member_email)->first();
+                if($team_member){
+                    if(!$team_member->hasActivated()){
+                        array_push($invalid_emails, $team_member->email);
+                    }
+                }
+            }
+            $invalid_emails = implode(',', $invalid_emails);
+            return str_replace(':invalid_emails', $invalid_emails, ':invalid_emails has/have not activated account');
+        });
     }
     /**
      * Register any application services.

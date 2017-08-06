@@ -7,6 +7,7 @@ use App\Event;
 use App\Team;
 use Session;
 use Auth;
+use App\Traits\Utilities;
 
 class CheckRegistration
 {
@@ -17,6 +18,8 @@ class CheckRegistration
      * @param  \Closure  $next
      * @return mixed
      */
+    use Utilities;
+
     public function handle($request, Closure $next, $type, $registered)
     {
         // Check if user has confirmed his registrations
@@ -48,7 +51,7 @@ class CheckRegistration
             }
             if($registered == 'no'){
                 if(!$user->hasRegisteredEvent($event->id)){
-                    if($registered_event = $this->userHasParallelEvent($event->id)){
+                    if($registered_event = $this->userHasParallelEvent(Auth::user()->id, $event->id)){
                         if($request->ajax()){
                             $response['error'] = true;
                             $response['message'] = "Sorry! you have registered a parallel event $registered_event->title";
@@ -106,40 +109,6 @@ class CheckRegistration
             return redirect()->route('pages.events');                                
         }
     }
-    private function userHasParallelEvent($event_id){
-        $user = Auth::user();
-        $event = Event::find($event_id);
-        $registered_events = $user->events;
-        // Check for single events
-        if($parallel_event = $this->checkIsParralelEvent($registered_events, $event)){
-            return $parallel_event;
-        }
-        $registered_events = $user->teamEvents();
-        // Check for group events
-        if($parallel_event = $this->checkIsParralelEvent($registered_events, $event)){
-            return $parallel_event;
-        }
-        return false;
-    }
-    private function checkIsParralelEvent($registered_events, $event){
-        foreach($registered_events as $registered_event){
-            // Date of the event to be registered
-            $event_date = date_create($event->event_date);
-            // Date of the registered event
-            $registered_event_date = date_create($registered_event->event_date);
-            // Start and end time of event being registered
-            $start_time = strtotime($event->start_time);
-            $end_time = strtotime($event->end_time);       
-            //  Start and end time of event already registered
-            $registered_start_time = strtotime($registered_event->start_time);
-            $registered_end_time = strtotime($registered_event->end_time);                
-            // Check whether they occur in parallel
-            if($event_date == $registered_event_date){
-                if(($registered_start_time <= $start_time && $start_time < $registered_end_time) || ($end_time > $registered_start_time && $end_time <= $registered_end_time)){
-                    return $registered_event;                 
-                }                    
-            }
-        }
-        return false;
-    }
+    
+    
 }
