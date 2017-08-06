@@ -22,7 +22,8 @@ class AdminPagesController extends Controller
         $payment_count = Payment::count();
         $accomodation_count = Accomodation::count();
         $confirmed_accomodation = Accomodation::where('status', 'ack')->count();
-        return view('pages.admin.root')->with('registered_count', $registered_count)->with('confirmed_registrations', $confirmed_registrations)->with('payment_count', $payment_count)->with('accomodation_count', $accomodation_count)->with('confirmed_accomodation', $confirmed_accomodation);
+        $accomodation_payment = Accomodation::where('paid', true)->count();
+        return view('pages.admin.root')->with('registered_count', $registered_count)->with('confirmed_registrations', $confirmed_registrations)->with('payment_count', $payment_count)->with('accomodation_count', $accomodation_count)->with('confirmed_accomodation', $confirmed_accomodation)->with('accomodation_payment', $accomodation_payment);
     }
     function registrations(\Illuminate\Http\Request $request){
         $search = Input::get('search', '');

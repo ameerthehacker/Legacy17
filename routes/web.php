@@ -84,7 +84,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','a
         Route::get('requests', ['as' => 'requests', 'uses' => 'AdminPagesController@requests']);
         Route::post('requests', 'AdminPagesController@replyRequest');    
 
-
+        Route::resource('users', 'UsersController');
     });
     Route::group(['middleware' => 'auth.admin:hospitality'], function(){
         Route::get('accomodations', ['as' => 'accomodations', 'uses' => 'AdminPagesController@accomodationRequests']);

@@ -47,6 +47,11 @@
                             </li>
                         </ul>
                     </li>
+                    <li class="collection-item">
+                        <li>
+                            <a href="{{ route('admin::users.index') }}"><i class="fa fa-2x fa-user"></i>  Manage Users</a>
+                        </li>   
+                    </li>
                 @endif
                 @if(Auth::user()->hasRole('hospitality'))
                     <li class="no-padding">

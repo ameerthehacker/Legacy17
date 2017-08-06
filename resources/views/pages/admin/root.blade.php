@@ -9,9 +9,11 @@
                         <h5 class="white-text"><i class="fa fa-users"></i> {{ $registered_count }} {{ str_plural('Registration', $registered_count) }}</h5>
                     </div>
                 </div>
-                <div class="card-action">
-                    {{ link_to_route('admin::registrations', 'View all Registrations') }}
-                </div>
+                @if(Auth::user()->hasRole('root'))
+                    <div class="card-action">
+                        {{ link_to_route('admin::registrations', 'View all Registrations') }}
+                    </div>
+                @endif
             </div>
         </div>
         <div class="col s6">
@@ -21,9 +23,11 @@
                         <h5 class="white-text"><i class="fa fa-thumbs-up"></i> {{ $confirmed_registrations }} Confirmed</h5>
                     </div>
                 </div>
-                <div class="card-action">
-                    {{ link_to_route('admin::requests.all', 'View all Requests') }}
-                </div>
+                @if(Auth::user()->hasRole('root'))
+                    <div class="card-action">
+                        {{ link_to_route('admin::requests.all', 'View all Requests') }}                        
+                    </div>
+                @endif
             </div>
         </div>
         <div class="col s6">
@@ -33,9 +37,11 @@
                         <h5 class="white-text"><i class="fa fa-bed"></i> {{ $accomodation_count }} {{ str_plural('Accomodation Request', $accomodation_count) }}</h5>
                     </div>
                 </div>
-                <div class="card-action">
-                    {{ link_to_route('admin::accomodations.all', 'View all Accomodations') }}
-                </div>
+                @if(Auth::user()->hasRole('hospitality'))
+                    <div class="card-action">
+                        {{ link_to_route('admin::accomodations.all', 'View all Accomodations') }}
+                    </div>
+                @endif
             </div>
         </div>
         <div class="col s6">
@@ -45,9 +51,11 @@
                         <h5 class="white-text"><i class="fa fa-bed"></i> {{ $confirmed_accomodation }} {{ str_plural('Confirmed Accomodation', $confirmed_accomodation) }}</h5>
                     </div>
                 </div>
-                <div class="card-action">
-                    {{ link_to_route('admin::accomodations', 'View New Accomodation Requests') }}
-                </div>
+                @if(Auth::user()->hasRole('hospitality'))
+                    <div class="card-action">
+                        {{ link_to_route('admin::accomodations', 'View New Accomodation Requests') }}
+                    </div>
+                @endif
             </div>
         </div>
         <div class="col s6">
@@ -55,6 +63,15 @@
                 <div class="card-content green lighten-1">
                     <div class="card-title">
                         <h5 class="white-text"><i class="fa fa-money"></i> {{ $payment_count }} {{ str_plural('Payment', $payment_count) }}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col s6">
+            <div class="card hoverable">
+                <div class="card-content green lighten-1">
+                    <div class="card-title">
+                        <h5 class="white-text"><i class="fa fa-money"></i> {{ $accomodation_payment }} {{ str_plural('Accomodation Payment', $accomodation_payment) }}</h5>
                     </div>
                 </div>
             </div>

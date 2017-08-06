@@ -18,9 +18,9 @@ class CreateUsersTable extends Migration
             $table->string('full_name');
             $table->string('email');
             $table->string('password');
-            $table->enum('gender', ['male', 'female']);
-            $table->integer('college_id');
-            $table->string('mobile');
+            $table->enum('gender', ['male', 'female'])->nullable();
+            $table->integer('college_id')->nullable();
+            $table->string('mobile')->nullable();
             $table->enum('type', ['student', 'admin']);
             $table->rememberToken();
             $table->boolean('activated')->default(false);
