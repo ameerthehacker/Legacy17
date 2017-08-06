@@ -22,8 +22,12 @@
                                         {!! Form::text('message') !!}
                                         {!! Form::hidden('user_id', $request->user->id) !!}                            
                                     </div>
-                                    {!! Form::submit('Accept', ['class' => 'btn green', 'name' => 'submit']) !!}
-                                    {!! Form::submit('Reject', ['class' => 'btn red', 'name' => 'submit']) !!}
+                                    <?php 
+                                        $accepted = $request->user->accomodation->status == 'ack'?'disabled':'';
+                                        $rejected = $request->user->accomodation->status == 'nack'?'disabled':'';
+                                    ?>
+                                    {!! Form::submit('Accept', ['class' => "btn green $accepted", 'name' => 'submit']) !!}
+                                    {!! Form::submit('Reject', ['class' => "btn red $rejected", 'name' => 'submit']) !!}
                                 {!! Form::close() !!}        
                             </p>    
                         </div>

@@ -8,15 +8,15 @@
                 </li>
             </ul>
             <ul class="side-nav" id="slide-out">
-                <li>{{ link_to_route('pages.events', 'Events') }}</li>
-                <li>{{ link_to_route('pages.about', 'About') }}</li>                  
+                <li><a href="{{ route('pages.events') }}"><i class="fa fa-2x fa-tasks"></i> Events</a></li>
+                <li><a href="{{ route('pages.about') }}"><i class="fa fa-2x fa-child"></i> About</a></li>
                 @if(Auth::Check())
-                    <li>{{ link_to_route('pages.dashboard', 'Dashboard') }}</li>  
-                    <li>{{ link_to_route('pages.hospitality', 'Hospitality') }}</li>
+                    <li><a href="{{ route('pages.dashboard') }}"><i class="fa fa-2x fa-tachometer"></i> Dashboard</a></li>  
+                    <li><a href="{{ route('pages.hospitality') }}"><i class="fa fa-2x fa-bed"></i> Hospitality</a></li>
                     <li class="no-padding">
                         <ul class="collapsible collapsible-accordion">
                             <li>
-                                <a class="collapsible-header">{{ Auth::user()->full_name }} <i class="material-icons right">arrow_drop_down
+                                <a class="collapsible-header"><i class="fa fa-2x fa-user"></i> {{ Auth::user()->full_name }} <i class="material-icons right">arrow_drop_down
                                 </i></a>
                                 <div class="collapsible-body">
                                     <ul>
@@ -27,25 +27,25 @@
                         </ul>
                     </li>
                 @else
-                    <li>{{ link_to_route('auth.login', 'Login') }}</li>
-                    <li>{{ link_to_route('auth.register', 'Register') }}</li>                                     
+                    <li><a href="{{ route('auth.login') }}"><i class="fa fa-2x fa-key"></i> Login</a></li>
+                    <li><a href="{{ route('auth.register') }}"><i class="fa fa-2x fa-user"></i> Register</a></li>                                     
                 @endif
             </ul>
             <ul class="right hide-on-med-and-down">
-                <li>{{ link_to_route('pages.events', 'Events') }}</li>
-                <li>{{ link_to_route('pages.about', 'About') }}</li>                  
+                <li><a href="{{ route('pages.events') }}"><i class="fa fa-tasks"></i> Events</a></li>
+                <li><a href="{{ route('pages.about') }}"><i class="fa fa-child"></i> About</a></li>
                 @if(Auth::Check())
-                    <li>{{ link_to_route('pages.dashboard', 'Dashboard') }}</li>  
-                    <li>{{ link_to_route('pages.hospitality', 'Hospitality') }}</li>
+                    <li><a href="{{ route('pages.dashboard') }}"><i class="fa fa-tachometer"></i> Dashboard</a></li>  
+                    <li><a href="{{ route('pages.hospitality') }}"><i class="fa fa-bed"></i> Hospitality</a></li>
                     <li>
-                        <a href="#" class="dropdown-button" data-activates="user-dropdown">Hi, {{ Auth::user()->full_name }} <i class="material-icons right">arrow_drop_down</i></a>
+                        <a href="#" class="dropdown-button" data-activates="user-dropdown"><i class="fa fa-user"></i> Hi, {{ Auth::user()->full_name }} <i class="material-icons right">arrow_drop_down</i></a>
                         <ul id="user-dropdown" class="dropdown-content">
                             <li>{{ link_to_route('auth.logout', 'Logout') }}</li>
                         </ul>
                     </li>
                 @else
-                    <li>{{ link_to_route('auth.login', 'Login') }}</li>
-                    <li>{{ link_to_route('auth.register', 'Register') }}</li>                                     
+                    <li><a href="{{ route('auth.login') }}"><i class="fa fa-key"></i> Login</a></li>
+                    <li><a href="{{ route('auth.register') }}"><i class="fa fa-user"></i> Register</a></li>                                     
                 @endif
             </ul>
         </div>

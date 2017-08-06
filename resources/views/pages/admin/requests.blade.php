@@ -24,8 +24,12 @@
                                     {!! Form::textarea('message', null, ['class' => 'materialize-textarea']) !!}
                                 </div>
                                 <div class="input-field">
-                                    {!! Form::submit('Accept', ['class' => 'btn green', 'name' => 'submit']) !!}
-                                    {!! Form::submit('Reject', ['class' => 'btn red', 'name' => 'submit']) !!}
+                                    <?php 
+                                        $accepted = $request->user->isConfirmed()?'disabled':'';
+                                        $rejected = $request->user->isRejected()?'disabled':'';
+                                    ?>
+                                    {!! Form::submit('Accept', ['class' => "btn green $accepted", 'name' => 'submit']) !!}
+                                    {!! Form::submit('Reject', ['class' => "btn red $rejected", 'name' => 'submit']) !!}
                                 </div>
                             {!! Form::close() !!}
                         </p>    

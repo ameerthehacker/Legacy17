@@ -288,6 +288,12 @@ class User extends Authenticatable
             return false;
         }
     }
+    function isRejected(){
+        if($this->confirmation && $this->confirmation->status == 'nack'){
+            return true;
+        }
+        return false;
+    }
     static function search($term){
         $college_ids = College::where('name', 'LIKE', $term)->pluck('id')->toArray();        
         $users = self::where('id', 'LIKE', $term)->orWhere('full_name', 'LIKE', $term)->orWhere('email', 'LIKE', $term)->orWhere('gender', 'LIKE', $term)->orWhere('mobile', 'LIKE', $term)->orWhereIn('college_id', $college_ids);  

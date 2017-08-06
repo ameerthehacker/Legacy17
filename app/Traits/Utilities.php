@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use App\User;
 use App\Event;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 trait Utilities{
     private function checkIsParallelEvent($registered_events, $event){
@@ -27,8 +28,9 @@ trait Utilities{
         }
         return false;
     }
-    private function rejectOtherUsers($user){
-         foreach($user->events as $event){
+    private function rejectOtherUsers($user_id){
+        $user = User::find($user_id);
+        foreach($user->events as $event){
             if($user->college->noOfParticipantsForEvent($event->id) >= $event->max_limit){
                 // Take all students from this college
                 foreach($user->college->users as $user){
@@ -49,7 +51,8 @@ trait Utilities{
             }
         }
     }
-    private function rejectOtherTeams($user){
+    private function rejectOtherTeams($user_id){
+        $user = User::find($user_id);        
         foreach($user->teamEvents() as $event){
             if($user->college->noOfParticipantsForEvent($event->id) >= $event->max_limit){
                 // Take all students from this college
@@ -76,11 +79,12 @@ trait Utilities{
             }
         }
     }
-    private function rejectOtherRegistrations($user){
+    private function rejectOtherRegistrations($user_id){
+        $user = User::find($user_id);        
         // Reject events for other users which are filled
-        $this->rejectOtherUsers($user);
+        $this->rejectOtherUsers($user->id);
         // Reject team events for other users which are filled
-        $this->rejectOtherTeams($user);
+        $this->rejectOtherTeams($user->id);
         // Reject the individual events that are confirmed for his teammembers
         foreach($user->teams as $team){
             foreach($team->teamMembers as $teamMember){
@@ -102,5 +106,16 @@ trait Utilities{
             return $parallel_event;
         }
         return false;
+    }
+    private function paginate($page, $per_page, $objects, $request){
+        $offset = ($page * $per_page) - $per_page;
+        $objects =  new LengthAwarePaginator(
+            $objects->splice($offset, $per_page, true),
+            count($objects), 
+            $per_page,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+        return $objects;
     }
 }

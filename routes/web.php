@@ -69,11 +69,19 @@ Route::group(['namespace' => 'Auth', 'prefix' => 'auth'], function(){
 // Routes for administrators
 Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','auth.admin:']], function(){
     Route::group(['middleware' => 'auth.admin:root'], function(){
+        Route::get('registrations', ['as' => 'registrations', 'uses' => 'AdminPagesController@registrations']);
+        Route::get('registrations/{user_id}', ['as' => 'registrations.edit', 'uses' => 'AdminPagesController@editRegistration']);
+        Route::get('registrations/{user_id}/confirm', ['as' => 'registrations.confirm', 'uses' => 'AdminPagesController@confirmRegistration']); 
+        Route::get('registrations/{user_id}/unconfirm', ['as' => 'registrations.unconfirm', 'uses' => 'AdminPagesController@unconfirmRegistration']); 
+        Route::get('registrations/{user_id}/payments/confirm', ['as' => 'registrations.payments.confirm', 'uses' => 'AdminPagesController@confirmPayment']); 
+        Route::get('registrations/{user_id}/payments/unconfirm', ['as' => 'registrations.payments.unconfirm', 'uses' => 'AdminPagesController@unconfirmPayment']); 
+        Route::get('requests/all', ['as' => 'requests.all', 'uses' => 'AdminPagesController@allRequests']);
         Route::get('requests', ['as' => 'requests', 'uses' => 'AdminPagesController@requests']);
         Route::post('requests', 'AdminPagesController@replyRequest');        
     });
     Route::group(['middleware' => 'auth.admin:hospitality'], function(){
         Route::get('accomodations', ['as' => 'accomodations', 'uses' => 'AdminPagesController@accomodationRequests']);
+        Route::get('accomodations/all', ['as' => 'accomodations.all', 'uses' => 'AdminPagesController@allAccomodationRequests']);
         Route::post('accomodations', 'AdminPagesController@replyAccomodationRequest');        
     });
     Route::get('/', ['as' => 'root', 'uses' => 'AdminPagesController@root']);

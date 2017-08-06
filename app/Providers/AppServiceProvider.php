@@ -6,6 +6,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use App\User;
 use App\Event;
+use App\Confirmation;
+use App\Accomodation;
 use Auth;
 use App\Traits\Utilities;
 
@@ -20,6 +22,12 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot()
     {
+
+        view()->composer('layouts.admin', function($view){
+            $new_requests = Confirmation::where('status', null)->where('file_name', '<>', null)->count();
+            $new_accomodations = Accomodation::where('status', null)->count();
+            $view->with('new_requests', $new_requests)->with('new_accomodations', $new_accomodations);            
+        });
         // Validator for checking team members have registered
         Validator::extend('teamMembersExist', function($attribute, $value, $parameters, $validator){
             $team_members_emails = explode(',', $value);

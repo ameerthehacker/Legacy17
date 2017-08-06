@@ -153,7 +153,7 @@ class PagesController extends Controller
             }
             else{
                 $user->doPayment($inputs['txnid']);
-                $this->rejectOtherRegistrations($user);
+                $this->rejectOtherRegistrations($user->id);
             }
             return view('pages.payment.success')->with('info', 'Your payment was successful!');
         }
