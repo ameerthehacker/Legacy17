@@ -10,6 +10,7 @@ use App\Confirmation;
 use App\Accomodation;
 use Auth;
 use App\Traits\Utilities;
+use Hash;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,6 +28,18 @@ class AppServiceProvider extends ServiceProvider
             $new_requests = Confirmation::where('status', null)->where('file_name', '<>', null)->count();
             $new_accomodations = Accomodation::where('status', null)->count();
             $view->with('new_requests', $new_requests)->with('new_accomodations', $new_accomodations);            
+        });
+        Validator::extend('samePassword', function($attribute, $value, $parameters, $validator){
+            $old_password_hash = $parameters[0];
+            if(Hash::check($value, $old_password_hash)){
+                return true;                
+            }
+            else{
+                return false;
+            }
+        });
+        Validator::replacer('samePassword', function($message, $attribute, $rule, $parameters, $validator){
+            return "Your old password is wrong";
         });
         // Validator for checking team members have registered
         Validator::extend('teamMembersExist', function($attribute, $value, $parameters, $validator){

@@ -64,6 +64,8 @@ Route::group(['namespace' => 'Auth', 'prefix' => 'auth'], function(){
     Route::get('register', ['as' => 'auth.register', 'uses' => 'RegisterController@showRegistrationForm']);
     Route::post('register', 'RegisterController@register');
     Route::get('activate', ['as' => 'auth.activate', 'uses' => 'RegisterController@activate']);
+    Route::get('change-password', ['as' => 'auth.changePassword', 'uses' => 'PasswordController@showChangePassword']);
+    Route::post('change-password', ['uses' => 'PasswordController@changePassword']);
 });
 
 // Routes for administrators
@@ -71,13 +73,18 @@ Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','a
     Route::group(['middleware' => 'auth.admin:root'], function(){
         Route::get('registrations', ['as' => 'registrations', 'uses' => 'AdminPagesController@registrations']);
         Route::get('registrations/{user_id}', ['as' => 'registrations.edit', 'uses' => 'AdminPagesController@editRegistration']);
+
         Route::get('registrations/{user_id}/confirm', ['as' => 'registrations.confirm', 'uses' => 'AdminPagesController@confirmRegistration']); 
         Route::get('registrations/{user_id}/unconfirm', ['as' => 'registrations.unconfirm', 'uses' => 'AdminPagesController@unconfirmRegistration']); 
+
         Route::get('registrations/{user_id}/payments/confirm', ['as' => 'registrations.payments.confirm', 'uses' => 'AdminPagesController@confirmPayment']); 
         Route::get('registrations/{user_id}/payments/unconfirm', ['as' => 'registrations.payments.unconfirm', 'uses' => 'AdminPagesController@unconfirmPayment']); 
+
         Route::get('requests/all', ['as' => 'requests.all', 'uses' => 'AdminPagesController@allRequests']);
         Route::get('requests', ['as' => 'requests', 'uses' => 'AdminPagesController@requests']);
-        Route::post('requests', 'AdminPagesController@replyRequest');        
+        Route::post('requests', 'AdminPagesController@replyRequest');    
+
+
     });
     Route::group(['middleware' => 'auth.admin:hospitality'], function(){
         Route::get('accomodations', ['as' => 'accomodations', 'uses' => 'AdminPagesController@accomodationRequests']);

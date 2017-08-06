@@ -36,4 +36,10 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+    function showChangePassword(){
+        return view('users.change_password');
+    }
+    function changePassword(ChangePasswordRequest $request){
+        redirect()->back();
+    }
 }
