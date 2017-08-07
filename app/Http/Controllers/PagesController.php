@@ -140,6 +140,7 @@ class PagesController extends Controller
         $request->file('ticket')->move('uploads/tickets', $filename);
         $confirmation->file_name = $filename;
         $confirmation->save();
+        Session::flash('success', 'Your ticket was uploaded');
         return redirect()->route('pages.dashboard');
     }
     function paymentSuccess(Request $request){

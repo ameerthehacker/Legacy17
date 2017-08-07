@@ -80,6 +80,7 @@ $(function () {
     $('select').material_select();
     $('.collapsible').collapsible();
     $('.btn-collapse-sidebar').sideNav();
+    $('.stepper').activateStepper();
 });
 
 /***/ }),

@@ -29,17 +29,10 @@
     </div>
 @endif
 <div class="row">
-    <div class="col s12">
-        <ul class="collection z-depth-4">
-            <li class="collection-item">
-                <div class="chip"><i class="fa {{ $user->hasConfirmed()?'fa-check':'fa-times' }}"></i> Confirm Registration</div>              
-                @if($user->needApproval())
-                    <div class="chip"><i class="fa {{ $user->hasUploadedTicket()?'fa-check':'fa-times' }}"></i> Upload Ticket for verification</div>
-                    <div class="chip"><i class="fa {{ ($user->hasPaid() && $user->hasPaidForTeams())?'fa-check':'fa-times' }}"></i> Do Payment</div>
-                @endif
-            </li>
-            <li class="collection-item"><strong>Step 1: Confirm your event registrations</strong></li>
-            <li class="collection-item">
+    <ul class="stepper">
+        <li class="step {{ $user->hasConfirmed()?'':'active' }}">
+            <div class="step-title waves-effect waves-dark">Confirm Registration</div>
+            <div class="step-content">
                 <p>
                     <ul>
                         <li>
@@ -59,41 +52,42 @@
                     </ul>
                     <p class="red-text">After clicking on confirm and generate ticket you wont be able to further add or remove any other events</p>
                 @endif
-                @if($user->hasConfirmed())
-                    {{ link_to_route('pages.ticket.download', 'Download Ticket', null, ['class' => 'btn waves-effect waves-light green']) }}
-                @else
-                    <a class="btn waves-effect waves-light green modal-trigger {{ $user->canConfirm()?'':'disabled' }}" href="#modal-confirm">Confirm and generate ticket</a>
-                @endif
-            </li>
-            @if($user->needApproval())
-                <li class="collection-item"><strong>Step 2: Upload ticket for acknowledgement</strong></li>        
-                @if($user->hasConfirmed())
-                    <li class="collection-item">
-                        @include('partials.errors')
-                        {!! Form::open(['url' => route('pages.ticket.upload'), 'files' => true, 'id' => 'form-upload-ticket']) !!}
-                            {!! Form::file('ticket', ['class' => 'hide', 'id' => 'file-ticket']) !!}
-                        {!! Form::close() !!}
-                        <button class="btn waves-effect waves-light green" id="btn-upload-ticket">Upload Ticket</button>
-                        @if($user->hasUploadedTicket())                     
-                            @unless($user->isAcknowledged())
-                                <p>Sit back and relax we will be verifying your ticket within a day, <strong>dont forget to check back!</strong></p>
+                <a class="btn waves-effect waves-light green modal-trigger {{ $user->hasConfirmed()?'disabled':'' }} {{ $user->canConfirm()?'':'disabled' }}" href="#modal-confirm">Confirm and generate ticket</a>
+            </div>
+        </li>
+        @if($user->needApproval())        
+            <li class="step {{ ($user->hasConfirmed() && !$user->isConfirmed())?'active':'' }}">
+                <div class="step-title waves-effect waves-dark">Attestation Of Participation</div>
+                <div class="step-content">
+                    <a class="btn waves-effect waves-light green {{ $user->hasConfirmed()?'':'disabled' }}" href="{{ route('pages.ticket.download') }}">Download Ticket</a>
+                    @include('partials.errors')
+                    {!! Form::open(['url' => route('pages.ticket.upload'), 'files' => true, 'id' => 'form-upload-ticket', 'style' => 'display:inline']) !!}
+                        {!! Form::file('ticket', ['class' => 'hide', 'id' => 'file-ticket']) !!}
+                    {!! Form::close() !!}
+                    <button type="button" class="btn waves-effect waves-light green {{ $user->hasConfirmed()?'':'disabled' }}" id="btn-upload-ticket">Upload Ticket</button>
+                    @if($user->hasUploadedTicket())                     
+                        @unless($user->isAcknowledged())
+                            <p>Sit back and relax we will be verifying your ticket within a day, <strong>dont forget to check back!</strong></p>
+                        @else
+                            @if($user->isConfirmed())
+                                <p><i class="fa fa-check"></i> Hurray! your ticket has been verified</p>
                             @else
-                                @if($user->isConfirmed())
-                                    <p><i class="fa fa-check"></i> Hurray! your ticket has been verified</p>
-                                @else
-                                    <p class="red-text">Sorry your request has been rejected!</p>
-                                    @if($user->confirmation->message)
-                                        <p class="red-text">{{ $user->confirmation->message }}</p>
-                                    @endif
+                                <p class="red-text">Sorry your request has been rejected!</p>
+                                @if($user->confirmation->message)
+                                    <p class="red-text">{{ $user->confirmation->message }}</p>
                                 @endif
                             @endif
                         @endif
-                    </li>
-                @endif    
-                <li class="collection-item"><strong>Step 3: Payment Process</strong></li> 
-                @if($user->isAcknowledged())
-                    @if($user->confirmation->status == 'ack')
-                        <li class="collection-item">                    
+                    @endif
+                </div>
+            </li>
+        @endif        
+        <li class="step {{ $user->isConfirmed()?'active':'' }}">
+            <div class="step-title waves-effect waves-dark">Payment</div>
+            <div class="step-content">
+                @if($user->needApproval())
+                    @if($user->isAcknowledged())
+                        @if($user->confirmation->status == 'ack')       
                             @if($user->hasTeams())
                                 <i class="fa {{ $user->hasConfirmedTeams()?'fa-check':'fa-times' }}"></i> All your team members have confirmed their registration
                             @endif
@@ -152,18 +146,7 @@
                                     </tfoot>
                                 </table>
                                 @if($user->hasConfirmedTeams())
-                                    <form action="https://test.payu.in/_payment" method="post">
-                                        <input type="hidden" name="key" value="{{ App\Payment::getPaymentKey() }}">
-                                        <input type="hidden" name="txnid" value="{{ $user->getTransactionId() }}">    
-                                        <input type="hidden" name="amount" value="{{ $user->getTotalAmount() }}">   
-                                        <input type="hidden" name="productinfo" value="{{ App\Payment::getProductInfo() }}">
-                                        <input type="hidden" name="firstname" value="{{ $user->full_name }}">
-                                        <input type="hidden" name="email" value="{{ $user->email }}">
-                                        <input type="hidden" name="phone" value="{{ $user->mobile }}">            <input type="hidden" name="surl" value="{{ route('pages.payment.success') }}">   
-                                        <input type="hidden" name="furl" value="{{ route('pages.payment.failure') }}">
-                                        <input type="hidden" name="hash" value="{{ $user->getHash($user->getTotalAmount()) }}">
-                                        <button type="submit" class="btn waves-effect waves-light green"><i class="fa fa-credit-card"></i> Pay by PayUmoney</button>
-                                    </form>
+                                    <button type="button" onclick="$('#frm-payment').submit()" class="btn waves-effect waves-light green"><i class="fa fa-credit-card"></i> Pay by PayUmoney</button>
                                 @else
                                     <button type="submit" class="btn waves-effect waves-light green disabled"><i class="fa fa-credit-card"></i> Pay by PayUmoney</button>
                                 @endif
@@ -173,23 +156,23 @@
                                     {{ link_to_route('pages.payment.reciept', 'Download Payment Reciept', null, ['class' => 'waves-effect waves-light btn green']) }}
                                 </p>
                             @endif
-                        </li>
+                        @else
+                            <button type="submit" class="btn waves-effect waves-light green disabled"><i class="fa fa-credit-card"></i> Pay by PayUmoney</button>   
+                        @endif
+                    @else
+                        <button type="submit" class="btn waves-effect waves-light green disabled"><i class="fa fa-credit-card"></i> Pay by PayUmoney</button>
                     @endif
-                @endif
-            @else
-                <li class="collection-item">
+                @else
                     <strong>Your verification and payment will be done by one of your team leaders</strong>
-                </li>
-            @endif
-            @if($user->hasPaid() && $user->payment->paidBy->id != $user->id)
-                <li class="collection-item">
+                @endif
+                @if($user->hasPaid() && $user->payment->paidBy->id != $user->id)
                     <div class="chip">
                         You have been paid by {{ $user->payment->paidBy->full_name }} [ {{ $user->payment->paidBy->email }} ]
                     </div>
-                </li>
-            @endif
-        </ul>
-    </div>
+                @endif
+            </div>
+        </li>
+    </ul>
 </div>
 <div class="modal" id="modal-confirm">
     <div class="modal-content">
@@ -203,6 +186,19 @@
         {{ link_to_route('pages.confirm', 'Got it!', null, ['class' => 'btn-flat waves-effect waves-green modal-action modal-close']) }}        
     </div>
 </div>
+@if($user->hasConfirmedTeams())
+    <form action="https://test.payu.in/_payment" id="frm-payment" method="post">
+        <input type="hidden" name="key" value="{{ App\Payment::getPaymentKey() }}">
+        <input type="hidden" name="txnid" value="{{ $user->getTransactionId() }}">    
+        <input type="hidden" name="amount" value="{{ $user->getTotalAmount() }}">
+        <input type="hidden" name="productinfo" value="{{ App\Payment::getProductInfo() }}">
+        <input type="hidden" name="firstname" value="{{ $user->full_name }}">
+        <input type="hidden" name="email" value="{{ $user->email }}">
+        <input type="hidden" name="phone" value="{{ $user->mobile }}">            <input type="hidden" name="surl" value="{{ route('pages.payment.success') }}">   
+        <input type="hidden" name="furl" value="{{ route('pages.payment.failure') }}">
+        <input type="hidden" name="hash" value="{{ $user->getHash($user->getTotalAmount()) }}">
+    </form>
+@endif
 <script>
     $('#btn-upload-ticket').on('click', function(){
         $('#file-ticket').trigger('click');

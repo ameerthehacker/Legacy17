@@ -88,7 +88,7 @@ trait Utilities{
         // Reject the individual events that are confirmed for his teammembers
         foreach($user->teams as $team){
             foreach($team->teamMembers as $teamMember){
-                $this->rejectOtherUsers($teamMember->user);
+                $this->rejectOtherUsers($teamMember->user->id);
             }
         }
     }

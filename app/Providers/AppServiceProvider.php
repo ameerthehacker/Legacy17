@@ -180,7 +180,7 @@ class AppServiceProvider extends ServiceProvider
             $team_members_emails = explode(',', $value);       
             foreach($team_members_emails as $team_member_email){
                 $team_member = User::where('email', $team_member_email)->first();
-                if(Auth::user()->id == $team_member->id){
+                if($team_member && Auth::user()->id == $team_member->id){
                     return false;
                 }
             }
@@ -193,7 +193,7 @@ class AppServiceProvider extends ServiceProvider
             $team_members_emails = explode(',', $value);       
             foreach($team_members_emails as $team_member_email){
                 $team_member = User::where('email', $team_member_email)->first();
-                if(!$team_member->hasActivated()){
+                if($team_member && !$team_member->hasActivated()){
                     return false;
                 }
             }
