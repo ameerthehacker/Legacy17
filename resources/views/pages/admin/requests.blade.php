@@ -11,6 +11,18 @@
             @foreach($requests as $request)
                 <li>
                     <div class="collapsible-header">
+                        <span class="new badge blue" data-badge-caption="Confirmed">
+                            <?php 
+                                $confirmed = 0;
+                                $users = $request->user->college->users;
+                                foreach($users as $user){
+                                    if($user->hasPaid()){
+                                        $confirmed++;
+                                    }
+                                }
+                            ?>
+                            {{ $confirmed }}
+                        </span>
                         <strong>{{ $request->user->full_name }}</strong> From <strong>{{ $request->user->college->name }}</strong>
                         <a href="/uploads/tickets/{{ $request->user->confirmation->file_name }}" class= "right" target="_blank">View Ticket <i class="fa fa-eye"></i></a>
                     </div>

@@ -38,10 +38,6 @@
     background: #ef5350 ;
     z-index: 999;
 }
-canvas{
-  display:block;
-  position: absolute;
-}
 
 /* ---- particles.js container ---- */
 
@@ -49,8 +45,5 @@ canvas{
   position: absolute;
   width: 100%;
   height: 100%;
-  background-image: url('');
-  background-size: scale;
-  background-repeat: no-repeat;
-  top: 0;
+  z-index: 999;
 }

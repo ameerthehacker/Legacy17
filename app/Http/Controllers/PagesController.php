@@ -17,6 +17,7 @@ use Auth;
 use Session;
 use PDF;
 use App\Traits\Utilities;
+use Illuminate\Support\Facades\Input;
 
 class PagesController extends Controller
 {
@@ -37,17 +38,19 @@ class PagesController extends Controller
     function about(){
         return view('pages.about');
     }
-    function events(){
+    function events(\Illuminate\Http\Request $request){
         $registeredTeam = null;
         if(Auth::check()){
             $events = Event::all()->reject(function($event, $key){          
                 return Auth::user()->hasRegisteredEvent($event->id);
             });
-            $events = $events->all();
         }
         else{
             $events = Event::all();                 
         }
+        $page = Input::get('page', 1);
+        $per_page = 10;
+        $events = $this->paginate($page, $per_page, $events, $request);
         return view('pages.events')->with('events', $events);
     }
     function requestHospitality(){

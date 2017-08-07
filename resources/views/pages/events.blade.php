@@ -1,13 +1,17 @@
 @extends('layouts.default')
 
 @section('content')
-
 <div class="row">
     @foreach($events as $event)
         <div class="col m6 s12">
             @include('partials.event', ['event' => $event])
         </div>
     @endforeach
+</div>
+<div class="row">
+    <div class="col s12 center-align">
+        {{ $events->render() }}
+    </div>
 </div>
 <script>
     $(function(){

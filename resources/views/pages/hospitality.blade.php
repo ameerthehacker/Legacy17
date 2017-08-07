@@ -21,13 +21,16 @@
                     Payment
                 </div>
                 <div class="step-content">
-                    <button type="button" onclick="$('#frm-payment').submit()" class="btn waves-effect waves-light green {{ (Auth::user()->hasRequestedAccomodation() && Auth::user()->accomodation->status == 'ack')?'':'disabled' }}"><i class="fa fa-credit-card"></i> Pay by PayUmoney</button>
+                    <p>
+                         <i class="fa {{ Auth::user()->hasPaid()?'fa-check':'fa-times' }}"></i> Pay for your events to continue with payment for accomodation
+                    </p>
+                    <button type="button" onclick="$('#frm-payment').submit()" class="btn waves-effect waves-light green {{ (Auth::user()->hasRequestedAccomodation() && Auth::user()->accomodation->status == 'ack' && Auth::user()->hasPaid())?'':'disabled' }}"><i class="fa fa-credit-card"></i> Pay by PayUmoney</button>
                 </div>
             </li>
         </ul>
     </div>
 </div>
-@if(Auth::user()->hasRequestedAccomodation() && Auth::user()->accomodation->status == 'ack')
+@if(Auth::user()->hasRequestedAccomodation() && Auth::user()->accomodation->status == 'ack' && Auth::user()->hasPaid())
     <form action="https://test.payu.in/_payment" id='frm-payment' method="post">
         <input type="hidden" name="key" value="{{ App\Payment::getPaymentKey() }}">
         <input type="hidden" name="txnid" value="{{ Auth::user()->getTransactionId() }}">    

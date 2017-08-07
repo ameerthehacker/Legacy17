@@ -170,10 +170,10 @@ class User extends Authenticatable
     function canConfirm(){
         if($this->isParticipating()){
             if($this->hasSureEvents()){
-                return false;
+                return true;
             }
             else{
-                return true;                
+                return false;                
             }
         }
         else{
@@ -300,7 +300,7 @@ class User extends Authenticatable
         return false;
     }
     function hasOnlyTeamEvents(){
-        if($this->events()->count() == 0 && $this->teams()->count ==0 && $this->teamMembers()->count() != 0){
+        if($this->events()->count() == 0 && $this->teams()->count() == 0 && $this->teamMembers()->count() != 0){
             return true;
         }
         else{
@@ -308,16 +308,16 @@ class User extends Authenticatable
         }
     }
     function hasSureEvents(){
-        if($this->events()->count() == 0 && $this->teams()->count ==0 && $this->teamMembers()->count() != 0){
+        if($this->events()->count() == 0 && $this->teams()->count() == 0 && $this->teamMembers()->count() != 0){
             foreach($this->teamMembers as $teamMember){
-                if($teamMember->team->user->hasConfirmed){
-                    return false;
+                if($teamMember->team->user->hasConfirmed()){
+                    return true;
                 }
             }
-            return true;
+            return false;
         }
         else{
-            return false;
+            return true;
         }
     }
     static function search($term){

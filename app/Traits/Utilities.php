@@ -4,6 +4,8 @@ namespace App\Traits;
 
 use App\User;
 use App\Event;
+use App\Team;
+use App\Rejection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 trait Utilities{
@@ -61,6 +63,12 @@ trait Utilities{
                         // Remove the team
                         $team = $user->teamLeaderFor($event->id);
                         $event->teams()->detach($team->id);
+                        foreach($team->teamMembers as $teamMember){
+                            $rejection = new Rejection();
+                            $rejection->event_id = $event->id;
+                            $rejection->user_id = $teamMember->user->id;
+                            $teamMember->user->rejections()->save($rejection);
+                        }
                         $team->teamMembers()->delete();
                         Team::destroy($team->id);
                         $user->events()->detach($event->id);

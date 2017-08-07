@@ -28,8 +28,8 @@ class CheckConfirmation
                 Session::flash('success', 'Sorry! you have already confirmed your events');
                 return redirect()->route('pages.dashboard');                               
             }
-            if($user->hasSureEvents()){
-                Session:flash('success', 'Ask atleast one of your team leaders to confirm their registrations inorder to confirm your registration');
+            if(!$user->hasSureEvents()){
+                Session::flash('success', 'Ask atleast one of your team leaders to confirm their registrations inorder to confirm your registration');
                 return redirect()->route('pages.dashboard');                               
             }
         }

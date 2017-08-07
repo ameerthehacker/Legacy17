@@ -19,7 +19,7 @@
         <div class="col s12">
             <ul class="collection with-header z-depth-4">
                 <li class="collection-header">
-                    <strong>Your registration for following events is rejected as maximum participants have already been confirmed</strong>
+                    <strong>Your registrations for following events are rejected as maximum participants have already been confirmed</strong>
                 </li>
                 @foreach($user->rejections as $rejection)
                     <li class="collection-item">{{ $rejection->event->title }}</li>
@@ -36,9 +36,13 @@
                 <p>
                     <ul>
                         <li>
-                            <i class="fa {{ $user->isParticipating()?'fa-check':'fa-times' }}"></i> Participate in atleast one single or team event
+                            <p>
+                                <i class="fa {{ $user->isParticipating()?'fa-check':'fa-times' }}"></i> Participate in atleast one single or team event
+                            </p>
                             @if($user->hasOnlyTeamEvents())
-                                <i class="fa {{ $user->hasSureEvents()?'fa-check':'fa-times' }}"></i> Atleast one of your team leaders has confirmed your participation in their team
+                                <p>
+                                    <i class="fa {{ $user->hasSureEvents()?'fa-check':'fa-times' }}"></i> Atleast one of your team leaders has confirmed your participation in their team
+                                </p>
                             @endif
                         </li>
                     </ul>
@@ -53,12 +57,16 @@
             <li class="step {{ ($user->hasConfirmed() && !$user->isConfirmed())?'active':'' }}">
                 <div class="step-title waves-effect waves-dark">Attestation Of Participation</div>
                 <div class="step-content">
-                    <a class="btn waves-effect waves-light green {{ $user->hasConfirmed()?'':'disabled' }}" href="{{ route('pages.ticket.download') }}">Download Ticket</a>
-                    @include('partials.errors')
-                    {!! Form::open(['url' => route('pages.ticket.upload'), 'files' => true, 'id' => 'form-upload-ticket', 'style' => 'display:inline']) !!}
-                        {!! Form::file('ticket', ['class' => 'hide', 'id' => 'file-ticket']) !!}
-                    {!! Form::close() !!}
-                    <button type="button" class="btn waves-effect waves-light green {{ $user->hasConfirmed()?'':'disabled' }}" id="btn-upload-ticket">Upload Ticket</button>
+                    <p>
+                         <a class="btn waves-effect waves-light green {{ $user->hasConfirmed()?'':'disabled' }}" href="{{ route('pages.ticket.download') }}">Download Ticket</a>
+                    </p>
+                    <p>
+                        @include('partials.errors')                        
+                        {!! Form::open(['url' => route('pages.ticket.upload'), 'files' => true, 'id' => 'form-upload-ticket', 'style' => 'display:inline']) !!}
+                            {!! Form::file('ticket', ['class' => 'hide', 'id' => 'file-ticket']) !!}
+                        {!! Form::close() !!}
+                        <button type="button" class="btn waves-effect waves-light green {{ $user->hasConfirmed()?'':'disabled' }}" id="btn-upload-ticket">Upload Ticket</button>
+                    </p>
                     @if($user->hasUploadedTicket())                     
                         @unless($user->isAcknowledged())
                             <p>Sit back and relax we will be verifying your ticket within a day, <strong>dont forget to check back!</strong></p>

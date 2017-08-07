@@ -25,8 +25,8 @@ class AppServiceProvider extends ServiceProvider
     {
 
         view()->composer('layouts.admin', function($view){
-            $new_requests = Confirmation::where('status', null)->where('file_name', '<>', null)->count();
-            $new_accomodations = Accomodation::where('status', null)->count();
+            $new_requests = Confirmation::all()->where('status', null)->where('file_name', '<>', null)->count();
+            $new_accomodations = Accomodation::all()->where('status', null)->count();
             $view->with('new_requests', $new_requests)->with('new_accomodations', $new_accomodations);            
         });
         Validator::extend('samePassword', function($attribute, $value, $parameters, $validator){

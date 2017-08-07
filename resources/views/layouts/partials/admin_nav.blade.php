@@ -44,7 +44,7 @@
                                         <li>
                                             <a href="{{ route('admin::requests') }}">
                                                 New Requests
-                                                <span class="new badge green">{{ $new_accomodations }}</span> 
+                                                <span class="new badge green">{{ $new_requests }}</span> 
                                             </a>
                                         </li>
                                     </ul>
@@ -70,7 +70,7 @@
                                         <li>
                                             <a href="{{ route('admin::accomodations') }}">
                                                 New Requests
-                                                <span class="new badge green">{{ $new_requests }}</span> 
+                                                <span class="new badge green">{{ $new_accomodations }}</span> 
                                             </a>
                                         </li>
                                     </ul>
