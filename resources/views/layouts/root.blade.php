@@ -9,6 +9,8 @@
         {{ HTML::Style("css/app.css") }}   
         {{ HTML::Script("js/jquery.min.js") }}        
         {{ HTML::Script("js/materialize.min.js") }} 
+        {{ HTML::Script("js/materialize-stepper.min.js") }} 
+        {{ HTML::Script("js/particles.min.js") }}   
         {{ HTML::Script("js/app.js") }}         
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">            
         <style>
@@ -21,9 +23,15 @@
         </style>
     </head>
     <body> 
+        <div id="particles-js"></div>
         @yield('content')        
     </body>
     <script>
-        $('.slider').slider({interval: 3000, transition: 1000});
+        $('.slider').slider();
+        $(function(){
+            particlesJS.load('particles-js', 'json/particles.json', function(){
+                console.log('Particles JS loaded')
+            });
+        });
     </script>
 </html>

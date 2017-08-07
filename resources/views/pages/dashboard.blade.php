@@ -44,15 +44,6 @@
                     </ul>
                 </p>
                 @if($user->isParticipating())
-                    <ul class="collection with-header">
-                        <li class="collection-header"><strong>You are participating in the following events</strong></li>
-                        @foreach($user->events as $event)
-                            <li class="collection-item">{{ $event->title }}</li>
-                        @endforeach
-                        @foreach($user->teamEvents() as $event)
-                            <li class="collection-item">{{ $event->title }}</li>
-                        @endforeach
-                    </ul>
                     <p class="red-text">After clicking on confirm and generate ticket you wont be able to further add or remove any other events</p>
                 @endif
                 <a class="btn waves-effect waves-light green modal-trigger {{ ($user->hasConfirmed()|| !$user->canConfirm())?'disabled':'' }}" href="#modal-confirm">Confirm and generate ticket</a>

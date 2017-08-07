@@ -22,5 +22,13 @@
             </div>
             @yield('content')
         </div>
+        <div class="footer">    
+            <span class="white-text">
+                &copy; MEPCO 2017
+            </span>
+            <span class="right white-text">
+                Designed with <i class="fa fa-heart"></i> by Ameer Jhan
+            </span>
+        </div>
     </body>
 </html>

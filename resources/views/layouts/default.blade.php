@@ -11,6 +11,7 @@
         {{ HTML::Script("js/jquery.min.js") }}        
         {{ HTML::Script("js/materialize.min.js") }} 
         {{ HTML::Script("js/materialize-stepper.min.js") }} 
+        {{ HTML::Script("js/particles.min.js") }}         
         {{ HTML::Script("js/app.js") }}         
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">            
     </head>
@@ -32,6 +33,5 @@
                 Designed with <i class="fa fa-heart"></i> by Ameer Jhan
             </span>
         </div>
-        
     </body>
 </html>
