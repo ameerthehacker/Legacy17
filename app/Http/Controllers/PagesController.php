@@ -126,7 +126,7 @@ class PagesController extends Controller
     function downloadTicket(){
         $user = Auth::user();
         $pdf = PDF::loadView('pages.ticket', [ 'user' => $user]);
-        return $pdf->download('ticket.pdf');
+        return $pdf->stream('ticket.pdf');
     }
     function uploadTicketImage(UploadTicketRequest $request){
         // Check if the student can upload ticket for approval

@@ -1,6 +1,31 @@
 @extends('layouts.admin')
 
 @section('content')
+    @if(Auth::user()->hasRole('root'))
+        <div class="row">
+            <div class="col s12">
+                <div class="card hoverable">
+                    <div class="card-content">
+                        <div class="card-title center-align">Setttings</div>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <th>Registration</th>
+                                    <td>
+                                        @if(App\Config::getConfig('registration_open'))
+                                            {{ link_to_route('admin::registrations.close', 'Close Registration', null, ['class' => 'btn waves-effect waves-light red']) }}
+                                        @else
+                                            {{ link_to_route('admin::registrations.open', 'Open Registration', null, ['class' => 'btn waves-effect waves-light green']) }}
+                                        @endif
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
     <div class="row">
         <div class="col s6">
             <div class="card hoverable">

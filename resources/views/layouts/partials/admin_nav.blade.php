@@ -28,6 +28,11 @@
                             <a href="{{ route('admin::registrations') }}"><i class="fa fa-2x fa-users"></i>  All Registrations</a>
                         </li>   
                     </li>
+                    <li class="collection-item">
+                        <li>
+                            <a href="{{ route('admin::events.index') }}"><i class="fa fa-2x fa-tasks"></i>  Events</a>
+                        </li>   
+                    </li>
                     <li class="no-padding">
                         <ul class="collapsible collapsible-accordion">
                             <li>

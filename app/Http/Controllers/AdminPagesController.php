@@ -11,6 +11,7 @@ use App\Team;
 use Illuminate\Support\Facades\Input;
 use App\Traits\Utilities;
 use App\Payment;
+use App\Config;
 
 class AdminPagesController extends Controller
 {
@@ -18,12 +19,26 @@ class AdminPagesController extends Controller
 
     function root(){
         $registered_count = User::where('type', 'student')->count();
-        $confirmed_registrations = Confirmation::where('status', 'ack')->count();
+        $confirmed_registrations = 0;
+        $users = User::all()->where('type', 'student')->where('activated', true); 
+        foreach($users as $user){
+            if($user->isConfirmed()){
+                $confirmed_registrations++;
+            }
+        }
         $payment_count = Payment::count();
         $accomodation_count = Accomodation::count();
         $confirmed_accomodation = Accomodation::where('status', 'ack')->count();
         $accomodation_payment = Accomodation::where('paid', true)->count();
         return view('pages.admin.root')->with('registered_count', $registered_count)->with('confirmed_registrations', $confirmed_registrations)->with('payment_count', $payment_count)->with('accomodation_count', $accomodation_count)->with('confirmed_accomodation', $confirmed_accomodation)->with('accomodation_payment', $accomodation_payment);
+    }
+    function openRegistrations(){
+        Config::setConfig('registration_open', true);
+        return redirect()->route('admin::root');
+    }
+     function closeRegistrations(){
+        Config::setConfig('registration_open', false);
+        return redirect()->route('admin::root');
     }
     function registrations(\Illuminate\Http\Request $request){
         $search = Input::get('search', '');

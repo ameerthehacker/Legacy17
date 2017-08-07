@@ -21,12 +21,16 @@ class CheckConfirmation
         $user = Auth::user();
         if($confirmed == 'no'){
             if(!$user->isParticipating()){
-                Session::flash('success', 'You need to participate in atleast one single or team event to confirm the registration!');         
-                return redirect()->route('pages.dashboard');   
+                Session::flash('success', 'You need to participate in atleast one single or team event to confirm the registration!');    
+                return redirect()->route('pages.dashboard');                                    
             }
             if($user->hasConfirmed()){
-                Session::flash('success', 'Sorry! you have already confirmed your events');         
-                return redirect()->route('pages.dashboard');                                          
+                Session::flash('success', 'Sorry! you have already confirmed your events');
+                return redirect()->route('pages.dashboard');                               
+            }
+            if($user->hasSureEvents()){
+                Session:flash('success', 'Ask atleast one of your team leaders to confirm their registrations inorder to confirm your registration');
+                return redirect()->route('pages.dashboard');                               
             }
         }
         else if($confirmed == 'yes'){

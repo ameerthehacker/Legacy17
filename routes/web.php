@@ -72,6 +72,8 @@ Route::group(['namespace' => 'Auth', 'prefix' => 'auth'], function(){
 Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','auth.admin:']], function(){
     Route::group(['middleware' => 'auth.admin:root'], function(){
         Route::get('registrations', ['as' => 'registrations', 'uses' => 'AdminPagesController@registrations']);
+        Route::get('registrations/open', ['as' => 'registrations.open', 'uses' => 'AdminPagesController@openRegistrations']);
+        Route::get('registrations/close', ['as' => 'registrations.close', 'uses' => 'AdminPagesController@closeRegistrations']);
         Route::get('registrations/{user_id}', ['as' => 'registrations.edit', 'uses' => 'AdminPagesController@editRegistration']);
 
         Route::get('registrations/{user_id}/confirm', ['as' => 'registrations.confirm', 'uses' => 'AdminPagesController@confirmRegistration']); 
@@ -85,6 +87,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','a
         Route::post('requests', 'AdminPagesController@replyRequest');    
 
         Route::resource('users', 'UsersController');
+
+        Route::resource('events', 'EventsController', ['except' => 'show']);        
     });
     Route::group(['middleware' => 'auth.admin:hospitality'], function(){
         Route::get('accomodations', ['as' => 'accomodations', 'uses' => 'AdminPagesController@accomodationRequests']);
@@ -93,7 +97,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','a
     });
     Route::get('/', ['as' => 'root', 'uses' => 'AdminPagesController@root']);
     //CRUD routes for events
-    Route::resource('events', 'EventsController', ['except' => 'show']);
 });
 
 

@@ -37,6 +37,9 @@
                     <ul>
                         <li>
                             <i class="fa {{ $user->isParticipating()?'fa-check':'fa-times' }}"></i> Participate in atleast one single or team event
+                            @if($user->hasOnlyTeamEvents())
+                                <i class="fa {{ $user->hasSureEvents()?'fa-check':'fa-times' }}"></i> Atleast one of your team leaders has confirmed your participation in their team
+                            @endif
                         </li>
                     </ul>
                 </p>
@@ -52,7 +55,7 @@
                     </ul>
                     <p class="red-text">After clicking on confirm and generate ticket you wont be able to further add or remove any other events</p>
                 @endif
-                <a class="btn waves-effect waves-light green modal-trigger {{ $user->hasConfirmed()?'disabled':'' }} {{ $user->canConfirm()?'':'disabled' }}" href="#modal-confirm">Confirm and generate ticket</a>
+                <a class="btn waves-effect waves-light green modal-trigger {{ ($user->hasConfirmed()|| !$user->canConfirm())?'disabled':'' }}" href="#modal-confirm">Confirm and generate ticket</a>
             </div>
         </li>
         @if($user->needApproval())        

@@ -169,7 +169,12 @@ class User extends Authenticatable
     }
     function canConfirm(){
         if($this->isParticipating()){
-            return true;
+            if($this->hasSureEvents()){
+                return false;
+            }
+            else{
+                return true;                
+            }
         }
         else{
             return false;
@@ -293,6 +298,27 @@ class User extends Authenticatable
             return true;
         }
         return false;
+    }
+    function hasOnlyTeamEvents(){
+        if($this->events()->count() == 0 && $this->teams()->count ==0 && $this->teamMembers()->count() != 0){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    function hasSureEvents(){
+        if($this->events()->count() == 0 && $this->teams()->count ==0 && $this->teamMembers()->count() != 0){
+            foreach($this->teamMembers as $teamMember){
+                if($teamMember->team->user->hasConfirmed){
+                    return false;
+                }
+            }
+            return true;
+        }
+        else{
+            return false;
+        }
     }
     static function search($term){
         $college_ids = College::where('name', 'LIKE', $term)->pluck('id')->toArray();        
