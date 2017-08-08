@@ -49,6 +49,15 @@
     "config": {
         "preferred-install": "dist",
         "sort-packages": true,
-        "optimize-autoloader": true
+        "optimize-autoloader": true,
+        "disable-tls": true,
+        "secure-http": false,
+        "verify-peer": false,
+        "repositories": [
+            {
+                "type": "composer",
+                "url": "http://packagist.org"
+            }
+        ]
     }
 }
