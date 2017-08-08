@@ -189,7 +189,7 @@
     </div>
 </div>
 @if($user->hasConfirmedTeams())
-    <form action="https://test.payu.in/_payment" id="frm-payment" method="post">
+    <form action="{{ env('PAYU_URL') }}" id="frm-payment" method="post">
         <input type="hidden" name="key" value="{{ App\Payment::getPaymentKey() }}">
         <input type="hidden" name="txnid" value="{{ $user->getTransactionId() }}">    
         <input type="hidden" name="amount" value="{{ $user->getTotalAmount() }}">

@@ -31,7 +31,7 @@
     </div>
 </div>
 @if(Auth::user()->hasRequestedAccomodation() && Auth::user()->accomodation->status == 'ack' && Auth::user()->hasPaid())
-    <form action="https://test.payu.in/_payment" id='frm-payment' method="post">
+    <form action="{{ env('PAYU_URL') }}" id='frm-payment' method="post">
         <input type="hidden" name="key" value="{{ App\Payment::getPaymentKey() }}">
         <input type="hidden" name="txnid" value="{{ Auth::user()->getTransactionId() }}">    
         <input type="hidden" name="amount" value="{{ Auth::user()->getAccomodationAmount() }}">   

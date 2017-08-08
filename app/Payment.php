@@ -5,9 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
-{
-    private static $paymentKey = "gtKFFx";
-    private static $paymentSalt = "eCwWELxi";    
+{   
     private static $productInfo = "Legacy17 Events";
     private static $eventAmount = 200;
     private static $transactionFee = 0.04;
@@ -19,10 +17,10 @@ class Payment extends Model
         return $this->belongsTo('App\User', 'paid_by');
     }
     static function getPaymentKey(){
-        return self::$paymentKey;
+        return env('PAYU_KEY');
     }
     static function getPaymentSalt(){
-        return self::$paymentSalt;
+        return env('PAYU_SALT');
     }
     static function getProductInfo(){
         return self::$productInfo;

@@ -151,7 +151,7 @@ class AdminPagesController extends Controller
         });
         $page = Input::get('page', 1);
         $per_page = 10;
-        $requests = $this->paginate($page, $per_page, $request);
+        $requests = $this->paginate($page, $per_page, $requests);
         return view('pages.admin.requests')->with('requests', $requests);
     }
     function replyRequest(Request $request){

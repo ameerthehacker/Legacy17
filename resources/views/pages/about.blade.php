@@ -27,10 +27,15 @@
 </div>
 <div class="row">
     <div class="col s12">
-        <h4>Contact US</h4>
+        <h4><i class="fa fa-user"></i> Contact US</h4>
         <div class="divider"></div>
         <p class="flow-text">
-            <i class="fa fa-mobile"></i> 9566602688, Prabhakaran                            
+            Dr T.Prabaharan,<br>
+            Professor/ Mechanical Engineering,<br>
+            Mepco Schlenk Engineering College, Sivakasi,<br>
+            Mepco Engineering College Post - 626 005,<br>
+            Virudhunagar District<br>
+            <i class="fa fa-2x fa-mobile"></i><span> 04562 – 235601, 235660, 9677913395</span>                          
         </p>
     </div>
 </div>
