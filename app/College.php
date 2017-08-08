@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class College extends Model
 {
+    protected $fillable = ['name', 'location'];
     function users(){
         return $this->hasMany('App\User');
     }

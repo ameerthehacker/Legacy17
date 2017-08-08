@@ -56,6 +56,9 @@
                         <li>
                             <a href="{{ route('admin::users.index') }}"><i class="fa fa-2x fa-user"></i>  Manage Users</a>
                         </li>   
+                        <li>
+                            <a href="{{ route('admin::colleges.index') }}"><i class="fa fa-2x fa-graduation-cap"></i>  Manage Colleges</a>
+                        </li>   
                     </li>
                 @endif
                 @if(Auth::user()->hasRole('hospitality'))
