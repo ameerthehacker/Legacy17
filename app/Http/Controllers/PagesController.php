@@ -38,7 +38,7 @@ class PagesController extends Controller
     function about(){
         return view('pages.about');
     }
-    function events(\Illuminate\Http\Request $request){
+    function events(){
         $registeredTeam = null;
         if(Auth::check()){
             $events = Event::all()->reject(function($event, $key){          
@@ -50,7 +50,7 @@ class PagesController extends Controller
         }
         $page = Input::get('page', 1);
         $per_page = 10;
-        $events = $this->paginate($page, $per_page, $events, $request);
+        $events = $this->paginate($page, $per_page, $events);
         return view('pages.events')->with('events', $events);
     }
     function requestHospitality(){

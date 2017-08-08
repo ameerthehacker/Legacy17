@@ -40,7 +40,7 @@ class AdminPagesController extends Controller
         Config::setConfig('registration_open', false);
         return redirect()->route('admin::root');
     }
-    function registrations(\Illuminate\Http\Request $request){
+    function registrations(){
         $search = Input::get('search', '');
         $search = $search . '%';
         $user_ids = User::search($search)->pluck('id')->toArray();
@@ -130,7 +130,7 @@ class AdminPagesController extends Controller
         }
         return redirect()->route('admin::registrations.edit', ['user_id' => $user_id]);
     }
-    function allRequests(\Illuminate\Http\Request $request){
+    function allRequests(){
         $search = Input::get('search', '');
         $search = $search . '%';
         $user_ids = User::search($search)->pluck('id')->toArray();
@@ -139,10 +139,10 @@ class AdminPagesController extends Controller
         });
         $page = Input::get('page', 1);
         $per_page = 10;
-        $requests = $this->paginate($page, $per_page, $requests, $request);
+        $requests = $this->paginate($page, $per_page, $requests);
         return view('pages.admin.requests')->with('requests', $requests);
     }
-    function requests(\Illuminate\Http\Request $request){
+    function requests(){
         $search = Input::get('search', '');
         $search = $search . '%';
         $user_ids = User::search($search)->pluck('id')->toArray();
@@ -151,7 +151,7 @@ class AdminPagesController extends Controller
         });
         $page = Input::get('page', 1);
         $per_page = 10;
-        $requests = $this->paginate($page, $per_page, $requests, $request);
+        $requests = $this->paginate($page, $per_page, $request);
         return view('pages.admin.requests')->with('requests', $requests);
     }
     function replyRequest(Request $request){

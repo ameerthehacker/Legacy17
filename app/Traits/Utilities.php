@@ -7,6 +7,7 @@ use App\Event;
 use App\Team;
 use App\Rejection;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 
 trait Utilities{
     private function checkIsParallelEvent($registered_events, $event){
@@ -115,15 +116,14 @@ trait Utilities{
         }
         return false;
     }
-    private function paginate($page, $per_page, $objects, $request){
-        $offset = ($page * $per_page) - $per_page;
-        $objects =  new LengthAwarePaginator(
-            $objects->splice($offset, $per_page, true),
-            count($objects), 
-            $per_page,
-            $page,
-            ['path' => $request->url(), 'query' => $request->query()]
+    private function paginate($page, $perPage, $items)
+    {
+        $offSet = ($page * $perPage) - $perPage;
+        $itemsForCurrentPage = $items->slice($offSet, $perPage);
+        return new LengthAwarePaginator(
+            $itemsForCurrentPage, $items->count(), $perPage,
+            Paginator::resolveCurrentPage(),
+            ['path' => Paginator::resolveCurrentPath()]
         );
-        return $objects;
     }
 }

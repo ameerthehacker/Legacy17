@@ -10,7 +10,7 @@ use App\Category;
 class EventsController extends Controller
 {
     function index(){
-        $events = Event::all();
+        $events = Event::paginate(10);
         return view('events.index')->with('events', $events);
     }
     function create(){
