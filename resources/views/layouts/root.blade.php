@@ -28,7 +28,7 @@
     <script>
         $('.slider').slider();
         $(function(){
-            particlesJS.load('particles-js', '/public/json/particles.json', function(){
+            particlesJS.load('particles-js', 'js/particles.json', function(){
             });
         });
     </script>
