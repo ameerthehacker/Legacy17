@@ -9,6 +9,8 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Request;
 use Illuminate\Support\Facades\Input;
 use Mail;
+use App\Mail\RegistrationConfirmation;
+use Session;
 
 class RegisterController extends Controller
 {
@@ -80,7 +82,8 @@ class RegisterController extends Controller
             'activated' => false,
             'activation_code' => $activation_code
         ]);
-        Mail::to(new RegistrationConfirmation($user))->send();
+        Mail::to($user->email)->send(new RegistrationConfirmation($user));
+		Session::flash('info', 'An Activation mail has been sent to your email');
     }
     public function activate(){
         $email = Input::get('email', false);

@@ -29,6 +29,6 @@ class RegistrationConfirmation extends Mailable
      */
     public function build()
     {
-        return $this->view('mailer.registration')->with('user', $this->user);
+        return $this->subject('Legacy17 Registration Activation')->view('mailer.registration')->with('user', $this->user);
     }
 }
