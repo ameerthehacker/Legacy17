@@ -61,6 +61,7 @@ class PagesController extends Controller
             }
             else{
                 $accomodation = new Accomodation();
+                $accomodation->days = Input::get('days', 1);
                 $user->accomodation()->save($accomodation);
                 Session::flash('success', 'You request for accomodation has been sent!');            
             }

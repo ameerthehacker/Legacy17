@@ -80,6 +80,12 @@
                             @endif
                         </td>
                     </tr>
+                    <tr>
+                        <th>Accomodation requested days</th>
+                        <td>
+                            {{ $user->accomodation->days }} {{ str_plural('day',$user->accomodation->days) }}
+                        </td>
+                    </tr>
                 @endif
                 @if($user->accomodation && $user->accomodation->status == 'ack')
                     <tr>
