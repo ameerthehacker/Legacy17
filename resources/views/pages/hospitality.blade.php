@@ -10,7 +10,17 @@
                     Request Accomodation
                 </div>
                 <div class="step-content">
-                    <p>You need to pay 100 rupees per head per day</p>                    
+                    <p>You need to pay 100 rupees per head per day</p>   
+                    <p>
+                        <p class="red-text"> 
+                            @if(Auth::user()->hasRequestedAccomodation() && Auth::user()->accomodation->status == 'nack')
+                                Sorry! Your accomodation request is rejected
+                                @if(Auth::user()->accomodation->message)
+                                    , {{ Auth::user()->accomodation->message }}
+                                @endif
+                            @endif
+                        </p>
+                    </p>                 
                     <p>
                         <i class="fa {{ Auth::user()->hasConfirmed()?'fa-check':'fa-times' }}"></i> Confirm your registration
                     </p>
@@ -26,14 +36,6 @@
                                         <strong>
                                             {{ Auth::user()->accomodation->days }} {{ str_plural('day', Auth::user()->accomodation->days) }}
                                         </strong>
-                                    </p>
-                                    <p class="red-text"> 
-                                        @if(Auth::user()->accomodation->status == 'nack')
-                                            Sorry! Your accomodation request is rejected
-                                            @if(Auth::user()->accomodation->message)
-                                                , {{ Auth::user()->accomodation->message }}
-                                            @endif
-                                        @endif
                                     </p>
                                 @endif
                                 {!! Form::submit('Send Request', ['class' => "btn waves-effect waves-light green " . (Auth::user()->hasRequestedAccomodation()||!Auth::user()->hasConfirmed()?'disabled':'')]) !!}
