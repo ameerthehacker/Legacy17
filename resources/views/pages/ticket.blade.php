@@ -151,7 +151,7 @@
     </table>
     <p class="text-uppercase header">Certificate</p>
     <p style="text-indent: 0.5in">
-         This is to certicy that <strong>{{ ($user->gender == 'male' ? 'Mr. ' : 'Ms. ').$user->full_name  }}</strong> is permitted to attend the events of Legacy17 on Sept 8,9 2017. {{ $user->gender == 'male' ? 'He' : 'She' }} is a bonafide student of this institute
+         This is to certify that <strong>{{ ($user->gender == 'male' ? 'Mr. ' : 'Ms. ').$user->full_name  }}</strong> is permitted to attend the events of Legacy17 on Sept 8,9 2017. {{ $user->gender == 'male' ? 'He' : 'She' }} is a bonafide student of this institute
     </p>
     <div class="row" style="margin-top: 70px">
         <div class="col-xs-7">
