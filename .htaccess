@@ -6,6 +6,6 @@
 
     RewriteEngine On
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^ public [L]
+    RewriteRule ^ legacy17/public [L]
 </IfModule>
 
