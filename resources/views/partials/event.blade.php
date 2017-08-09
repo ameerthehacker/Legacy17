@@ -14,7 +14,9 @@
             <p> {{ $event->description }}</p>
             <p><i class="fa fa-calendar"></i> {{ $event->getDate() }}</p>
             <p><i class="fa fa-clock-o"></i> {{ $event->getStartTime() }} to {{ $event->getEndTime() }}</p>
-            <p><i class="fa fa-child"></i> {{ Auth::user()->college->noOfParticipantsForEvent($event->id) }} {{ str_plural('Registration', Auth::user()->college->noOfParticipantsForEvent($event->id)) }} / {{ $event->max_limit }} {{ str_plural('Slot', $event->max_limit) }}</p>
+            @if(Auth::check())
+                <p><i class="fa fa-child"></i> {{ Auth::user()->college->noOfParticipantsForEvent($event->id) }} {{ str_plural('Registration', Auth::user()->college->noOfParticipantsForEvent($event->id)) }} / {{ $event->max_limit }} {{ str_plural('Slot', $event->max_limit) }}</p>
+            @endif
             <p>
                 @if(Auth::check() && Auth::user()->type == 'student')
                     @if(Auth::user()->hasRegisteredEvent($event->id))

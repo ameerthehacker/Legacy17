@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="slider fullscreen">
-    <ul class="slides" style="background: #000"> 
+    <ul class="slides" style="background: #d35400"> 
         <li>
             <img src="#">
             <div class="caption center-align">
