@@ -49,6 +49,12 @@
                                 </div>
                             </div>
                             <div class="row">
+                                <?php
+                                    $college_list = [];
+                                    foreach(App\College::all() as $college){
+                                        $college_list[$college->id] = $college->getQualifiedName();
+                                    }
+                                 ?>
                                 <div class="col s12 input-field">
                                     <i class="fa fa-2x fa-graduation-cap prefix"></i>                     
                                     {!! Form::select('college_id', $college_list) !!}

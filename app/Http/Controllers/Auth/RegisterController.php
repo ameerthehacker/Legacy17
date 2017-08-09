@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Request;
 use Illuminate\Support\Facades\Input;
+use Mail;
 
 class RegisterController extends Controller
 {
@@ -68,7 +69,7 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         $activation_code = substr(hash('SHA512', rand(100000, 1000000)), 0, 15);
-        User::create([
+        $user = User::create([
             'full_name' => $data['full_name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
@@ -79,6 +80,7 @@ class RegisterController extends Controller
             'activated' => false,
             'activation_code' => $activation_code
         ]);
+        Mail::to(new RegistrationConfirmation($user))->send();
     }
     public function activate(){
         $email = Input::get('email', false);

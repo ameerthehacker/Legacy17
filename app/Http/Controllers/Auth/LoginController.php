@@ -42,4 +42,5 @@ class LoginController extends Controller
     function changePassword(ChangePasswordRequest $request){
         redirect()->back();
     }
+    
 }

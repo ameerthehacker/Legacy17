@@ -54,6 +54,7 @@ class Kernel extends HttpKernel
         'auth.admin' => \App\Http\Middleware\AuthenticateAdmin::class,     
         'auth.redirect_admin' => \App\Http\Middleware\RedirectIfAdmin::class,                   
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        'auth.activated' => \App\Http\Middleware\CheckActivation::class,        
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
