@@ -18,7 +18,7 @@ class CheckActivation
     public function handle($request, Closure $next)
     {
         if(Auth::check()){
-            if(Auth::user()->activated){
+            if(Auth::user()->type == 'student' && Auth::user()->activated){
                 return $next($request);                            
             }
             else{
