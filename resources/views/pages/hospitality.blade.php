@@ -27,6 +27,14 @@
                                             {{ Auth::user()->accomodation->days }} {{ str_plural('day', Auth::user()->accomodation->days) }}
                                         </strong>
                                     </p>
+                                    <p class="red-text"> 
+                                        @if(Auth::user()->accomodation->status == 'nack')
+                                            Sorry! Your accomodation request is rejected
+                                            @if(Auth::user()->accomodation->message)
+                                                , {{ Auth::user()->accomodation->message }}
+                                            @endif
+                                        @endif
+                                    </p>
                                 @endif
                                 {!! Form::submit('Send Request', ['class' => "btn waves-effect waves-light green " . (Auth::user()->hasRequestedAccomodation()||!Auth::user()->hasConfirmed()?'disabled':'')]) !!}
                             </div>                     
