@@ -12,7 +12,7 @@
 */
 
 Route::group(['middleware' => 'auth.redirect_admin'], function(){
-    Route::get('/', ['as' => 'pages.root', 'uses' => 'PagesController@root'])->middleware('guest');
+    Route::get( '/', ['as' => 'pages.root', 'uses' => 'PagesController@root'])->middleware('guest');
     Route::get('about', ['as' => 'pages.about', 'uses' => 'PagesController@about']);
     Route::get('events', ['as' => 'pages.events', 'uses' => 'PagesController@events']);
     Route::group(['middleware' => 'auth'], function(){
