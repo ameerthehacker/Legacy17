@@ -58,7 +58,7 @@
                                 <div class="col s12 input-field">
                                     <i class="fa fa-2x fa-graduation-cap prefix"></i>                     
                                     {!! Form::select('college_id', $college_list) !!}
-                                    <p class="red-text"><i class="fa fa-question-circle"></i> Is your college not listed? contact us 994468912</p>
+                                    <p class="red-text"><i class="fa fa-question-circle"></i> Is your college not listed? contact us 9677913395</p>
                                 </div>
                             </div>
                             <div class="row">

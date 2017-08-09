@@ -47,7 +47,7 @@
     $(function(){
         var chips = $(".chips-autocomplete");
         $.ajax({
-            url: '/teams/get_college_mates',
+            url: 'legacy17/public/teams/get_college_mates',
             method: 'get',
             success: function(res){
                 var suggestions = {};
