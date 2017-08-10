@@ -5,7 +5,7 @@
         <p class="center-align"><i class="fa fa-meh-o" style="font-size: 200px;margin-top:60px;"></i></p>
         <h4 class="center-align">OOPS! thats a 404</h4>
         <p class="center-align">
-            <a href="/legacy17" class="btn btn-large green">Go to Home</a>
+            <a href="{{ route('pages.root') }}" class="btn btn-large green">Go to Home</a>
         </p>
     </div>
 @endsection
