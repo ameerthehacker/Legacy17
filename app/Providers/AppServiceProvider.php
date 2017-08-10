@@ -214,6 +214,38 @@ class AppServiceProvider extends ServiceProvider
             $invalid_emails = implode(',', $invalid_emails);
             return str_replace(':invalid_emails', $invalid_emails, ':invalid_emails has/have not activated account');
         });
+        Validator::extend('checkGenderMixing', function($attribute, $value, $parameters, $validator){
+            $team_members_emails = explode(',', $value);   
+            $user_gender = Auth::user()->gender;
+            $event = Event::find($parameters[0]);
+            if($event->allow_gender_mixing){
+                return true;
+            }
+            else{
+                foreach($team_members_emails as $team_member_email){
+                    $team_member = User::where('email', $team_member_email)->first();
+                    if($team_member && $team_member->gender != $user_gender){
+                        return false;
+                    }
+                }
+            }
+            return true;
+        });
+        Validator::replacer('checkGenderMixing', function($message, $attribute, $rule, $parameters, $validator){
+            $value = array_get($validator->getData(), $attribute);
+            $team_members_emails = explode(',', $value);
+            $user_gender = Auth::user()->gender;            
+            $invalid_emails = [];
+            $event = Event::find($parameters[0]);
+            foreach($team_members_emails as $team_member_email){
+                $team_member = User::where('email', $team_member_email)->first();
+                if($team_member && $team_member->gender != $user_gender){
+                    array_push($invalid_emails, $team_member->email);
+                }
+            }
+            $invalid_emails = implode(',', $invalid_emails);
+            return str_replace(':invalid_emails', $invalid_emails, ':invalid_emails is/are not allowed as this event does not allow mixing of genders');
+        });
     }
     /**
      * Register any application services.

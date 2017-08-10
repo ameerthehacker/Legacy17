@@ -6,6 +6,7 @@ use Request;
 use App\Http\Requests\EventRequest;
 use App\Event;
 use App\Category;
+use Session;
 
 class EventsController extends Controller
 {
@@ -17,6 +18,7 @@ class EventsController extends Controller
         $event = new Event();
         $event->max_members = 1;
         $event->min_members = 1;
+        $event->allow_gender_mixing = 1;
         $categories = Category::pluck('name', 'id');
         return view('events.create')->with('event', $event)->with('categories', $categories);
     }
@@ -54,7 +56,7 @@ class EventsController extends Controller
         // Update event record    
         $event->update($input);
         // Set flash message
-        \Session::flash('success', 'The event was edited successfully!');
+        Session::flash('success', 'The event was edited successfully!');
         return redirect()->route('admin::events.index');
     }
     function destroy($id){

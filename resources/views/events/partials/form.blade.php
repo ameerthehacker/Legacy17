@@ -64,6 +64,13 @@
         </div>
     </div>
     <div class="row">
+        {!! Form::label('allow_gender_mixing') !!}
+        {!! Form::radio('allow_gender_mixing', 1, $event->allow_gender_mixing, ['class' => 'with-gap', 'id' => 'rad-yes'] ) !!}
+        {!! Form::label('rad-yes', 'Yes') !!}
+        {!! Form::radio('allow_gender_mixing', 0, $event->allow_gender_mixing, ['class' => 'with-gap', 'id' => 'rad-no'] ) !!}
+        {!! Form::label('rad-no', 'No') !!}
+    </div>
+    <div class="row">
         {!! Form::label('event_image') !!}    
         <div class="col-s12 file-field input-field">
             <div class="btn">
