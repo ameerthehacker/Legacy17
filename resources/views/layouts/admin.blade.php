@@ -6,11 +6,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         {{ HTML::Style("css/materialize.min.css") }}
         {{ HTML::Style("css/font-awesome.min.css") }} 
-        {{ HTML::Style("css/app.css") }}                                      
+        {{ HTML::Style("css/app.css") }}                
+        {{ HTML::Style("css/material-icons.css") }}                                              
         {{ HTML::Script("js/jquery.min.js") }}   
         {{ HTML::Script("js/materialize.min.js") }} 
         {{ HTML::Script("js/app.js") }}         
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">            
     </head>
     <body>
         @include('layouts.partials.admin_nav')

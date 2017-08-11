@@ -1,7 +1,7 @@
 <div class="navbar-fixed">
     <nav>
         <div class="nav-wrapper">
-            <a href="{{ route('pages.root') }}" class="brand-logo"><i class="fa fa-rocket"></i> Legacy17 Admin</a>
+            <a href="{{ route('pages.root') }}" class="brand-logo center-align center"><i class="fa fa-rocket"></i> Legacy17 Admin</a>
             <ul class="left">
                 <li>
                     <a href="#" class="btn-collapse-sidebar" data-activates="slide-out"><i class="material-icons">menu</i></a>

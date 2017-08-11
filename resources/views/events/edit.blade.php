@@ -8,7 +8,7 @@
         <div class="card">
             <div class="card-content">
                 <span class="card-title">
-                    <h4 class="center-align">New Event</h4>
+                    <h4 class="center-align">Edit Event</h4>
                 </span>
                 {!! Form::model($event, ['url' => route('admin::events.update', ['id' => $event->id]), 'method' => 'put', 'files' => true]) !!}
                     @include('events.partials.form')

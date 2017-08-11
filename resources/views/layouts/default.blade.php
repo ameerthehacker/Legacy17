@@ -8,12 +8,12 @@
         {{ HTML::Style("css/font-awesome.min.css") }}  
         {{ HTML::Style("css/app.css") }}            
         {{ HTML::Style("css/materialize-stepper.min.css") }}                                                     
+        {{ HTML::Style("css/material-icons.css") }}                                                    
         {{ HTML::Script("js/jquery.min.js") }}        
         {{ HTML::Script("js/materialize.min.js") }} 
         {{ HTML::Script("js/materialize-stepper.min.js") }} 
         {{ HTML::Script("js/particles.min.js") }}         
         {{ HTML::Script("js/app.js") }}         
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">            
     </head>
     <body>
         @include('layouts.partials.default_nav')    
