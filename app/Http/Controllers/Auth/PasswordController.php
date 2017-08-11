@@ -11,7 +11,8 @@ use Session;
 class PasswordController extends Controller
 {
     function showChangePassword(){
-        return view('auth.change_password');
+        $layout = Auth::user()->type=='student'?'layouts.default':'layouts.admin';        
+        return view('auth.change_password')->with('layout', $layout);
     }
     function changePassword(ChangePasswordRequest $request){
         $inputs = $request->all();
