@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Request;
+use App\Http\Requests\CommandRequest;
 use App\Confirmation;
 use App\User;
 use App\Accomodation;
@@ -195,6 +196,15 @@ class AdminPagesController extends Controller
         }
         $user->accomodation->save();
         return redirect()->back();
+    }
+    function terminal(){
+        return view('pages.admin.terminal');
+    }
+    function executeCommand(CommandRequest $request){
+        $inputs = $request->all();
+        $output = [];
+        exec($inputs['command'], $output);
+        return view('pages.admin.terminal')->with('output', implode("<br>", $output));
     }
     
 }

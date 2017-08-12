@@ -84,12 +84,17 @@ Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','a
 
         Route::get('requests/all', ['as' => 'requests.all', 'uses' => 'AdminPagesController@allRequests']);
         Route::get('requests', ['as' => 'requests', 'uses' => 'AdminPagesController@requests']);
+             
         Route::post('requests', 'AdminPagesController@replyRequest');    
 
         Route::resource('users', 'UsersController', ['except' => 'show']);
 
         Route::resource('events', 'EventsController', ['except' => 'show']);        
         Route::resource('colleges', 'CollegesController', ['except' => 'show']);                
+    });
+    Route::group(['middleware' => 'auth.admin:developer'], function(){
+        Route::get('terminal', ['as' => 'terminal', 'uses' => 'AdminPagesController@terminal']);
+        Route::post('terminal', ['uses' => 'AdminPagesController@executeCommand']);  
     });
     Route::group(['middleware' => 'auth.admin:hospitality'], function(){
         Route::get('accomodations', ['as' => 'accomodations', 'uses' => 'AdminPagesController@accomodationRequests']);

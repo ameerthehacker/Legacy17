@@ -22,6 +22,11 @@
                 <li>
                     <a href="{{ route('admin::root') }}"><i class="fa fa-2x fa-home"></i> Home</a>
                 </li>
+                @if(Auth::user()->hasRole('developer'))
+                    <li>
+                        <a href="{{ route('admin::terminal') }}"><i class="fa fa-2x fa-cloud-upload"></i> Terminal</a>
+                    </li>
+                @endif
                 @if(Auth::user()->hasRole('root'))
                     <li class="collection-item">
                         <li>
