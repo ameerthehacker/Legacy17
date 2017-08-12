@@ -7,7 +7,7 @@
         <li>
             <img src="#">
             <div class="caption center-align">
-                <h1>Legacy 17</h1>
+                <h1>Legacy'17</h1>
                 <h3>MEPCO Schlenk Engineering College (Autonomous)</h3>
                 <p class="flow-text">
                     One of the biggest cultural fests is here
