@@ -32,6 +32,9 @@ class PagesController extends Controller
         $teamEvents = Auth::user()->teamEvents();        
         return view('pages.dashboard')->with('events', $events)->with('teamEvents', $teamEvents)->with('user', $user);
     }
+    function help(){
+        return view('pages.help');
+    }
     function hospitality(){
         return view('pages.hospitality');
     }

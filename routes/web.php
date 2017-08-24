@@ -15,6 +15,7 @@ Route::group(['middleware' => 'auth.redirect_admin'], function(){
     Route::get( '/', ['as' => 'pages.root', 'uses' => 'PagesController@root'])->middleware('guest');
     Route::get('about', ['as' => 'pages.about', 'uses' => 'PagesController@about']);
     Route::get('events', ['as' => 'pages.events', 'uses' => 'PagesController@events']);
+    Route::get('help', ['as' => 'pages.help', 'uses' => 'PagesController@help']);    
     Route::group(['middleware' => 'auth'], function(){
         // Routes for team registration
         Route::group(['prefix' => 'events/{event_id}'], function(){

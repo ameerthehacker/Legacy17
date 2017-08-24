@@ -45,6 +45,11 @@
         </li>
     </ul>    
     <div class="center-align slider-fixed-item">
+        <marquee scrollamount="6">
+            <p class="flow-text white-text">
+                Send your shortfilms to the following email : shortflimlegacy17@gmail.com
+            </p>
+        </marquee>
         {{ link_to_route('auth.login', 'Participate', null, ['class' => 'waves-effect waves-light btn blue']) }}  
         {{ link_to_route('auth.register', 'Register', null, ['class' => 'waves-effect waves-light btn green']) }}
     </div> 

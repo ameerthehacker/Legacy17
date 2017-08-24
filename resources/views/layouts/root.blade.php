@@ -16,7 +16,7 @@
             .slider-fixed-item{
                 position: relative;
                 z-index: 9999;
-                bottom: 150px;
+                bottom: 200px;
                 height: 0px;
             }
         </style>
