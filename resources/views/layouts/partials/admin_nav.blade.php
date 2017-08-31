@@ -48,8 +48,6 @@
                             </li>
                         </ul>
                     </li>   
-                @endif
-                @if(Auth::user()->hasRole('root') || Auth::user()->organizings->count()!=0)
                     <li class="no-padding">
                         <ul class="collapsible collapsible-accordion">
                             <li>
@@ -76,6 +74,7 @@
                             </li>
                         </ul>
                     </li>
+                    <li><a href="{{ route('admin::reports') }}"><i class="fa fa-2x fa-bar-chart-o"></i> Reports</a></li>
                 @endif
                 @if(Auth::user()->hasRole('root'))
                     <li class="collection-item">

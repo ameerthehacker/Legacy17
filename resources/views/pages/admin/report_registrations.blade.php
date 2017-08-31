@@ -29,6 +29,12 @@
                         <th>
                             Mobile
                         </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Payment
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -39,7 +45,21 @@
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->college->name }}</td>
                             <td>{{ $user->gender }}</td>                            
-                            <td>{{ $user->mobile }}</td>                            
+                            <td>{{ $user->mobile }}</td>  
+                            <td>
+                                @if($user->hasConfirmed())
+                                    @if($user->confirmation->status != null)
+                                        {{ $user->confirmation->status == 'ack'?'Accepted': 'Rejected' }}
+                                    @else
+                                        Not yet acknowledged
+                                    @endif
+                                @else
+                                    Not yet cofirmed                                    
+                                @endif
+                            </td>    
+                            <td>
+                                {{ $user->hasPaid()?'Paid': 'Not Paid' }}
+                            </td>                       
                         </tr>
                     @endforeach
                 </tbody>

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
+use Session;
 use Request;
 use App\Http\Requests\CommandRequest;
 use App\Confirmation;
@@ -159,10 +161,19 @@ class AdminPagesController extends Controller
         return redirect()->route('admin::registrations.edit', ['user_id' => $user_id]);
     }
     function reports(){
-        $colleges = ['all' => 'All'];
-        $events = ['all' => 'All'];
+        if(!Auth::user()->hasRole('root') && !Auth::user()->hasRole('hospitality') && !Auth::user()->organizings->count() == 0){
+            return redirect()->route('admin::root');
+        }
+        if(Auth::user()->hasRole('root')){
+            $colleges = ['all' => 'All'];
+            $events = ['all' => 'All'];        
+            $events = Event::pluck('title', 'id')->toArray();                    
+        }else{
+            $colleges = [];
+            $events = [];
+            $events = Auth::user()->organizings->pluck('title', 'id')->toArray();        
+        }
         $colleges += College::pluck('name', 'id')->toArray();
-        $events += Event::pluck('title', 'id')->toArray();
         return view('pages.admin.reports')->with('colleges', $colleges)->with('events', $events);
     }
     function reportRegistrations(Request $request){
@@ -176,13 +187,17 @@ class AdminPagesController extends Controller
             $users = User::all()->where('type', 'student');
         }
         else{
+            if(!Auth::user()->isOrganizing($event_id)){
+                Session::flash('success', 'You dont have rights to view this report!');
+                return redirect()->route('admin::root');
+            }
             $event = Event::findOrFail($event_id);
             if($event->isGroupEvent()){
                 $user_ids = [];
                 foreach($event->teams as $team){
                     array_push($user_ids, $team->user_id);
                     foreach($team->teamMembers as $teamMember){
-                        array_push($user_id, $teamMember->user->id);
+                        array_push($user_ids, $teamMember->user->id);
                     }
                 }
                 $users = User::all()->whereIn('id', $user_ids);
@@ -207,9 +222,13 @@ class AdminPagesController extends Controller
         $page = Input::get('page', 1);
         $per_page = 10;
         $users = $this->paginate($page, $per_page, $users);
-        return view('pages.admin.report_results')->with('users', $users)->with('users_count', $users_count);
+        return view('pages.admin.report_registrations')->with('users', $users)->with('users_count', $users_count);
     }
     function reportAccomodations(Request $request){
+        if(!Auth::user()->hasRole('hospitality')){
+            Session::flash('success', 'You dont have rights to view this report!');
+            return redirect()->route('admin::root');
+        }
         $inputs = Request::all();
         $college_id = $inputs['college_id'];
         $gender = $inputs['gender'];
@@ -238,7 +257,7 @@ class AdminPagesController extends Controller
         $page = Input::get('page', 1);
         $per_page = 10;
         $users = $this->paginate($page, $per_page, $users);
-        return view('pages.admin.report_results')->with('users', $users)->with('users_count', $users_count);
+        return view('pages.admin.report_accomodations')->with('users', $users)->with('users_count', $users_count);
     }
     function allRequests(){
         $search = Input::get('search', '');
