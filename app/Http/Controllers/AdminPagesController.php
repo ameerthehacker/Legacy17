@@ -187,7 +187,7 @@ class AdminPagesController extends Controller
             $users = User::all()->where('type', 'student');
         }
         else{
-            if(!Auth::user()->isOrganizing($event_id) || Auth::user()->hasRole('root')){
+            if(!Auth::user()->isOrganizing($event_id) && !Auth::user()->hasRole('root')){
                 Session::flash('success', 'You dont have rights to view this report!');
                 return redirect()->route('admin::root');
             }
