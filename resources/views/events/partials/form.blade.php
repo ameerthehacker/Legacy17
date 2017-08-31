@@ -83,9 +83,66 @@
             </div>
         </div>
     </div>
+    <div class="col s12">
+        {!! Form::label('organizers', 'Email ids of all organizers') !!}
+        <div class="chips-autocomplete">
+        </div>
+    </div>
+    {!! Form::hidden('organizers', null, ['id' => 'organizers']) !!}
     <div class="row">
         <div class="col-s12 input-fields">
             {!! Form::submit('Submit', ['class' => 'btn waves-effect waves-light green', 'id' => 'btn-create-event']) !!}
         </div>
     </div>
 </div> 
+
+<script>
+    $(function(){
+        var chips = $(".chips-autocomplete");
+        $.ajax({
+            url: 'legacy17/public/admin/get_admins',
+            method: 'get',
+            success: function(res){
+                var suggestions = {};
+                $.each(res, function(index, val){
+                    suggestions[val.email] = null;
+                });
+                chips.material_chip({
+                    placeholder: '+Organizers',
+                    data: loadChips(),
+                    autocompleteOptions:{
+                        data: suggestions,
+                        limit: Infinity,
+                        minLength: 1
+                    }
+                });
+            },
+            error: function(){
+                Materialize.toast('Sorry! something went wrong please try again')
+            }
+        });
+        // Update team members in the hidden field
+        function updateOrganizers(evt, chip){
+            var data = chips.material_chip('data');
+            var tags = [];
+            $.each(data, function(index, val){
+                tags.push(val.tag);
+            });
+            $("#organizers").val(tags.join(','));
+        }
+        function loadChips(){
+            var teamMembers = $("#organizers").val().split(',');
+            var initialChips  = [];
+            $.each(teamMembers, function(index, val){
+                if(val != ""){
+                    var chip = { 'tag': val }
+                    initialChips.push(chip);
+                }
+            });
+            return initialChips;
+        }
+        // Update team members hidden field on changes to chips
+        chips.on('chip.add', updateOrganizers);
+        chips.on('chip.delete', updateOrganizers);        
+    });
+</script>

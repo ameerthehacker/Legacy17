@@ -72,6 +72,7 @@ Route::group(['namespace' => 'Auth', 'prefix' => 'auth'], function(){
 // Routes for administrators
 Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','auth.admin:']], function(){
     Route::group(['middleware' => 'auth.admin:root'], function(){
+        Route::get('get_admins', 'AdminPagesController@getAdmins');
         Route::get('registrations', ['as' => 'registrations', 'uses' => 'AdminPagesController@registrations']);
         Route::get('registrations/open', ['as' => 'registrations.open', 'uses' => 'AdminPagesController@openRegistrations']);
         Route::get('registrations/close', ['as' => 'registrations.close', 'uses' => 'AdminPagesController@closeRegistrations']);

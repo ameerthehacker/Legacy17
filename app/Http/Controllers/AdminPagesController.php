@@ -33,11 +33,15 @@ class AdminPagesController extends Controller
         $accomodation_payment = Accomodation::where('paid', true)->count();
         return view('pages.admin.root')->with('registered_count', $registered_count)->with('confirmed_registrations', $confirmed_registrations)->with('payment_count', $payment_count)->with('accomodation_count', $accomodation_count)->with('confirmed_accomodation', $confirmed_accomodation)->with('accomodation_payment', $accomodation_payment);
     }
+    function getAdmins(){
+        $adminEmails = User::where('type', 'admin')->get(['email']);
+        return response()->json($adminEmails);
+    }
     function openRegistrations(){
         Config::setConfig('registration_open', true);
         return redirect()->route('admin::root');
     }
-     function closeRegistrations(){
+    function closeRegistrations(){
         Config::setConfig('registration_open', false);
         return redirect()->route('admin::root');
     }

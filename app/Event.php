@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
-    protected $fillable =  ['title', 'category_id', 'description', 'image_name', 'rules', 'event_date', 'start_time', 'end_time', 'min_members', 'max_members', 'max_limit', 'contact_email', 'allow_gender_mixing'];
+    protected $fillable =  ['title', 'category_id', 'description', 'image_name', 'rules', 'event_date', 'start_time', 'end_time', 'min_members', 'max_members', 'max_limit', 'contact_email', 'allow_gender_mixing', 'organizers'];
     protected $image_path = '/images/events/';
     function category(){
         return $this->belongsTo('App\Category');
