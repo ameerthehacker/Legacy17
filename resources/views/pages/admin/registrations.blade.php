@@ -2,6 +2,9 @@
 
 @section('content')
 @include('pages.admin.partials.search_bar')
+<div class="col s12">
+    <p class="flow-text">{{ $registrations->count() }} results <i class="fa fa-users"></i></p>
+</div>
 <div class="row">
     <div class="col s12">
         @if($registrations->count() == 0)
@@ -12,7 +15,9 @@
                 <li>
                     <div class="collapsible-header">
                         <strong>{{ $registration->full_name }}</strong> From <strong>{{ $registration->college->name }}</strong>
-                        <a class="right" href="{{ route('admin::registrations.edit', ['user_id' => $registration->id]) }}"><i class="fa fa-pencil"></i> Edit</a>
+                        @if(Auth::user()->hasRole('root'))
+                            <a class="right" href="{{ route('admin::registrations.edit', ['user_id' => $registration->id]) }}"><i class="fa fa-pencil"></i> Edit</a>
+                        @endif
                     </div>
                     <div class="collapsible-body">
                         @include('pages.admin.partials.student_detail', ['user' => $registration])

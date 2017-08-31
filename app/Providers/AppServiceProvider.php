@@ -41,6 +41,28 @@ class AppServiceProvider extends ServiceProvider
         Validator::replacer('samePassword', function($message, $attribute, $rule, $parameters, $validator){
             return "Your old password is wrong";
         });
+        // Validator for checking if the admin exist
+        Validator::extend('adminExists', function($attribute, $value, $parameters, $validator){
+            $admin_emails = explode(',', $value);
+            foreach($admin_emails as $admin_email){
+                if(User::where('type', 'admin')->where('email', $admin_email)->count() == 0){
+                    return false;
+                }
+            }
+            return true;
+        });
+        Validator::replacer('adminExists', function($message, $attribute, $rule, $parameters, $validator){
+            $value = array_get($validator->getData(), $attribute);
+            $admin_emails = explode(',', $value);
+            $invalid_emails = [];
+            foreach($admin_emails as $admin_email){
+                if(User::where('type', 'admin')->where('email', $admin_email)->count() == 0){
+                    array_push($invalid_emails, $admin_email);
+                }
+            }
+            $invalid_emails = implode(',', $invalid_emails);
+            return str_replace(':invalid_emails', $invalid_emails, ':invalid_emails is/are not registered as admins');
+        });
         // Validator for checking team members have registered
         Validator::extend('teamMembersExist', function($attribute, $value, $parameters, $validator){
             $team_members_emails = explode(',', $value);

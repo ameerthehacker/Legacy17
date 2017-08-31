@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Request;
 use App\Http\Requests\EventRequest;
+use App\User;
 use App\Event;
 use App\Category;
 use Session;
@@ -20,7 +21,8 @@ class EventsController extends Controller
         $event->min_members = 1;
         $event->allow_gender_mixing = 1;
         $categories = Category::pluck('name', 'id');
-        return view('events.create')->with('event', $event)->with('categories', $categories);
+        $organizers = "";
+        return view('events.create')->with('event', $event)->with('categories', $categories)->with('organizers', $organizers);
     }
     function store(EventRequest $request){
         $input = Request::all();
@@ -32,15 +34,22 @@ class EventsController extends Controller
             $input['image_name'] = $filename;    
         }
         // Create event record    
-        Event::create($input);
+        $event = Event::create($input);
+        // Add organizers
+        $organizerEmails = explode(",", $input['organizers']);
+        foreach($organizerEmails as $organizerEmail){
+            $organizer = User::where('email', $organizerEmail)->first();
+            $event->organizers()->save($organizer);
+        }
         // Set flash message
-        \Session::flash('success', 'The event was created successfully!');
+        Session::flash('success', 'The event was created successfully!');
         return redirect()->route('admin::events.create');
     }
     function edit($id){
         $event = Event::findOrFail($id);
         $categories = Category::pluck('name', 'id');
-        return view('events.edit')->with('event', $event)->with('categories', $categories);
+        $organizers = $event->getOrganizersList();        
+        return view('events.edit')->with('event', $event)->with('categories', $categories)->with('organizers', $organizers);
     }
     function update(EventRequest $request, $id){
         $input = Request::all();
@@ -55,6 +64,14 @@ class EventsController extends Controller
         }
         // Update event record    
         $event->update($input);
+        // Update organizers
+        $event->organizers()->detach();
+        $organizerEmails = explode(",", $input['organizers']);
+        foreach($organizerEmails as $organizerEmail){
+            $organizer = User::where('email', $organizerEmail)->first();
+            $event->organizers()->save($organizer);
+        }
+        // $event->organizers()->save();
         // Set flash message
         Session::flash('success', 'The event was edited successfully!');
         return redirect()->route('admin::events.index');

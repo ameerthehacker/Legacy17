@@ -27,17 +27,29 @@
                         <a href="{{ route('admin::terminal') }}"><i class="fa fa-2x fa-cloud-upload"></i> Terminal</a>
                     </li>
                 @endif
-                @if(Auth::user()->hasRole('root'))
-                    <li class="collection-item">
-                        <li>
-                            <a href="{{ route('admin::registrations') }}"><i class="fa fa-2x fa-users"></i>  All Registrations</a>
-                        </li>   
-                    </li>
-                    <li class="collection-item">
-                        <li>
-                            <a href="{{ route('admin::events.index') }}"><i class="fa fa-2x fa-tasks"></i>  Events</a>
-                        </li>   
-                    </li>
+                @if(Auth::user()->hasRole('root') || Auth::user()->organizings->count()!=0)
+                    <li class="no-padding">
+                        <ul class="collapsible collapsible-accordion">
+                            <li>
+                                <a class="collapsible-header"><i class="fa fa-users"></i> Registrations <i class="material-icons right">arrow_drop_down
+                                </i></a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        @if(Auth::user()->hasRole('root'))
+                                            <li>{{ link_to_route('admin::registrations', 'All Registrations') }}</li>
+                                        @endif
+                                        @foreach(App\Event::all() as $event)
+                                            @if(Auth::user()->isOrganizing($event->id) || Auth::user()->hasRole('root'))
+                                                <li>{{ link_to_route('admin::event.registrations',  $event->title, ['event_id' => $event->id]) }}</li>
+                                            @endif
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>   
+                @endif
+                @if(Auth::user()->hasRole('root') || Auth::user()->organizings->count()!=0)
                     <li class="no-padding">
                         <ul class="collapsible collapsible-accordion">
                             <li>
@@ -45,17 +57,31 @@
                                 </i></a>
                                 <div class="collapsible-body">
                                     <ul>
-                                        <li>{{ link_to_route('admin::requests.all', 'All Requests') }}</li>
-                                        <li>
-                                            <a href="{{ route('admin::requests') }}">
-                                                New Requests
-                                                <span class="new badge green">{{ $new_requests }}</span> 
-                                            </a>
-                                        </li>
+                                        @if(Auth::user()->hasRole('root'))
+                                            <li>{{ link_to_route('admin::requests.all', 'All Requests') }}</li>
+                                            <li>
+                                                <a href="{{ route('admin::requests') }}">
+                                                    New Requests
+                                                    <span class="new badge green">{{ $new_requests }}</span> 
+                                                </a>
+                                            </li>
+                                        @endif
+                                        @foreach(App\Event::all() as $event)
+                                            @if(Auth::user()->isOrganizing($event->id) || Auth::user()->hasRole('root'))
+                                                <li>{{ link_to_route('admin::event.requests',  $event->title, ['event_id' => $event->id]) }}</li>
+                                            @endif
+                                        @endforeach
                                     </ul>
                                 </div>
                             </li>
                         </ul>
+                    </li>
+                @endif
+                @if(Auth::user()->hasRole('root'))
+                    <li class="collection-item">
+                        <li>
+                            <a href="{{ route('admin::events.index') }}"><i class="fa fa-2x fa-tasks"></i>  Events</a>
+                        </li>   
                     </li>
                     <li class="collection-item">
                         <li>

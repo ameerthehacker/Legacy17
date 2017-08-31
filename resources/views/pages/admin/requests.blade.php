@@ -2,6 +2,9 @@
 
 @section('content')
 @include('pages.admin.partials.search_bar')
+<div class="col s12">
+    <p class="flow-text">{{ $requests->count() }} results <i class="fa fa-users"></i></p>
+</div>
 <div class="row">
     <div class="col s12">
         @if($requests->count() == 0)
@@ -28,23 +31,25 @@
                     </div>
                     <div class="collapsible-body">
                         @include('pages.admin.partials.student_detail', ['user' => $request->user])
-                        <p>
-                            {!! Form::open(['url' => route('admin::requests')]) !!}
-                                {!! Form::hidden('user_id', $request->user->id) !!}
-                                <div class="input-field">
-                                    {!! Form::label('message') !!}
-                                    {!! Form::textarea('message', null, ['class' => 'materialize-textarea']) !!}
-                                </div>
-                                <div class="input-field">
-                                    <?php 
-                                        $accepted = $request->user->isConfirmed()?'disabled':'';
-                                        $rejected = $request->user->isRejected()?'disabled':'';
-                                    ?>
-                                    {!! Form::submit('Accept', ['class' => "btn green $accepted", 'name' => 'submit']) !!}
-                                    {!! Form::submit('Reject', ['class' => "btn red $rejected", 'name' => 'submit']) !!}
-                                </div>
-                            {!! Form::close() !!}
-                        </p>    
+                        @if(Auth::user()->hasRole('root'))
+                            <p>
+                                {!! Form::open(['url' => route('admin::requests')]) !!}
+                                    {!! Form::hidden('user_id', $request->user->id) !!}
+                                    <div class="input-field">
+                                        {!! Form::label('message') !!}
+                                        {!! Form::textarea('message', null, ['class' => 'materialize-textarea']) !!}
+                                    </div>
+                                    <div class="input-field">
+                                        <?php 
+                                            $accepted = $request->user->isConfirmed()?'disabled':'';
+                                            $rejected = $request->user->isRejected()?'disabled':'';
+                                        ?>
+                                        {!! Form::submit('Accept', ['class' => "btn green $accepted", 'name' => 'submit']) !!}
+                                        {!! Form::submit('Reject', ['class' => "btn red $rejected", 'name' => 'submit']) !!}
+                                    </div>
+                                {!! Form::close() !!}
+                            </p>    
+                        @endif
                     </div>
                 </li>
             @endforeach   

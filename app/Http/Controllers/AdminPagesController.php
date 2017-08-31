@@ -9,6 +9,7 @@ use App\User;
 use App\Accomodation;
 use App\Rejection;
 use App\Team;
+use App\Event;
 use Illuminate\Support\Facades\Input;
 use App\Traits\Utilities;
 use App\Payment;
@@ -55,6 +56,24 @@ class AdminPagesController extends Controller
     function editRegistration($user_id){
         $user = User::findOrFail($user_id);
         return view('pages.admin.edit_registration', ['registration' => $user]);
+    }
+    function eventRegistrations($event_id){
+        $event = Event::findOrFail($event_id);
+        $search = Input::get('search', '');
+        $search = $search . '%';
+        $user_ids = User::search($search)->pluck('id')->toArray();
+        if($event->isGroupEvent()){
+            $registered_user_ids = $event->teams()->whereIn('user_id', $user_ids)->pluck('user_id')->toArray();
+        }
+        else{
+            $registered_user_ids = $event->users()->whereIn('id', $user_ids)->pluck('id')->toArray();
+        }
+        $registrations = User::all()->whereIn('id', $registered_user_ids);
+        // Paginate registrations
+        $page = Input::get('page', 1);
+        $per_page = 10;
+        $registrations = $this->paginate($page, $per_page, $registrations);
+        return view('pages.admin.registrations')->with('registrations', $registrations);
     }
     function confirmPayment($user_id){
         $user = User::findOrFail($user_id);
@@ -152,6 +171,25 @@ class AdminPagesController extends Controller
         $search = $search . '%';
         $user_ids = User::search($search)->pluck('id')->toArray();
         $requests = Confirmation::all()->where('status', null)->where('file_name', '<>',  null)->whereIn('user_id', $user_ids)->filter(function($confirmation){
+            return $confirmation->user->needApproval();
+        });
+        $page = Input::get('page', 1);
+        $per_page = 10;
+        $requests = $this->paginate($page, $per_page, $requests);
+        return view('pages.admin.requests')->with('requests', $requests);
+    }
+    function eventRequests($event_id){
+        $event = Event::findOrFail($event_id);
+        $search = Input::get('search', '');
+        $search = $search . '%';
+        $user_ids = User::search($search)->pluck('id')->toArray();
+        if($event->isGroupEvent()){
+            $registered_user_ids = $event->teams()->whereIn('user_id', $user_ids)->pluck('user_id')->toArray();
+        }
+        else{
+            $registered_user_ids = $event->users()->whereIn('id', $user_ids)->pluck('id')->toArray();
+        }
+        $requests = Confirmation::all()->where('status', null)->where('file_name', '<>',  null)->whereIn('user_id', $registered_user_ids)->filter(function($confirmation){
             return $confirmation->user->needApproval();
         });
         $page = Input::get('page', 1);

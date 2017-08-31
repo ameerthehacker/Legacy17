@@ -34,7 +34,8 @@ class EventRequest extends FormRequest
             'min_members' => 'required',
             'max_members' => 'required',
             'max_limit' => 'required',
-            'event_image' => 'mimetypes:image/jpeg, images/png'
+            'event_image' => 'mimetypes:image/jpeg, images/png',
+            'organizers' => 'required|adminExists'
         ];
     }
     public function messages(){
@@ -44,7 +45,8 @@ class EventRequest extends FormRequest
             'min_members.required' => 'The minimum participants field is required',
             'max_members.required' => 'The maximum participants field is required',
             'max_limit.required' => 'The maximum participations field is required',
-            'event_image.mimetypes' => 'The event image must be of formats jpeg or png only'
+            'event_image.mimetypes' => 'The event image must be of formats jpeg or png only',
+            'organizers.required' => 'There must be atleast one organizer for an event'
         ];
     }
 }

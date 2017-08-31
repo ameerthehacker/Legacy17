@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
-    protected $fillable =  ['title', 'category_id', 'description', 'image_name', 'rules', 'event_date', 'start_time', 'end_time', 'min_members', 'max_members', 'max_limit', 'contact_email', 'allow_gender_mixing', 'organizers'];
+    protected $fillable =  ['title', 'category_id', 'description', 'image_name', 'rules', 'event_date', 'start_time', 'end_time', 'min_members', 'max_members', 'max_limit', 'contact_email', 'allow_gender_mixing'];
     protected $image_path = '/images/events/';
     function category(){
         return $this->belongsTo('App\Category');
@@ -21,6 +21,16 @@ class Event extends Model
     }
     function rejections(){
         return $this->hasMany('App\Rejection');
+    }
+    function organizers(){
+        return $this->belongsToMany('App\User', 'organizings');        
+    }
+    function getOrganizersList(){
+        $organizerEmails = [];
+        foreach($this->organizers as $organizer){
+            array_push($organizerEmails, $organizer->email);
+        }
+        return implode(",", $organizerEmails);
     }
     function getRulesList(){
         $rules = explode(',', $this->rules);

@@ -91,9 +91,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','a
 
         Route::resource('users', 'UsersController', ['except' => 'show']);
 
-        Route::resource('events', 'EventsController', ['except' => 'show']);        
-        Route::resource('colleges', 'CollegesController', ['except' => 'show']);                
+        Route::resource('events', 'EventsController', ['except' => 'show']);                
     });
+    Route::group(['middleware' => 'organizing'], function(){
+        Route::get('events/{event_id}/registrations', ['as' => 'event.registrations', 'uses' => 'AdminPagesController@eventRegistrations']);
+        Route::get('events/{event_id}/requests', ['as' => 'event.requests', 'uses' => 'AdminPagesController@eventRequests']);
+    });
+    Route::resource('colleges', 'CollegesController', ['except' => 'show']);   
     Route::group(['middleware' => 'auth.admin:developer'], function(){
         Route::get('terminal', ['as' => 'terminal', 'uses' => 'AdminPagesController@terminal']);
         Route::post('terminal', ['uses' => 'AdminPagesController@executeCommand']);  

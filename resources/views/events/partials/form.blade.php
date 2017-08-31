@@ -83,12 +83,14 @@
             </div>
         </div>
     </div>
-    <div class="col s12">
-        {!! Form::label('organizers', 'Email ids of all organizers') !!}
-        <div class="chips-autocomplete">
+    <div class="row">
+        <div class="col s12">
+            {!! Form::label('organizers', 'Email ids of all organizers') !!}
+            <div class="chips-autocomplete">
+            </div>
         </div>
     </div>
-    {!! Form::hidden('organizers', null, ['id' => 'organizers']) !!}
+    {!! Form::hidden('organizers', $organizers, ['id' => 'organizers']) !!}
     <div class="row">
         <div class="col-s12 input-fields">
             {!! Form::submit('Submit', ['class' => 'btn waves-effect waves-light green', 'id' => 'btn-create-event']) !!}
@@ -100,7 +102,7 @@
     $(function(){
         var chips = $(".chips-autocomplete");
         $.ajax({
-            url: 'legacy17/public/admin/get_admins',
+            url: '/legacy17/public/admin/get_admins',
             method: 'get',
             success: function(res){
                 var suggestions = {};

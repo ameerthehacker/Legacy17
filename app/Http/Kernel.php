@@ -61,6 +61,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'registrations' => \App\Http\Middleware\CheckRegistration::class,
         'registrations.confirm' => \App\Http\Middleware\CheckConfirmation::class, 
-        'payment.check' => \App\Http\Middleware\CheckPaymentRequest::class                       
+        'payment.check' => \App\Http\Middleware\CheckPaymentRequest::class,    
+        'organizing' =>\App\Http\Middleware\IsOrganizing::class        
     ];
 }

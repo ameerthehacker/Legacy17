@@ -26,6 +26,9 @@ class User extends Authenticatable
     function accomodation(){
         return $this->hasOne('App\Accomodation');
     }
+    function organizings(){
+        return $this->belongsToMany('App\Event', 'organizings');
+    }
     function hasRequestedAccomodation(){
         if($this->accomodation){
             return true;
@@ -52,6 +55,12 @@ class User extends Authenticatable
     }
     function payments(){
         return $this->hasMany('App\Payment', 'paid_by');
+    }
+    // Check if the user is organizing an event
+    function isOrganizing($event_id){
+        if($this->organizings()->find($event_id)){
+            return true;
+        }
     }
     // Find the team a user has registered for an event
     function teamLeaderFor($event_id){
