@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Input;
 use App\Traits\Utilities;
 use App\Payment;
 use App\Config;
+use App\College;
 
 class AdminPagesController extends Controller
 {
@@ -156,6 +157,88 @@ class AdminPagesController extends Controller
             Session('success', 'User has not confirmed the registration');          
         }
         return redirect()->route('admin::registrations.edit', ['user_id' => $user_id]);
+    }
+    function reports(){
+        $colleges = ['all' => 'All'];
+        $events = ['all' => 'All'];
+        $colleges += College::pluck('name', 'id')->toArray();
+        $events += Event::pluck('title', 'id')->toArray();
+        return view('pages.admin.reports')->with('colleges', $colleges)->with('events', $events);
+    }
+    function reportRegistrations(Request $request){
+        $inputs = Request::all();
+        $event_id = $inputs['event_id'];
+        $college_id = $inputs['college_id'];
+        $gender = $inputs['gender'];
+        $payment = $inputs['payment'];
+        // Get the registered users in the given event
+        if($event_id == "all"){
+            $users = User::all()->where('type', 'student');
+        }
+        else{
+            $event = Event::findOrFail($event_id);
+            if($event->isGroupEvent()){
+                $user_ids = [];
+                foreach($event->teams as $team){
+                    array_push($user_ids, $team->user_id);
+                    foreach($team->teamMembers as $teamMember){
+                        array_push($user_id, $teamMember->user->id);
+                    }
+                }
+                $users = User::all()->whereIn('id', $user_ids);
+            }
+            else{
+                $users = $event->users;
+            }
+        }
+        if($college_id != "all"){
+            $users = $users->where('college_id', $college_id);
+        }
+        if($gender != "all"){
+            $users = $users->where('gender', $gender);
+        }
+        if($payment != "all"){
+            $users = $users->filter(function($user) use ($payment){
+                return $user->hasPaid() == $payment;
+            });
+        }
+        $users_count = $users->count();
+
+        $page = Input::get('page', 1);
+        $per_page = 10;
+        $users = $this->paginate($page, $per_page, $users);
+        return view('pages.admin.report_results')->with('users', $users)->with('users_count', $users_count);
+    }
+    function reportAccomodations(Request $request){
+        $inputs = Request::all();
+        $college_id = $inputs['college_id'];
+        $gender = $inputs['gender'];
+        $payment = $inputs['payment'];
+        $status = $inputs['status'];
+        // Get the user who requested for accomodations
+        $user_ids = Accomodation::pluck('user_id')->toArray();
+        $users = User::all()->whereIn('id', $user_ids);
+        if($college_id != "all"){
+            $users = $users->where('college_id', $college_id);
+        }
+        if($gender != "all"){
+            $users = $users->where('gender', $gender);
+        }
+        if($status != "all"){
+            $users = $users->filter(function($user) use ($status){
+                return $user->accomodation->status == $status;
+            });
+        }
+        if($payment != "all"){
+            $users = $users->filter(function($user) use($payment){
+                return $user->accomodation->paid == $payment;
+            });
+        }
+        $users_count = $users->count();
+        $page = Input::get('page', 1);
+        $per_page = 10;
+        $users = $this->paginate($page, $per_page, $users);
+        return view('pages.admin.report_results')->with('users', $users)->with('users_count', $users_count);
     }
     function allRequests(){
         $search = Input::get('search', '');

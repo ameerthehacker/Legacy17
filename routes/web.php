@@ -96,6 +96,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','a
     Route::group(['middleware' => 'organizing'], function(){
         Route::get('events/{event_id}/registrations', ['as' => 'event.registrations', 'uses' => 'AdminPagesController@eventRegistrations']);
         Route::get('events/{event_id}/requests', ['as' => 'event.requests', 'uses' => 'AdminPagesController@eventRequests']);
+        Route::get('reports', ['as' => 'reports', 'uses' => 'AdminPagesController@reports']);
+        Route::get('reports/registrations', ['as' => 'reports.registrations', 'uses' => 'AdminPagesController@reportRegistrations']);
+        Route::get('reports/accomodations', ['as' => 'reports.accomodations', 'uses' => 'AdminPagesController@reportAccomodations']);        
     });
     Route::resource('colleges', 'CollegesController', ['except' => 'show']);   
     Route::group(['middleware' => 'auth.admin:developer'], function(){
