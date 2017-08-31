@@ -3,7 +3,7 @@
 @section('content')
 @include('pages.admin.partials.search_bar')
 <div class="col s12">
-    <p class="flow-text">{{ $registrations->count() }} results <i class="fa fa-users"></i></p>
+    <p class="flow-text">{{ $registrations_count }} results <i class="fa fa-users"></i></p>
 </div>
 <div class="row">
     <div class="col s12">

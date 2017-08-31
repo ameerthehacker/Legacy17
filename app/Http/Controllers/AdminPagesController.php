@@ -50,8 +50,10 @@ class AdminPagesController extends Controller
         $search = Input::get('search', '');
         $search = $search . '%';
         $user_ids = User::search($search)->pluck('id')->toArray();
-        $registrations = User::whereIn('id', $user_ids)->where('activated', true)->paginate(10);
-        return view('pages.admin.registrations')->with('registrations', $registrations);
+        $registrations = User::whereIn('id', $user_ids)->where('activated', true);
+        $registrations_count = $registrations->count();
+        $registrations = $registrations->paginate(10);
+        return view('pages.admin.registrations')->with('registrations', $registrations)->with('registrations_count', $registrations_count);
     }
     function editRegistration($user_id){
         $user = User::findOrFail($user_id);
@@ -69,11 +71,12 @@ class AdminPagesController extends Controller
             $registered_user_ids = $event->users()->whereIn('id', $user_ids)->pluck('id')->toArray();
         }
         $registrations = User::all()->whereIn('id', $registered_user_ids);
+        $registrations_count = $registrations->count();        
         // Paginate registrations
         $page = Input::get('page', 1);
         $per_page = 10;
         $registrations = $this->paginate($page, $per_page, $registrations);
-        return view('pages.admin.registrations')->with('registrations', $registrations);
+        return view('pages.admin.registrations')->with('registrations', $registrations)->with('registrations_count', $registrations_count);
     }
     function confirmPayment($user_id){
         $user = User::findOrFail($user_id);
@@ -161,10 +164,11 @@ class AdminPagesController extends Controller
         $requests = Confirmation::all()->where('file_name', '<>',  null)->whereIn('user_id', $user_ids)->filter(function($confirmation){
             return $confirmation->user->needApproval();
         });
+        $requests_count = $requests->count();
         $page = Input::get('page', 1);
         $per_page = 10;
         $requests = $this->paginate($page, $per_page, $requests);
-        return view('pages.admin.requests')->with('requests', $requests);
+        return view('pages.admin.requests')->with('requests', $requests)->with('requests_count', $requests_count);
     }
     function requests(){
         $search = Input::get('search', '');
@@ -173,10 +177,11 @@ class AdminPagesController extends Controller
         $requests = Confirmation::all()->where('status', null)->where('file_name', '<>',  null)->whereIn('user_id', $user_ids)->filter(function($confirmation){
             return $confirmation->user->needApproval();
         });
+        $requests_count = $requests->count();        
         $page = Input::get('page', 1);
         $per_page = 10;
         $requests = $this->paginate($page, $per_page, $requests);
-        return view('pages.admin.requests')->with('requests', $requests);
+        return view('pages.admin.requests')->with('requests', $requests)->with('requests_count', $requests_count);
     }
     function eventRequests($event_id){
         $event = Event::findOrFail($event_id);
