@@ -197,10 +197,11 @@ class AdminPagesController extends Controller
         $requests = Confirmation::all()->where('status', null)->where('file_name', '<>',  null)->whereIn('user_id', $registered_user_ids)->filter(function($confirmation){
             return $confirmation->user->needApproval();
         });
+        $requests_count = $requests->count();                
         $page = Input::get('page', 1);
         $per_page = 10;
         $requests = $this->paginate($page, $per_page, $requests);
-        return view('pages.admin.requests')->with('requests', $requests);
+        return view('pages.admin.requests')->with('requests', $requests)->with('requests_count', $requests_count);
     }
     function replyRequest(Request $request){
         $inputs = Request::all();
