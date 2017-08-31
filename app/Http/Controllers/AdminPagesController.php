@@ -167,7 +167,7 @@ class AdminPagesController extends Controller
         if(Auth::user()->hasRole('root')){
             $colleges = ['all' => 'All'];
             $events = ['all' => 'All'];        
-            $events = Event::pluck('title', 'id')->toArray();                    
+            $events += Event::pluck('title', 'id')->toArray();                    
         }else{
             $colleges = [];
             $events = [];
