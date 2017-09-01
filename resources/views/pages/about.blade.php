@@ -35,7 +35,7 @@
             Mepco Schlenk Engineering College, Sivakasi,<br>
             Mepco Engineering College Post - 626 005,<br>
             Virudhunagar District<br>
-            <i class="fa fa-2x fa-mobile"></i><span> 04562 – 235601, 235660, 9677913395</span>                          
+            <i class="fa fa-2x fa-mobile"></i><span> 04562 – 235601, 235660, 9677913395, 9442090272</span>                          
         </p>
     </div>
 </div>
