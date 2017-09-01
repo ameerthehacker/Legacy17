@@ -29,7 +29,7 @@
 </div>
 <div class="row">
     <div class="col s12">
-        {{ $registrations->render() }}        
+        {{ $registrations->appends(Request::capture()->except('page'))->render() }}        
     </div>
 </div>
 @endsection

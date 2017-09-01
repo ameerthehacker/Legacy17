@@ -58,7 +58,7 @@
 </div>
 <div class="row">
     <div class="col s12">
-        {{ $requests->render() }}        
+        {{ $requests->appends(Request::capture()->except('page'))->render() }}        
     </div>
 </div>
 @endsection
