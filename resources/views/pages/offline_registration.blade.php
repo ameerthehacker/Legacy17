@@ -12,21 +12,18 @@
                 <div class="center-align">
                     <div class="row">
                         <div class="col s12">
-                            <a href="uploads/reg.pdf" class="btn waves-effect waves-light green"><i class="fa fa-download"></i> Download Registration Form</a>
+                            <a href="{{ env('APP_URL') }}/uploads/reg.pdf" class="btn waves-effect waves-light green"><i class="fa fa-download"></i> Download Registration Form</a>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col s12">
-                            <a href="uploads/acc.pdf" class="btn waves-effect waves-light green"><i class="fa fa-download"></i> Download Accomodation Form</a> 
+                            <a href="{{ env('APP_URL') }}/uploads/acc.pdf" class="btn waves-effect waves-light green"><i class="fa fa-download"></i> Download Accomodation Form</a> 
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div class="row">
-    
 </div>
 
  
