@@ -15,7 +15,8 @@ Route::group(['middleware' => 'auth.redirect_admin'], function(){
     Route::get( '/', ['as' => 'pages.root', 'uses' => 'PagesController@root'])->middleware('guest');
     Route::get('about', ['as' => 'pages.about', 'uses' => 'PagesController@about']);
     Route::get('events', ['as' => 'pages.events', 'uses' => 'PagesController@events']);
-    Route::get('help', ['as' => 'pages.help', 'uses' => 'PagesController@help']);    
+    Route::get('help', ['as' => 'pages.help', 'uses' => 'PagesController@help']);   
+    Route::get('/register/offline', ['as' => 'pages.registration.offline', 'uses' => 'PagesController@offlineRegistration']);        
     Route::group(['middleware' => 'auth'], function(){
         // Routes for team registration
         Route::group(['prefix' => 'events/{event_id}'], function(){
@@ -76,6 +77,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','a
         Route::get('registrations', ['as' => 'registrations', 'uses' => 'AdminPagesController@registrations']);
         Route::get('registrations/open', ['as' => 'registrations.open', 'uses' => 'AdminPagesController@openRegistrations']);
         Route::get('registrations/close', ['as' => 'registrations.close', 'uses' => 'AdminPagesController@closeRegistrations']);
+        Route::get('registrations/offline/enable', ['as' => 'registrations.offline.enable', 'uses' => 'AdminPagesController@enableOfflineRegistration']);
+        Route::get('registrations/offline/disable', ['as' => 'registrations.offline.disable', 'uses' => 'AdminPagesController@disableOfflineRegistration']);
         Route::get('registrations/{user_id}', ['as' => 'registrations.edit', 'uses' => 'AdminPagesController@editRegistration']);
 
         Route::get('registrations/{user_id}/confirm', ['as' => 'registrations.confirm', 'uses' => 'AdminPagesController@confirmRegistration']); 

@@ -10,7 +10,11 @@
             <ul class="side-nav" id="slide-out">
                 <li><a href="{{ route('pages.events') }}"><i class="fa fa-2x fa-tasks"></i> Events</a></li>
                 <li><a href="{{ route('pages.about') }}"><i class="fa fa-2x fa-child"></i> About</a></li>
-                <li><a href="{{ route('pages.help') }}"><i class="fa fa-2x fa-question-circle"></i> Help</a></li> 
+                <li><a href="{{ route('pages.help') }}"><i class="fa fa-2x fa-question-circle"></i> 
+                Help</a></li>   
+                @if(App\Config::getConfig('offline_link'))              
+                    <li><a href="{{ route('pages.registration.offline') }}"><i class="fa fa-2x fa-download"></i> Offline Registration</a></li>  
+                @endif
                 @if(Auth::Check())
                     <li><a href="{{ route('pages.dashboard') }}"><i class="fa fa-2x fa-tachometer"></i> Dashboard</a></li>  
                     <li><a href="{{ route('pages.hospitality') }}"><i class="fa fa-2x fa-bed"></i> Hospitality</a></li>
@@ -37,6 +41,9 @@
                 <li><a href="{{ route('pages.events') }}"><i class="fa fa-tasks"></i> Events</a></li>
                 <li><a href="{{ route('pages.about') }}"><i class="fa fa-child"></i> About</a></li>
                 <li><a href="{{ route('pages.help') }}"><i class="fa fa-question-circle"></i> Help</a></li>
+                @if(App\Config::getConfig('offline_link'))              
+                    <li><a href="{{ route('pages.registration.offline') }}"><i class="fa fa-download"></i> Offline  Registration</a></li>                                          
+                @endif
                 @if(Auth::Check())
                     <li><a href="{{ route('pages.dashboard') }}"><i class="fa fa-tachometer"></i> Dashboard</a></li>  
                     <li><a href="{{ route('pages.hospitality') }}"><i class="fa fa-child"></i> Hospitality</a></li>

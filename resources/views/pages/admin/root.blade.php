@@ -19,6 +19,16 @@
                                         @endif
                                     </td>
                                 </tr>
+                                <tr>
+                                    <th>Offline Registration</th>
+                                    <td>
+                                        @if(App\Config::getConfig('offline_link'))
+                                            {{ link_to_route('admin::registrations.offline.disable', 'Disable', null, ['class' => 'btn waves-effect waves-light red']) }}
+                                        @else
+                                            {{ link_to_route('admin::registrations.offline.enable', 'Enable', null, ['class' => 'btn waves-effect waves-light green']) }}
+                                        @endif
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>

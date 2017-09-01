@@ -35,6 +35,9 @@ class PagesController extends Controller
     function help(){
         return view('pages.help');
     }
+    function offlineRegistration(){
+        return view('pages.offline_registration');
+    }
     function hospitality(){
         return view('pages.hospitality');
     }

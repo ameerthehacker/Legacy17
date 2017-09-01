@@ -49,6 +49,14 @@ class AdminPagesController extends Controller
         Config::setConfig('registration_open', false);
         return redirect()->route('admin::root');
     }
+    function enableOfflineRegistration(){
+        Config::setConfig('offline_link', true);
+        return redirect()->route('admin::root');
+    }
+    function disableOfflineRegistration(){
+        Config::setConfig('offline_link', false);
+        return redirect()->route('admin::root');
+    }
     function registrations(){
         $search = Input::get('search', '');
         $search = $search . '%';
