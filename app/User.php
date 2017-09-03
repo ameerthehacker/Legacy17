@@ -29,6 +29,33 @@ class User extends Authenticatable
     function organizings(){
         return $this->belongsToMany('App\Event', 'organizings');
     }
+    // Get all the users to be paid by the user eliminating duplicates
+    function getUsersToPay(){
+        $userIds = [];
+        $users = [];
+        // Add the current user and his id
+        array_push($userIds, $this->id);
+        array_push($users, $this);
+        // Get ids of all member users without duplication
+        foreach($this->teams as $team){
+            foreach($team->teamMembers as $teamMember){
+                if(array_search($teamMember->user->id, $userIds) === false){
+                    array_push($userIds, $teamMember->user->id);
+                    // Push the user as he is not being duplicated
+                    array_push($users, $teamMember->user);        
+                }
+            }
+        }
+        $usersToPay = [];
+        // Get users to be paid
+        foreach($users as $user){
+            if(!$user->hasPaid()){
+                array_push($usersToPay, $user);            
+            }
+        }
+        
+        return $usersToPay;
+    }
     function hasRequestedAccomodation(){
         if($this->accomodation){
             return true;
@@ -228,13 +255,8 @@ class User extends Authenticatable
         $transactionFee = Payment::getTransactionFee();
         $totalAmount = 0;
         $amount = Payment::getEventAmount();
-        // Amount for the actual user
-        if(!$this->hasPaid()){
+        foreach($this->getUsersToPay() as $userToPay){
             $totalAmount += $amount;
-        }
-        // Amount for teams in  which he is a leader
-        foreach($this->teams as $team){
-            $totalAmount += $team->getTotalAmount();
         }
         // Very Very important Add the transaction fee
         $totalAmount += $totalAmount*$transactionFee;

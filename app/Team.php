@@ -35,16 +35,6 @@ class Team extends Model
         }
         return true;
     }
-    function getTotalAmount(){
-        $totalAmount = 0;
-        $amount = Payment::getEventAmount();
-        foreach($this->teamMembers as $teamMember){
-            if(!$teamMember->user->hasPaid()){
-                $totalAmount += $amount;
-            }
-        }
-        return $totalAmount;
-    }
     function doPayment($txnid){
         foreach($this->teamMembers as $teamMember){
             if(!$teamMember->user->hasPaid()){

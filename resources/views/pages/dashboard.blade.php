@@ -105,12 +105,13 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if(!$user->hasPaid())
+                                        {{-- Get all users to pay   --}}
+                                        @foreach($user->getUsersToPay() as $userToPay)
                                             <tr>
-                                                <td>{{ $user->full_name }}</td>
-                                                <td>{{ $user->email }}</td>
+                                                <td>{{ $userToPay->full_name }}</td>
+                                                <td>{{ $userToPay->email }}</td>
                                                 <td>
-                                                    @if($user->hasConfirmed())
+                                                    @if($userToPay->hasConfirmed())
                                                         <span class="green-text">Confirmed</span>
                                                     @else
                                                         <span class="red-text">Not Confirmed</span>
@@ -118,26 +119,6 @@
                                                 </td>
                                                 <td><i class="fa fa-inr"></i> 200</td>
                                             </tr>
-                                        @endif
-                                        {{-- Get all teams   --}}
-                                        @foreach($user->teams as $team)
-                                            {{-- Get all team members  --}}
-                                            @foreach($team->teamMembers as $teamMember)
-                                                @if(!$teamMember->user->hasPaid())
-                                                    <tr>
-                                                        <td>{{ $teamMember->user->full_name }}</td>
-                                                        <td>{{ $teamMember->user->email }}</td>
-                                                        <td>
-                                                            @if($teamMember->user->hasConfirmed())
-                                                                <span class="green-text">Confirmed</span>
-                                                            @else
-                                                                <span class="red-text">Not Confirmed</span>
-                                                            @endif
-                                                        </td>
-                                                        <td><i class="fa fa-inr"></i> 200</td>
-                                                    </tr>
-                                                @endif
-                                            @endforeach
                                         @endforeach
                                     </tbody>
                                     <tfoot>
