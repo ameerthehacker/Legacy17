@@ -47,7 +47,7 @@
     <div class="center-align slider-fixed-item">
         <marquee scrollamount="6">
             <p class="flow-text white-text">
-                 Last date for registrations is 3.9.2017, Send your shortfilms to the following email : mepcolegacy17@gmail.com
+                 Last date for registrations is 5.9.2017, Send your shortfilms to the following email : mepcolegacy17@gmail.com
             </p>
         </marquee>
         {{ link_to_route('auth.login', 'Participate', null, ['class' => 'waves-effect waves-light btn blue']) }}  
