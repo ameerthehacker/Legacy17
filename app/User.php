@@ -274,17 +274,12 @@ class User extends Authenticatable
         return $totalAmount;
     }
     function doPayment($txnid){
-        // Amount for the actual user
-        if(!$this->hasPaid()){
+        foreach($this->getUsersToPay() as $user){
             $payment = new Payment();
             $payment->paid_by = $this->id;
-            $payment->user_id = $this->id;
+            $payment->user_id = $user->id;
             $payment->transaction_id = $txnid;
-            $this->payment()->save($payment);
-        }
-        // Amount for teams in  which he is a leader
-        foreach($this->teams as $team){
-            $team->doPayment($txnid);
+            $user->payment()->save($payment);
         }
     }
     function getTransactionId(){

@@ -35,16 +35,4 @@ class Team extends Model
         }
         return true;
     }
-    function doPayment($txnid){
-        foreach($this->teamMembers as $teamMember){
-            if(!$teamMember->user->hasPaid()){
-                $payment = new Payment();
-                // Paid by the team leader
-                $payment->paid_by = $this->user->id;
-                $payment->user_id = $teamMember->id;
-                $payment->transaction_id = $txnid;
-                $teamMember->user->payment()->save($payment);
-            }
-        }
-    }
 }
