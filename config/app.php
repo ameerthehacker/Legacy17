@@ -181,6 +181,7 @@ return [
         Barryvdh\DomPDF\ServiceProvider::class,
         // service provider for minifying html
         GrahamCampbell\HTMLMin\HTMLMinServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class
     ],
 
     /*
@@ -233,6 +234,7 @@ return [
         'Form' => Collective\Html\FormFacade::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'HTMLMin' => GrahamCampbell\HTMLMin\Facades\HTMLMin::class,  
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
 
 ];

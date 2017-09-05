@@ -34,7 +34,8 @@
             <div class="col s3">
                 {!! Form::select('payment', ['all' => 'All', '1' => 'Paid', '0' => 'Not Paid']) !!}            
             </div>
-            {!! Form::submit('View Report', ['class' => 'btn waves-effect waves-light green']) !!}        
+            {!! Form::submit('View Report',  ['class' => 'btn waves-effect waves-light green', 'name' => 'report_type']) !!}       
+            {!! Form::submit('Download Excel', ['class' => 'btn waves-effect waves-light green', 'name' => 'report_type']) !!}  
         {!! Form::close() !!}    
     </div>
 @endif
@@ -68,7 +69,8 @@
             <div class="col s3">
                 {!! Form::select('payment', ['all' => 'All', '1' => 'Paid', '0' => 'Not Paid']) !!}            
             </div>
-            {!! Form::submit('View Report', ['class' => 'btn waves-effect waves-light green']) !!}        
+            {!! Form::submit('View Report', ['class' => 'btn waves-effect waves-light green', 'name' => 'report_type']) !!}  
+            {!! Form::submit('Download Excel', ['class' => 'btn waves-effect waves-light green', 'name' => 'report_type']) !!}        
         {!! Form::close() !!}    
     </div>
 @endif

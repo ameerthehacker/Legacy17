@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Auth;
 use Session;
 use Request;
+use App\Http\Requests\RegistrationRequest;
 use App\Http\Requests\CommandRequest;
 use App\Confirmation;
 use App\User;
@@ -17,6 +18,7 @@ use App\Traits\Utilities;
 use App\Payment;
 use App\Config;
 use App\College;
+use Excel;
 
 class AdminPagesController extends Controller
 {
@@ -56,6 +58,25 @@ class AdminPagesController extends Controller
     function disableOfflineRegistration(){
         Config::setConfig('offline_link', false);
         return redirect()->route('admin::root');
+    }
+    function new_registration(){
+        return view('pages.admin.new_registration');
+    }
+    function create_registration(RegistrationRequest $request){
+        $inputs = Request::all();
+        $user = User::create([
+            'full_name' => $inputs['full_name'],
+            'email' => $inputs['email'],
+            'password' => bcrypt('test'),
+            'gender' => $inputs['gender'],
+            'college_id' => $inputs['college_id'],
+            'mobile' => $inputs['mobile_number'],
+            'type' => 'student',
+            'activated' => true,
+            'activation_code' => 0
+        ]);
+        Session::flash('success', 'The user was registered');
+        return redirect()->route('admin::registrations.create');
     }
     function registrations(){
         $search = Input::get('search', '');
@@ -225,12 +246,42 @@ class AdminPagesController extends Controller
                 return $user->hasPaid() == $payment;
             });
         }
-        $users_count = $users->count();
-
-        $page = Input::get('page', 1);
-        $per_page = 10;
-        $users = $this->paginate($page, $per_page, $users);
-        return view('pages.admin.report_registrations')->with('users', $users)->with('users_count', $users_count);
+        if($inputs['report_type'] == 'View Report'){
+            $users_count = $users->count();
+            $page = Input::get('page', 1);
+            $per_page = 10;
+            $users = $this->paginate($page, $per_page, $users);
+            return view('pages.admin.report_registrations')->with('users', $users)->with('users_count', $users_count);            
+        }
+        else if($inputs['report_type'] == 'Download Excel'){
+            $usersArray = [];
+            foreach($users as $user){
+                $userArray['LGID'] = $user->id;                
+                $userArray['FullName'] = $user->full_name;
+                $userArray['Email'] = $user->email;
+                $userArray['College'] = $user->college->name;                
+                $userArray['Gender'] = $user->gender;                
+                $userArray['Mobile'] = $user->mobile;
+                if(!$user->hasConfirmed()){
+                    $userArray['Status'] = 'Not yet confirmed';
+                }
+                else{
+                    if($user->isAcknowledged()){
+                        $userArray['Status'] = $user->confirmation->status == 'ack'? 'Accepted':'Rejected';  
+                    }
+                    else{
+                        $userArray['Status'] = 'Yet to be acknowledged';                          
+                    }
+                }
+                $userArray['Payment'] = $user->hasPaid()? 'Paid': 'Not Paid';
+                array_push($usersArray, $userArray);
+            }
+            Excel::create('report', function($excel) use($usersArray){
+                $excel->sheet('Sheet1', function($sheet) use($usersArray){
+                    $sheet->fromArray($usersArray);
+                });
+            })->download('xlsx');
+        }
     }
     function reportAccomodations(Request $request){
         if(!Auth::user()->hasRole('hospitality')){
@@ -261,11 +312,38 @@ class AdminPagesController extends Controller
                 return $user->accomodation->paid == $payment;
             });
         }
-        $users_count = $users->count();
-        $page = Input::get('page', 1);
-        $per_page = 10;
-        $users = $this->paginate($page, $per_page, $users);
-        return view('pages.admin.report_accomodations')->with('users', $users)->with('users_count', $users_count);
+        if($inputs['report_type'] == 'View Report'){
+            $users_count = $users->count();
+            $page = Input::get('page', 1);
+            $per_page = 10;
+            $users = $this->paginate($page, $per_page, $users);
+            return view('pages.admin.report_accomodations')->with('users', $users)->with('users_count', $users_count);        
+        }
+        else if($inputs['report_type'] == 'Download Excel'){
+            $usersArray = [];
+            foreach($users as $user){
+                $userArray['LGID'] = $user->id;                
+                $userArray['FullName'] = $user->full_name;
+                $userArray['Email'] = $user->email;
+                $userArray['College'] = $user->college->name;                
+                $userArray['Gender'] = $user->gender;                
+                $userArray['Mobile'] = $user->mobile;
+                $userArray['Days'] = $user->accomodation->days;
+                if($user->accomodation->status){
+                    $userArray['Status'] = $user->confirmation->status == 'ack'? 'Accepted':'Rejected';  
+                }
+                else{
+                    $userArray['Status'] = 'Yet to be acknowledged';                          
+                }
+                $userArray['Payment'] = $user->accomodation->paid? 'Paid': 'Not Paid';
+                array_push($usersArray, $userArray);
+            }
+            Excel::create('report', function($excel) use($usersArray){
+                $excel->sheet('Sheet1', function($sheet) use($usersArray){
+                    $sheet->fromArray($usersArray);
+                });
+            })->download('xlsx');
+        }
     }
     function allRequests(){
         $search = Input::get('search', '');

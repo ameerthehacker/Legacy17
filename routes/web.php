@@ -75,6 +75,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','a
     Route::group(['middleware' => 'auth.admin:root'], function(){
         Route::get('get_admins', 'AdminPagesController@getAdmins');
         Route::get('registrations', ['as' => 'registrations', 'uses' => 'AdminPagesController@registrations']);
+        Route::get('registrations/create', ['as' => 'registrations.create', 'uses' => 'AdminPagesController@new_registration' ]);
+        Route::post('registrations/create', 'AdminPagesController@create_registration');
         Route::get('registrations/open', ['as' => 'registrations.open', 'uses' => 'AdminPagesController@openRegistrations']);
         Route::get('registrations/close', ['as' => 'registrations.close', 'uses' => 'AdminPagesController@closeRegistrations']);
         Route::get('registrations/offline/enable', ['as' => 'registrations.offline.enable', 'uses' => 'AdminPagesController@enableOfflineRegistration']);
@@ -101,7 +103,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','a
         Route::get('events/{event_id}/requests', ['as' => 'event.requests', 'uses' => 'AdminPagesController@eventRequests']);
     });
     Route::get('reports', ['as' => 'reports', 'uses' => 'AdminPagesController@reports']);      
-    Route::get('reports/registrations', ['as' => 'reports.registrations', 'uses' => 'AdminPagesController@reportRegistrations']);
+    Route::get('reports/registrations', ['as' => 'reports.registrations', 'uses' => 'AdminPagesController@reportRegistrations']);   
     Route::get('reports/accomodations', ['as' => 'reports.accomodations', 'uses' => 'AdminPagesController@reportAccomodations']);      
     Route::resource('colleges', 'CollegesController', ['except' => 'show']);   
     Route::group(['middleware' => 'auth.admin:developer'], function(){
