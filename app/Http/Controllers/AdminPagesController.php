@@ -6,12 +6,14 @@ use Auth;
 use Session;
 use Request;
 use App\Http\Requests\RegistrationRequest;
+use App\Http\Requests\TeamRequest;
 use App\Http\Requests\CommandRequest;
 use App\Confirmation;
 use App\User;
 use App\Accomodation;
 use App\Rejection;
 use App\Team;
+use App\TeamMember;
 use App\Event;
 use Illuminate\Support\Facades\Input;
 use App\Traits\Utilities;
@@ -38,6 +40,83 @@ class AdminPagesController extends Controller
         $confirmed_accomodation = Accomodation::where('status', 'ack')->count();
         $accomodation_payment = Accomodation::where('paid', true)->count();
         return view('pages.admin.root')->with('registered_count', $registered_count)->with('confirmed_registrations', $confirmed_registrations)->with('payment_count', $payment_count)->with('accomodation_count', $accomodation_count)->with('confirmed_accomodation', $confirmed_accomodation)->with('accomodation_payment', $accomodation_payment);
+    }
+    function register($user_id){
+        $event_id = Input::get('event_id', false);
+        if($event_id){
+            $event = Event::find($event_id);
+            $user = User::find($user_id);
+            $user->events()->save($event);
+        }
+        return redirect()->route('admin::registrations.edit', ['user_id' => $user->id]);
+    }
+    function registerAccomodation($user_id){
+        $user = User::findOrFail($user_id);
+        $accomodation = new Accomodation();
+        $accomodation->status = 'ack';
+        $accomodation->paid = true;
+        $user->accomodation()->save($accomodation);
+        return redirect()->route('admin::registrations.edit', ['user_id' => $user->id]);
+    }
+    function unregister($user_id, $event_id){
+        $event = Event::find($event_id);
+        $user = User::find($user_id);
+        $event->users()->detach($user->id);        
+        return  redirect()->route('admin::registrations.edit', ['user_id' => $user_id]);
+    }
+    function registerTeam($user_id, \Illuminate\Http\Request $request){
+        $this->validate($request, [
+            'event_id' => 'required',
+            'name' => 'required',
+            'team_members' => 'required',
+        ]);
+        $inputs = Request::all();
+        $event = Event::findOrFail($inputs['event_id']);
+        $user = User::findOrFail($user_id);
+        $team  = new Team($user->teamLeaderFor($inputs['event_id']));
+        $team->user_id = $user->id;
+        $team->save();
+        $team_members_emails = explode(',', $inputs['team_members']);
+        $team_members_users = User::all()->whereIn('email', $team_members_emails);
+        foreach($team_members_users as $team_member_user){
+            $team_member = new TeamMember();
+            $team_member->team_id = $team->id;
+            $team_member->user_id = $team_member_user->id;
+            $team->teamMembers()->save($team_member);
+        }
+        $team->events()->save($event);
+        return redirect()->route('admin::registrations.edit', ['user_id' => $user->id]);
+    }
+    function unregisterTeam($user_id, $event_id){
+        $user = User::find($user_id);
+        $team = $user->teamLeaderFor($event_id);
+        $event  = Event::find($event_id);                         
+        $event->teams()->detach($team->id);
+        $team->teamMembers()->delete();
+        Team::destroy($team->id);
+        return  redirect()->route('admin::registrations.edit', ['user_id' => $user->id]);
+    }
+    function editTeam($id){
+        $team = Team::find($id);
+        return view('pages.admin.edit_team')->with('team', $team);
+    }
+    function updateTeam(\Illuminate\Http\Request $request, $id){
+        $this->validate($request, [
+            'name' => 'required',
+            'team_members' => 'required',
+        ]);
+        $inputs = Request::all();
+        $team  = Team::find($id);
+        $team->teamMembers()->delete();
+        $team_members_emails = explode(',', $inputs['team_members']);
+        $team_members_users = User::all()->whereIn('email', $team_members_emails);
+        foreach($team_members_users as $team_member_user){
+            $team_member = new TeamMember();
+            $team_member->team_id = $team->id;
+            $team_member->user_id = $team_member_user->id;
+            $team->teamMembers()->save($team_member);
+        } 
+        return redirect()->route('admin::registrations.edit', ['user_id' => $team->user->id]); 
     }
     function getAdmins(){
         $adminEmails = User::where('type', 'admin')->get(['email']);
@@ -70,7 +149,7 @@ class AdminPagesController extends Controller
             'password' => bcrypt('test'),
             'gender' => $inputs['gender'],
             'college_id' => $inputs['college_id'],
-            'mobile' => $inputs['mobile_number'],
+            'mobile' => $inputs['mobile'],
             'type' => 'student',
             'activated' => true,
             'activation_code' => 0
@@ -89,7 +168,22 @@ class AdminPagesController extends Controller
     }
     function editRegistration($user_id){
         $user = User::findOrFail($user_id);
-        return view('pages.admin.edit_registration', ['registration' => $user]);
+        $team = new Team();
+        $soloEvents = Event::where('max_members', 1)->pluck('title', 'id')->toArray();
+        $teamEvents = Event::where('max_members', '>', 1)->pluck('title', 'id')->toArray();        
+        return view('pages.admin.edit_registration', ['registration' => $user])->with('soloEvents', $soloEvents)->with('teamEvents', $teamEvents)->with('team', $team);
+    }
+    function updateRegistration($user_id, RegistrationRequest $request){
+        $user = User::findOrFail($user_id);
+        $inputs = Request::all();
+        $user->full_name = $inputs['full_name'];
+        $user->email = $inputs['email'];
+        $user->gender = $inputs['gender'];
+        $user->college_id = $inputs['college_id'];
+        $user->mobile = $inputs['mobile'];
+        $user->update();
+        Session::flash('success', 'The user was updated!');
+        return redirect()->route('admin::registrations.edit', $user_id);
     }
     function eventRegistrations($event_id){
         $event = Event::findOrFail($event_id);

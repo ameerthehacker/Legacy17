@@ -28,7 +28,7 @@ class RegistrationRequest extends FormRequest
             'email' => 'required|string|email|max:255|unique:users',
             'gender' => 'required',
             'college_id' => 'required',
-            'mobile_number' => 'required|digits:10'
+            'mobile' => 'required|digits:10'
         ];
     }
 }

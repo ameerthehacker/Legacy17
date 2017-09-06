@@ -102,7 +102,7 @@
     $(function(){
         var chips = $(".chips-autocomplete");
         $.ajax({
-            url: '/legacy17/public/admin/get_admins',
+            url: "{{ route('admin::admins') }}",
             method: 'get',
             success: function(res){
                 var suggestions = {};

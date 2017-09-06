@@ -123,8 +123,8 @@ class PagesController extends Controller
         Team::destroy($team->id);
         return  redirect()->route('pages.dashboard');
     }
-    function getCollegeMates(){
-        $user  = Auth::user();
+    function getCollegeMates($user_id){
+        $user  = User::find($user_id);
         $userEmails = User::where('college_id', $user->college_id)->where('id', '<>', $user->id)->where('activated', true)->get(['email']);
         return response()->json($userEmails);
     }

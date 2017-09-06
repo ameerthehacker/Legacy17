@@ -10,13 +10,13 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('users/{id}/get_college_mates', ['as' => 'users.college_mate', 'uses' => 'PagesController@getCollegeMates'])->middleware('auth');
 Route::group(['middleware' => 'auth.redirect_admin'], function(){
     Route::get( '/', ['as' => 'pages.root', 'uses' => 'PagesController@root'])->middleware('guest');
     Route::get('about', ['as' => 'pages.about', 'uses' => 'PagesController@about']);
     Route::get('events', ['as' => 'pages.events', 'uses' => 'PagesController@events']);
     Route::get('help', ['as' => 'pages.help', 'uses' => 'PagesController@help']);   
-    Route::get('/register/offline', ['as' => 'pages.registration.offline', 'uses' => 'PagesController@offlineRegistration']);        
+    Route::get('register/offline', ['as' => 'pages.registration.offline', 'uses' => 'PagesController@offlineRegistration']);   
     Route::group(['middleware' => 'auth'], function(){
         // Routes for team registration
         Route::group(['prefix' => 'events/{event_id}'], function(){
@@ -32,7 +32,6 @@ Route::group(['middleware' => 'auth.redirect_admin'], function(){
             });    
             Route::get('teams/{id}/unregister', ['as' => 'pages.unregisterteam', 'uses' => 'PagesController@unregisterTeam'])->middleware('registrations:team,yes');
         });
-        Route::get('teams/get_college_mates', 'PagesController@getCollegeMates');
         // Route for the user's dashboard
         Route::get('dashboard', ['as' => 'pages.dashboard', 'uses' => 'PagesController@dashboard']);
         // Route for requesting hospitality
@@ -73,7 +72,7 @@ Route::group(['namespace' => 'Auth', 'prefix' => 'auth'], function(){
 // Routes for administrators
 Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','auth.admin:']], function(){
     Route::group(['middleware' => 'auth.admin:root'], function(){
-        Route::get('get_admins', 'AdminPagesController@getAdmins');
+        Route::get('get_admins', ['as' =>'admins', 'uses' => 'AdminPagesController@getAdmins']);
         Route::get('registrations', ['as' => 'registrations', 'uses' => 'AdminPagesController@registrations']);
         Route::get('registrations/create', ['as' => 'registrations.create', 'uses' => 'AdminPagesController@new_registration' ]);
         Route::post('registrations/create', 'AdminPagesController@create_registration');
@@ -82,6 +81,17 @@ Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','a
         Route::get('registrations/offline/enable', ['as' => 'registrations.offline.enable', 'uses' => 'AdminPagesController@enableOfflineRegistration']);
         Route::get('registrations/offline/disable', ['as' => 'registrations.offline.disable', 'uses' => 'AdminPagesController@disableOfflineRegistration']);
         Route::get('registrations/{user_id}', ['as' => 'registrations.edit', 'uses' => 'AdminPagesController@editRegistration']);
+        Route::put('registrations/{user_id}', 'AdminPagesController@updateRegistration');
+        Route::get('registrations/{user_id}/events/register', ['as' => 'registrations.events.register', 'uses' => 'AdminPagesController@register']);
+        Route::get('registrations/{user_id}/events/{event_id}/uregister', ['as' => 'registrations.events.unregister', 'uses' => 'AdminPagesController@unregister']);
+
+        Route::post('registrations/{user_id}/teams/register', ['as' => 'registrations.teams.register', 'uses' => 'AdminPagesController@registerTeam']);
+        Route::get('registrations/{user_id}/teams/{event_id}/uregister', ['as' => 'registrations.teams.unregister', 'uses' => 'AdminPagesController@unregisterTeam']);
+
+        Route::get('registrations/{user_id}/accomodations/register', ['as' => 'registrations.accomodations.register', 'uses' => 'AdminPagesController@registerAccomodation']);
+
+        Route::get('registrations/teams/{id}/edit', ['as' => 'registrations.teams.edit', 'uses' => 'AdminPagesController@editTeam']);
+        Route::put('registrations/teams/{id}/edit', 'AdminPagesController@updateTeam'); 
 
         Route::get('registrations/{user_id}/confirm', ['as' => 'registrations.confirm', 'uses' => 'AdminPagesController@confirmRegistration']); 
         Route::get('registrations/{user_id}/unconfirm', ['as' => 'registrations.unconfirm', 'uses' => 'AdminPagesController@unconfirmRegistration']); 

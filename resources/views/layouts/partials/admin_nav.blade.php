@@ -35,6 +35,7 @@
                                 </i></a>
                                 <div class="collapsible-body">
                                     <ul>
+                                        <li>{{ link_to_route('admin::registrations.create', 'New Registration') }}</li>
                                         @if(Auth::user()->hasRole('root'))
                                             <li>{{ link_to_route('admin::registrations', 'All Registrations') }}</li>
                                         @endif

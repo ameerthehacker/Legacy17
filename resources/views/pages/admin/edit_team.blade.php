@@ -1,4 +1,4 @@
-@extends('layouts.default')
+@extends('layouts.admin')
 
 @section('content')
 
@@ -8,17 +8,9 @@
         <div class="card rounded-box">
             <div class="card-content">
                 <span class="card-title center-align">
-                    Register Team
+                    Edit Team
                 </span>
-                <div class="row">
-                    <div class="col s12">
-                        <ul class="collection with-header">
-                            <li class="collection-header"><strong>Note</strong></li>
-                            <li class="collection-item">You are the team leader and you are already included, dont enter your email id in team members list</li>                            
-                        </ul>
-                    </div>
-                </div>
-                {!! Form::model($team, ['url' => route('pages.registerteam', ['event_id' => Route::Input('event_id')])]) !!}
+                {!! Form::model($team, ['url' => route('admin::registrations.teams.edit', ['id' => $team->id]), 'method' => 'PUT']) !!}
                     @include('teams.partials.form')
                 {!! Form::close() !!}
             </div>
@@ -29,7 +21,7 @@
     $(function(){
         var chips = $(".chips-autocomplete");
         $.ajax({
-            url: "{{ route('users.college_mate', ['user_id' => Auth::user()->id]) }}",
+            url: "{{ route('users.college_mate', ['user_id' => $team->user_id]) }}",
             method: 'get',
             success: function(res){
                 var suggestions = {};
