@@ -425,7 +425,7 @@ class AdminPagesController extends Controller
                 $userArray['Mobile'] = $user->mobile;
                 $userArray['Days'] = $user->accomodation->days;
                 if($user->accomodation->status){
-                    $userArray['Status'] = $user->confirmation->status == 'ack'? 'Accepted':'Rejected';  
+                    $userArray['Status'] = $user->accomodation->status == 'ack'? 'Accepted':'Rejected';  
                 }
                 else{
                     $userArray['Status'] = 'Yet to be acknowledged';                          
