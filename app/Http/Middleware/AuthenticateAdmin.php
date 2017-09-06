@@ -14,17 +14,18 @@ class AuthenticateAdmin
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next, $role_name)
+    public function handle($request, Closure $next, $role_names)
     {
         if(Auth::user()->type == 'admin'){
             // Check if any role is needed for a route
-            if(!empty($role_name)){
-                if(Auth::user()->hasRole($role_name)){
-                    return $next($request); 
+            if(!empty($role_names)){
+                $roles = explode('.', $role_names);
+                foreach($roles as $role){
+                    if(Auth::user()->hasRole($role)){
+                        return $next($request); 
+                    }
                 }
-                else{
-                    return redirect()->route('auth.login');                
-                }
+                return redirect()->route('auth.login');                                
             }
             else{
                 return $next($request);                 

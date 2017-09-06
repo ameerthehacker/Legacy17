@@ -27,7 +27,7 @@
                         <a href="{{ route('admin::terminal') }}"><i class="fa fa-2x fa-cloud-upload"></i> Terminal</a>
                     </li>
                 @endif
-                @if(Auth::user()->hasRole('root') || Auth::user()->organizings->count()!=0)
+                @if(Auth::user()->hasRole('root') || Auth::user()->organizings->count()!=0 || Auth::user()->hasRole('registration'))
                     <li class="no-padding">
                         <ul class="collapsible collapsible-accordion">
                             <li>
@@ -36,7 +36,7 @@
                                 <div class="collapsible-body">
                                     <ul>
                                         <li>{{ link_to_route('admin::registrations.create', 'New Registration') }}</li>
-                                        @if(Auth::user()->hasRole('root'))
+                                        @if(Auth::user()->hasRole('root') || Auth::user()->hasRole('registration'))
                                             <li>{{ link_to_route('admin::registrations', 'All Registrations') }}</li>
                                         @endif
                                         @foreach(App\Event::all() as $event)
@@ -49,6 +49,8 @@
                             </li>
                         </ul>
                     </li>   
+                @endif
+                @if(Auth::user()->hasRole('root') || Auth::user()->organizings->count()!=0)
                     <li class="no-padding">
                         <ul class="collapsible collapsible-accordion">
                             <li>
@@ -100,7 +102,7 @@
                                 </i></a>
                                 <div class="collapsible-body">
                                     <ul>
-                                        <li>{{ link_to_route('admin::accomodations.all', 'All Requests') }}</li>  
+                                        <li>{{ link_to_route('admin::accomodations.all', 'All Requests') }}</li> 
                                         <li>
                                             <a href="{{ route('admin::accomodations') }}">
                                                 New Requests

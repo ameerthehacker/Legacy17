@@ -15,7 +15,8 @@ class RolesSeeder extends Seeder
             ['role_name' => 'root'],
             ['role_name' => 'hospitality'],
             ['role_name' => 'developer'],
-            ['role_name' => 'organizer']         
+            ['role_name' => 'organizer'],
+            ['role_name' => 'registration']
         ]);
     }
 }

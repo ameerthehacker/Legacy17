@@ -71,31 +71,39 @@ Route::group(['namespace' => 'Auth', 'prefix' => 'auth'], function(){
 
 // Routes for administrators
 Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','auth.admin:']], function(){
-    Route::group(['middleware' => 'auth.admin:root'], function(){
-        Route::get('get_admins', ['as' =>'admins', 'uses' => 'AdminPagesController@getAdmins']);
+    Route::group(['middleware' => 'auth.admin:root.registration'], function(){
+        // Adding new registrations onspot
         Route::get('registrations', ['as' => 'registrations', 'uses' => 'AdminPagesController@registrations']);
         Route::get('registrations/create', ['as' => 'registrations.create', 'uses' => 'AdminPagesController@new_registration' ]);
         Route::post('registrations/create', 'AdminPagesController@create_registration');
-        Route::get('registrations/open', ['as' => 'registrations.open', 'uses' => 'AdminPagesController@openRegistrations']);
-        Route::get('registrations/close', ['as' => 'registrations.close', 'uses' => 'AdminPagesController@closeRegistrations']);
-        Route::get('registrations/offline/enable', ['as' => 'registrations.offline.enable', 'uses' => 'AdminPagesController@enableOfflineRegistration']);
-        Route::get('registrations/offline/disable', ['as' => 'registrations.offline.disable', 'uses' => 'AdminPagesController@disableOfflineRegistration']);
+        // Edit student details and registered events on the spot
         Route::get('registrations/{user_id}', ['as' => 'registrations.edit', 'uses' => 'AdminPagesController@editRegistration']);
         Route::put('registrations/{user_id}', 'AdminPagesController@updateRegistration');
+        // Edit solo events
         Route::get('registrations/{user_id}/events/register', ['as' => 'registrations.events.register', 'uses' => 'AdminPagesController@register']);
         Route::get('registrations/{user_id}/events/{event_id}/uregister', ['as' => 'registrations.events.unregister', 'uses' => 'AdminPagesController@unregister']);
-
+        // Edit team events
         Route::post('registrations/{user_id}/teams/register', ['as' => 'registrations.teams.register', 'uses' => 'AdminPagesController@registerTeam']);
         Route::get('registrations/{user_id}/teams/{event_id}/uregister', ['as' => 'registrations.teams.unregister', 'uses' => 'AdminPagesController@unregisterTeam']);
-
+        // Add accomodations on the spot
         Route::get('registrations/{user_id}/accomodations/register', ['as' => 'registrations.accomodations.register', 'uses' => 'AdminPagesController@registerAccomodation']);
-
+        //  Edit student teams to add or remove team members
         Route::get('registrations/teams/{id}/edit', ['as' => 'registrations.teams.edit', 'uses' => 'AdminPagesController@editTeam']);
         Route::put('registrations/teams/{id}/edit', 'AdminPagesController@updateTeam'); 
-
+        // Open, Close registration
+        Route::get('registrations/open', ['as' => 'registrations.open', 'uses' => 'AdminPagesController@openRegistrations']);
+        Route::get('registrations/close', ['as' => 'registrations.close', 'uses' => 'AdminPagesController@closeRegistrations']);
+        // Enable or disable offline registration forms
+        Route::get('registrations/offline/enable', ['as' => 'registrations.offline.enable', 'uses' => 'AdminPagesController@enableOfflineRegistration']);
+        Route::get('registrations/offline/disable', ['as' => 'registrations.offline.disable', 'uses' => 'AdminPagesController@disableOfflineRegistration']);
+    });
+    Route::group(['middleware' => 'auth.admin:root'], function(){
+        // Route to get the list of admins emails in json
+        Route::get('get_admins', ['as' =>'admins', 'uses' => 'AdminPagesController@getAdmins']);
+        // Manual event confirmation and unconfirmation by admin        
         Route::get('registrations/{user_id}/confirm', ['as' => 'registrations.confirm', 'uses' => 'AdminPagesController@confirmRegistration']); 
         Route::get('registrations/{user_id}/unconfirm', ['as' => 'registrations.unconfirm', 'uses' => 'AdminPagesController@unconfirmRegistration']); 
-
+        // Manual payment on the spot by the admin
         Route::get('registrations/{user_id}/payments/confirm', ['as' => 'registrations.payments.confirm', 'uses' => 'AdminPagesController@confirmPayment']); 
         Route::get('registrations/{user_id}/payments/unconfirm', ['as' => 'registrations.payments.unconfirm', 'uses' => 'AdminPagesController@unconfirmPayment']); 
 
@@ -108,18 +116,24 @@ Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','a
 
         Route::resource('events', 'EventsController', ['except' => 'show']);                
     });
+    // For viewing the organizer specific details
     Route::group(['middleware' => 'organizing'], function(){
         Route::get('events/{event_id}/registrations', ['as' => 'event.registrations', 'uses' => 'AdminPagesController@eventRegistrations']);
         Route::get('events/{event_id}/requests', ['as' => 'event.requests', 'uses' => 'AdminPagesController@eventRequests']);
     });
-    Route::get('reports', ['as' => 'reports', 'uses' => 'AdminPagesController@reports']);      
-    Route::get('reports/registrations', ['as' => 'reports.registrations', 'uses' => 'AdminPagesController@reportRegistrations']);   
-    Route::get('reports/accomodations', ['as' => 'reports.accomodations', 'uses' => 'AdminPagesController@reportAccomodations']);      
+    Route::group(['middleware' => 'auth.admin:root.organizer'], function(){
+        // Report generation for events and accomodations
+        Route::get('reports', ['as' => 'reports', 'uses' => 'AdminPagesController@reports']);      
+        Route::get('reports/registrations', ['as' => 'reports.registrations', 'uses' => 'AdminPagesController@reportRegistrations']);   
+        Route::get('reports/accomodations', ['as' => 'reports.accomodations', 'uses' => 'AdminPagesController@reportAccomodations']);    
+    });
     Route::resource('colleges', 'CollegesController', ['except' => 'show']);   
+    // Integrated terminal for developers
     Route::group(['middleware' => 'auth.admin:developer'], function(){
         Route::get('terminal', ['as' => 'terminal', 'uses' => 'AdminPagesController@terminal']);
         Route::post('terminal', ['uses' => 'AdminPagesController@executeCommand']);  
     });
+    // Requests for hospitality
     Route::group(['middleware' => 'auth.admin:hospitality'], function(){
         Route::get('accomodations', ['as' => 'accomodations', 'uses' => 'AdminPagesController@accomodationRequests']);
         Route::get('accomodations/all', ['as' => 'accomodations.all', 'uses' => 'AdminPagesController@allAccomodationRequests']);
