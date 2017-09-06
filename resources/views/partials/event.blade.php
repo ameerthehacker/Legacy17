@@ -46,6 +46,11 @@
             {!! Form::open(['url' => route('admin::events.destroy', ['id' => $event->id]), 'method' => 'delete', 'style' => 'display:inline']) !!}
                 {!! Form::submit('Delete', ['class' => 'btn red waves-effect waves-light btn-delete-event']) !!}
             {!! Form::close() !!}
+            @if($event->hasPrizes())
+                <a href="{{ route('admin::events.prizes.edit', ['event_id' => $event->id]) }}" class="btn green waves-effect waves-light">Edit Prizes</a>            
+            @else
+                <a href="{{ route('admin::events.prizes.create', ['event_id' => $event->id]) }}" class="btn green waves-effect waves-light">Add Prizes</a>
+            @endif
         @endif
     </div>
     <div class="card-reveal">   

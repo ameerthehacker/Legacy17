@@ -109,12 +109,17 @@ Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','a
 
         Route::get('requests/all', ['as' => 'requests.all', 'uses' => 'AdminPagesController@allRequests']);
         Route::get('requests', ['as' => 'requests', 'uses' => 'AdminPagesController@requests']);
-             
+        
         Route::post('requests', 'AdminPagesController@replyRequest');    
+        // Resource route for users
+        Route::resource('users', 'UsersController', ['except' => ['show']]);
 
-        Route::resource('users', 'UsersController', ['except' => 'show']);
-
-        Route::resource('events', 'EventsController', ['except' => 'show']);                
+        Route::resource('events', 'EventsController', ['except' => ['show']]);      
+        // Nested resource for adding prizes
+        Route::resource('events.prizes', 'PrizesController', ['except' => ['show', 'index', 'edit', 'update', 'destroy']]);
+        Route::get('events/{event_id}/prizes/edit', ['as' => 'events.prizes.edit', 'uses' => 'PrizesController@edit']);
+        Route::put('events/{event_id}/prizes', ['as' => 'events.prizes.update', 'uses' => 'PrizesController@update']);
+        
     });
     // For viewing the organizer specific details
     Route::group(['middleware' => 'organizing'], function(){

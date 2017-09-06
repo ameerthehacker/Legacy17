@@ -25,6 +25,17 @@ class Event extends Model
     function organizers(){
         return $this->belongsToMany('App\User', 'organizings');        
     }
+    function prizes(){
+        return $this->hasMany('App\Prize');
+    }
+    function hasPrizes(){
+        if($this->prizes->count() == 0){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
     function getOrganizersList(){
         $organizerEmails = [];
         foreach($this->organizers as $organizer){

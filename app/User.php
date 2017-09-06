@@ -29,6 +29,9 @@ class User extends Authenticatable
     function organizings(){
         return $this->belongsToMany('App\Event', 'organizings');
     }
+    function prizes(){
+        return $this->hasMany('App\Prize');
+    }
     // Get all the users to be paid by the user eliminating duplicates
     function getUsersToPay(){
         $userIds = [];
