@@ -102,12 +102,12 @@ class AdminPagesController extends Controller
         return view('pages.admin.edit_team')->with('team', $team);
     }
     function updateTeam(\Illuminate\Http\Request $request, $id){
+        $team  = Team::findOrFail($id);        
         $this->validate($request, [
             'name' => 'required',
-            'team_members' => 'required|teamMembersExist|teamMembersCount:' . $event->id            
+            'team_members' => 'required|teamMembersExist|teamMembersCount:' . $team->events->first()->id
         ]);
         $inputs = Request::all();
-        $team  = Team::find($id);
         $team->teamMembers()->delete();
         $team_members_emails = explode(',', $inputs['team_members']);
         $team_members_users = User::all()->whereIn('email', $team_members_emails);
