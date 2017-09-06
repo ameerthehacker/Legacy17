@@ -18,7 +18,7 @@
             <li class="collection-item">
                 {{ $event->title }}
                 <span class="right">
-                    <a href="{{ route('admin::registrations.events.unregister', ['user_id' => $registration->id, 'event_id' => $event->id]) }}">Remove</a>
+                    <a href="{{ route('admin::registrations.events.unregister', ['user_id' => $registration->id, 'event_id' => $event->id]) }}"><i class="fa fa-trash"></i> Remove</a>
                 </span>
             </li>                
         @endforeach
@@ -37,8 +37,8 @@
                 <li class="collection-item">
                     {{ $event->title }}
                     <span class="right">
-                        <a href="{{ route('admin::registrations.teams.edit', ['id' => $registration->teamLeaderFor($event->id)]) }}">Edit</a>
-                        <a href="{{ route('admin::registrations.teams.unregister', ['user_id' => $registration->id, 'event_id' => $event->id]) }}">Remove</a>
+                        <a href="{{ route('admin::registrations.teams.edit', ['id' => $registration->teamLeaderFor($event->id)]) }}"><i class="fa fa-pencil"></i> Edit</a>
+                        <a href="{{ route('admin::registrations.teams.unregister', ['user_id' => $registration->id, 'event_id' => $event->id]) }}"><i class="fa fa-trash"></i> Remove</a>
                     </span>
                 </li>                
             @endforeach

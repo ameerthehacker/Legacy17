@@ -65,15 +65,16 @@ class AdminPagesController extends Controller
         return  redirect()->route('admin::registrations.edit', ['user_id' => $user_id]);
     }
     function registerTeam($user_id, \Illuminate\Http\Request $request){
+        $inputs = Request::all();
+        $event = Event::findOrFail($inputs['event_id']);        
         $this->validate($request, [
             'event_id' => 'required',
             'name' => 'required',
-            'team_members' => 'required',
+            'team_members' => 'required|teamMembersExist|teamMembersCount:' . $event->id
         ]);
-        $inputs = Request::all();
-        $event = Event::findOrFail($inputs['event_id']);
         $user = User::findOrFail($user_id);
-        $team  = new Team($user->teamLeaderFor($inputs['event_id']));
+        $team  = new Team();
+        $team->name = $inputs['name'];
         $team->user_id = $user->id;
         $team->save();
         $team_members_emails = explode(',', $inputs['team_members']);
@@ -103,7 +104,7 @@ class AdminPagesController extends Controller
     function updateTeam(\Illuminate\Http\Request $request, $id){
         $this->validate($request, [
             'name' => 'required',
-            'team_members' => 'required',
+            'team_members' => 'required|teamMembersExist|teamMembersCount:' . $event->id            
         ]);
         $inputs = Request::all();
         $team  = Team::find($id);
