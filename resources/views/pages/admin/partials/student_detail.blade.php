@@ -117,7 +117,7 @@
         @endforeach
     </ul>
 @endif
-@if($user->teams()->count())
+@if($user->teams()->count() > 0 || $user->teamMembers()->count() > 0)
     <ul class="collection with-header">
         <li class="collection-header">
             <h5>Teams Details</h5>
@@ -131,6 +131,18 @@
                 </p>
                 <p>
                     @include('partials.team_details', ['team' => $team])
+                </p>
+            </li>
+        @endforeach
+        @foreach($user->teamMembers as $teamMember)
+            <li class="collection-item">
+                <span class="new badge blue" data-badge-caption="From Same college">{{ $user->college->noOfParticipantsForEvent($teamMember->team->events->first()->id) }}</span> 
+                <span class="new badge green" data-badge-caption="Total Confirmed">{{ $teamMember->team->events->first()->noOfConfirmedRegistration() }}</span>
+                <p>
+                    <strong>{{ $teamMember->team->events->first()->title }}</strong>                         
+                </p>
+                <p>
+                    @include('partials.team_details', ['team' => $teamMember->team])
                 </p>
             </li>
         @endforeach

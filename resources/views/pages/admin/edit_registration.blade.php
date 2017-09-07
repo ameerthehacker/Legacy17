@@ -36,10 +36,12 @@
             @foreach($registration->teamEvents() as $event)
                 <li class="collection-item">
                     {{ $event->title }}
-                    <span class="right">
-                        <a href="{{ route('admin::registrations.teams.edit', ['id' => $registration->teamLeaderFor($event->id)]) }}"><i class="fa fa-pencil"></i> Edit</a>
-                        <a href="{{ route('admin::registrations.teams.unregister', ['user_id' => $registration->id, 'event_id' => $event->id]) }}"><i class="fa fa-trash"></i> Remove</a>
-                    </span>
+                    @if($registration->teamLeaderFor($event->id))
+                        <span class="right">
+                            <a href="{{ route('admin::registrations.teams.edit', ['id' => $registration->teamLeaderFor($event->id)]) }}"><i class="fa fa-pencil"></i> Edit</a>
+                            <a href="{{ route('admin::registrations.teams.unregister', ['user_id' => $registration->id, 'event_id' => $event->id]) }}"><i class="fa fa-trash"></i> Remove</a>
+                        </span>
+                    @endif
                 </li>                
             @endforeach
         @endif
