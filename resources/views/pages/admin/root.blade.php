@@ -41,6 +41,15 @@
             <div class="card hoverable">
                 <div class="card-content green lighten-1">
                     <div class="card-title">
+                        <h5 class="white-text"><i class="fa fa-child"></i> {{ $present_count }} {{ str_plural('Attende', $present_count) }}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col s6">
+            <div class="card hoverable">
+                <div class="card-content green lighten-1">
+                    <div class="card-title">
                         <h5 class="white-text"><i class="fa fa-users"></i> {{ $registered_count }} {{ str_plural('Registration', $registered_count) }}</h5>
                     </div>
                 </div>

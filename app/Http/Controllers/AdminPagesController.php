@@ -28,6 +28,7 @@ class AdminPagesController extends Controller
 
     function root(){
         $registered_count = User::where('type', 'student')->count();
+        $present_count = User::where('type', 'student')->where('present', true)->count();        
         $confirmed_registrations = 0;
         $users = User::all()->where('type', 'student')->where('activated', true); 
         foreach($users as $user){
@@ -39,7 +40,7 @@ class AdminPagesController extends Controller
         $accomodation_count = Accomodation::count();
         $confirmed_accomodation = Accomodation::where('status', 'ack')->count();
         $accomodation_payment = Accomodation::where('paid', true)->count();
-        return view('pages.admin.root')->with('registered_count', $registered_count)->with('confirmed_registrations', $confirmed_registrations)->with('payment_count', $payment_count)->with('accomodation_count', $accomodation_count)->with('confirmed_accomodation', $confirmed_accomodation)->with('accomodation_payment', $accomodation_payment);
+        return view('pages.admin.root')->with('registered_count', $registered_count)->with('confirmed_registrations', $confirmed_registrations)->with('payment_count', $payment_count)->with('accomodation_count', $accomodation_count)->with('confirmed_accomodation', $confirmed_accomodation)->with('accomodation_payment', $accomodation_payment)->with('present_count', $present_count);
     }
     function register($user_id){
         $event_id = Input::get('event_id', false);
@@ -57,6 +58,26 @@ class AdminPagesController extends Controller
         $accomodation->paid = true;
         $user->accomodation()->save($accomodation);
         return redirect()->route('admin::registrations.edit', ['user_id' => $user->id]);
+    }
+    function userPresent($user_id){
+        $user = User::findOrFail($user_id);
+        $user->present = true;
+        if($user->update()){
+            return response()->json(['error' => false]);                            
+        }
+        else{
+            return response()->json(['error' => true]);                            
+        }
+    }
+    function userAbsent($user_id){
+        $user = User::findOrFail($user_id);
+        $user->present = false;
+        if($user->update()){
+            return response()->json(['error' => false]);                            
+        }
+        else{
+            return response()->json(['error' => true]);                            
+        }
     }
     function unregister($user_id, $event_id){
         $event = Event::find($event_id);

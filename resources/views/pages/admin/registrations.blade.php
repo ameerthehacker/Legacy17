@@ -1,6 +1,7 @@
 @extends('layouts.admin')
 
 @section('content')
+
 @include('pages.admin.partials.search_bar')
 <div class="col s12">
     <p class="flow-text">{{ $registrations_count }} results <i class="fa fa-users"></i></p>
@@ -32,4 +33,30 @@
         {{ $registrations->appends(Request::capture()->except('page'))->render() }}        
     </div>
 </div>
+
+<script>
+    $(function(){
+        $('.attendance').on('change', function(){
+            var user = $(this).attr('data-id');            
+            if($(this).is(' :checked')){
+                var url = "/legacy17/public/admin/registrations/" + user + "/present";
+            }
+            else{
+                var url = "/legacy17/public/admin/registrations/" + user + "/absent";                
+            }
+            $.ajax({
+                url: url,
+                success: function(response){
+                    if(response.error){
+                        Materialize.toast('Something went wrong in updating!', 2000);                        
+                    }
+                },
+                error: function(){
+                    Materialize.toast('Something went wrong!', 2000);
+                }
+            });
+        });
+    });
+</script>
+
 @endsection

@@ -97,6 +97,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','a
        Route::resource('events', 'EventsController', ['except' => 'show']);                
     });
     Route::group(['middleware' => 'auth.admin:root.registration'], function(){
+        // Making user present
+        Route::get('registrations/{user_id}/present', ['as' => 'registrations.present', 'uses' => 'AdminPagesController@userPresent']);
+        // Making user absent
+        Route::get('registrations/{user_id}/absent', ['as' => 'registrations.absent', 'uses' => 'AdminPagesController@userAbsent']);    
         // Adding new registrations onspot
         Route::get('registrations', ['as' => 'registrations', 'uses' => 'AdminPagesController@registrations']);
         Route::get('registrations/create', ['as' => 'registrations.create', 'uses' => 'AdminPagesController@new_registration' ]);
@@ -140,7 +144,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','a
         Route::post('accomodations', 'AdminPagesController@replyAccomodationRequest');        
     });
     Route::get('/', ['as' => 'root', 'uses' => 'AdminPagesController@root']);
-    //CRUD routes for events
 });
 
 

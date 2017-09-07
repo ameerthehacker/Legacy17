@@ -8,6 +8,21 @@
                     <td>{{ $user->LGId() }}</td>
                 </tr>
                 <tr>
+                    <td>
+                        Attendence
+                    </td>
+                    <td>
+                        <div class="switch">
+                            <label>
+                                Absent
+                                <input class="attendance" data-id="{{ $user->id }}" {{ $user->present? "checked":'' }} type="checkbox">
+                                <span class="lever"></span>
+                                Present
+                            </label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
                     <th>Name</th>
                     <td>{{ $user->full_name }}</td>
                 </tr>

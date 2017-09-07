@@ -12,7 +12,7 @@
                 @endif
                 <span class="new badge blue" data-badge-caption="Leader"></span>           
                 <li class="collection-item">
-                    {{ $team->user->full_name }} 
+                    {{ $team->user->full_name }} ({{ $team->user->LGId() }})
                 </li>
                 @foreach($team->teamMembers as $teamMember)
                     @if($teamMember->user->hasConfirmed())
@@ -26,7 +26,7 @@
                         <span class="new badge lighten-2 red" data-badge-caption="Not Confirmed"></span>
                     @endif
                     <li class="collection-item">
-                        {{ $teamMember->user->full_name }}
+                        {{ $teamMember->user->full_name }} ({{ $teamMember->user->LGId() }})
                     </li>
                 @endforeach
             </ul>
