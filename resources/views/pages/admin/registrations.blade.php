@@ -32,4 +32,5 @@
         {{ $registrations->appends(Request::capture()->except('page'))->render() }}        
     </div>
 </div>
+
 @endsection

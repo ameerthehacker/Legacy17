@@ -47,7 +47,15 @@
                 {!! Form::submit('Delete', ['class' => 'btn red waves-effect waves-light btn-delete-event']) !!}
             {!! Form::close() !!}
             @if($event->hasPrizes())
-                <a href="{{ route('admin::events.prizes.edit', ['event_id' => $event->id]) }}" class="btn green waves-effect waves-light">Edit Prizes</a>            
+                <a href="#" class="btn waves-light dropdown-button waves-effect green" data-activates="prize-dropdown-{{ $event->id }}">Prizes</a>
+                <ul id="prize-dropdown-{{ $event->id }}" class="dropdown-content">
+                    <li>
+                        <a href="{{ route('admin::events.prizes.edit', ['event_id' => $event->id]) }}">Edit Prizes</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin::events.prizes.show', ['event_id' => $event->id]) }}">View Prizes</a>
+                    </li>
+                </ul>
             @else
                 <a href="{{ route('admin::events.prizes.create', ['event_id' => $event->id]) }}" class="btn green waves-effect waves-light">Add Prizes</a>
             @endif

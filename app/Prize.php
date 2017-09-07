@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Prize extends Model
 {
     function user(){
-        return $this->hasOne('App\User');
+        return $this->belongsTo('App\User');
     }
     function event(){
-        return $this->hasOne('App\Event');
+        return $this->belongsTo('App\Event');
     }
 }

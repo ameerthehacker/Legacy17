@@ -119,7 +119,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','a
         Route::resource('events.prizes', 'PrizesController', ['except' => ['show', 'index', 'edit', 'update', 'destroy']]);
         Route::get('events/{event_id}/prizes/edit', ['as' => 'events.prizes.edit', 'uses' => 'PrizesController@edit']);
         Route::put('events/{event_id}/prizes', ['as' => 'events.prizes.update', 'uses' => 'PrizesController@update']);
-        
+        Route::get('events/{event_id}/prizes', ['as' => 'events.prizes.show', 'uses' => 'PrizesController@show']);
     });
     // For viewing the organizer specific details
     Route::group(['middleware' => 'organizing'], function(){

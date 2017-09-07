@@ -58,4 +58,17 @@ class PrizesController extends Controller
         $third_prize->save();      
         return redirect()->route('admin::events.index');
     }
+    function show($event_id){
+        $event = Event::findOrFail($event_id);
+        if($event->hasPrizes()){       
+            $first_prize_user = Prize::where('event_id', $event_id)->where('prize', 1)->first()->user;
+            $second_prize_user = Prize::where('event_id', $event_id)->where('prize', 2)->first()->user;
+            $third_prize_user = Prize::where('event_id', $event_id)->where('prize', 3)->first()->user;  
+            return view('prizes.show')->with('first_prize_user', $first_prize_user)->with('second_prize_user', $second_prize_user)->with('third_prize_user', $third_prize_user)->with('event', $event);
+        }  
+        else{
+            return redirect()->route('admin::events');
+        }
+
+    }
 }
