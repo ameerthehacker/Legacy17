@@ -11,7 +11,9 @@ use App\Http\Requests\PrizeRequest;
 class PrizesController extends Controller
 {
     function create($event_id){
-        return view('prizes.create')->with('event_id', $event_id);
+        $event = Event::find($event_id);
+        
+        return view('prizes.create')->with('event', $event);
     }
     function store(PrizeRequest $request, $event_id){
         $inputs = $request->all();
@@ -39,32 +41,31 @@ class PrizesController extends Controller
 
         return redirect()->route('admin::events.index');
     }
-    function edit($event_id){
-        $first_prize = Prize::where('event_id', $event_id)->where('prize', 1)->first();
-        $second_prize = Prize::where('event_id', $event_id)->where('prize', 2)->first();
-        $third_prize = Prize::where('event_id', $event_id)->where('prize', 3)->first();        
-        return view('prizes.edit')->with('event_id', $event_id)->with('first_prize', $first_prize->user_id)->with('second_prize', $second_prize->user_id)->with('third_prize', $third_prize->user_id);
+    function edit($event){
+        $event = Event::find($event);        
+        $first_prize = Prize::where('event_id', $event->id)->where('prize', 1)->first();
+        $second_prize = Prize::where('event_id', $event->id)->where('prize', 2)->first();
+        $third_prize = Prize::where('event_id', $event->id)->where('prize', 3)->first();        
+        return view('prizes.edit')->with('event', $event)->with('first_prize', $first_prize->user_id)->with('second_prize', $second_prize->user_id)->with('third_prize', $third_prize->user_id);
     }
-    function update(PrizeRequest $request, $event_id){
+    function update(PrizeRequest $request, $event){
         $inputs = $request->all();        
-        $first_prize = Prize::where('event_id', $event_id)->where('prize', 1)->first();
-        $second_prize = Prize::where('event_id', $event_id)->where('prize', 2)->first();
-        $third_prize = Prize::where('event_id', $event_id)->where('prize', 3)->first();        
+        $first_prize = Prize::where('event_id', $event)->where('prize', 1)->first();
+        $second_prize = Prize::where('event_id', $event)->where('prize', 2)->first();
+        $third_prize = Prize::where('event_id', $event)->where('prize', 3)->first();        
         $first_prize->user_id = $inputs['first_prize'];
         $second_prize->user_id = $inputs['second_prize'];
         $third_prize->user_id = $inputs['third_prize'];  
         $first_prize->save();
         $second_prize->save();      
         $third_prize->save();      
+
         return redirect()->route('admin::events.index');
     }
     function show($event_id){
         $event = Event::findOrFail($event_id);
         if($event->hasPrizes()){       
-            $first_prize_user = Prize::where('event_id', $event_id)->where('prize', 1)->first()->user;
-            $second_prize_user = Prize::where('event_id', $event_id)->where('prize', 2)->first()->user;
-            $third_prize_user = Prize::where('event_id', $event_id)->where('prize', 3)->first()->user;  
-            return view('prizes.show')->with('first_prize_user', $first_prize_user)->with('second_prize_user', $second_prize_user)->with('third_prize_user', $third_prize_user)->with('event', $event);
+            return view('prizes.show')->with('event', $event);
         }  
         else{
             return redirect()->route('admin::events');

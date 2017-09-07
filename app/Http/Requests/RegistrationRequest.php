@@ -25,7 +25,7 @@ class RegistrationRequest extends FormRequest
     {
         return [
             'full_name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'required|string|email|max:255',
             'gender' => 'required',
             'college_id' => 'required',
             'mobile' => 'required|digits:10'

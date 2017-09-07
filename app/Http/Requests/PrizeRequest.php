@@ -23,10 +23,11 @@ class PrizeRequest extends FormRequest
      */
     public function rules()
     {
+        $event_id = $this->route('event');        
         return [
-            'first_prize' => 'required|exists:users,id',
-            'second_prize' => 'required|exists:users,id',
-            'third_prize' => 'required|exists:users,id',            
+            'first_prize' => 'required|exists:users,id|isParticipating:' . $event_id,
+            'second_prize' => 'required|exists:users,id|isParticipating:' . $event_id,
+            'third_prize' => 'required|exists:users,id|isParticipating:' . $event_id,            
         ];
     }
     public function messages()

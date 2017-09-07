@@ -8,9 +8,9 @@
         <div class="card">
             <div class="card-content">
                 <div class="card-title center-align">
-                    Edit Prizes
+                    Edit Prizes For {{ $event->title }}
                 </div>
-                {!! Form::open(['url' => route('admin::events.prizes.update', ['event' => $event_id]), 'method' => 'PUT']) !!}
+                {!! Form::open(['url' => route('admin::events.prizes.update', ['event' => $event->id]), 'method' => 'PUT']) !!}
                     @include('prizes.partials.form')
                 {!! Form::close() !!}  
             </div>

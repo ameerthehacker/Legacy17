@@ -11,7 +11,8 @@
                 <li><a href="{{ route('pages.events') }}"><i class="fa fa-2x fa-tasks"></i> Events</a></li>
                 <li><a href="{{ route('pages.about') }}"><i class="fa fa-2x fa-child"></i> About</a></li>
                 <li><a href="{{ route('pages.help') }}"><i class="fa fa-2x fa-question-circle"></i> 
-                Help</a></li>   
+                <li><a href="{{ route('pages.prizes') }}"><i class="fa fa-2x prize"></i> 
+                Prizes</a></li>   
                 @if(App\Config::getConfig('offline_link'))              
                     <li><a href="{{ route('pages.registration.offline') }}"><i class="fa fa-2x fa-download"></i> Offline Registration</a></li>  
                 @endif
@@ -41,6 +42,7 @@
                 <li><a href="{{ route('pages.events') }}"><i class="fa fa-tasks"></i> Events</a></li>
                 <li><a href="{{ route('pages.about') }}"><i class="fa fa-child"></i> About</a></li>
                 <li><a href="{{ route('pages.help') }}"><i class="fa fa-question-circle"></i> Help</a></li>
+                <li><a href="{{ route('pages.prizes') }}"><i class="fa fa-gift"></i> Prizes</a></li>     
                 @if(App\Config::getConfig('offline_link'))              
                     <li><a href="{{ route('pages.registration.offline') }}"><i class="fa fa-download"></i> Offline  Registration</a></li>                                          
                 @endif

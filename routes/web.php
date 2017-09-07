@@ -15,7 +15,8 @@ Route::group(['middleware' => 'auth.redirect_admin'], function(){
     Route::get( '/', ['as' => 'pages.root', 'uses' => 'PagesController@root'])->middleware('guest');
     Route::get('about', ['as' => 'pages.about', 'uses' => 'PagesController@about']);
     Route::get('events', ['as' => 'pages.events', 'uses' => 'PagesController@events']);
-    Route::get('help', ['as' => 'pages.help', 'uses' => 'PagesController@help']);   
+    Route::get('help', ['as' => 'pages.help', 'uses' => 'PagesController@help']);  
+    Route::get('prizes', ['as' => 'pages.prizes', 'uses' => 'PagesController@prizes']);       
     Route::get('register/offline', ['as' => 'pages.registration.offline', 'uses' => 'PagesController@offlineRegistration']);   
     Route::group(['middleware' => 'auth'], function(){
         // Routes for team registration
@@ -98,6 +99,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','a
         Route::get('registrations/offline/disable', ['as' => 'registrations.offline.disable', 'uses' => 'AdminPagesController@disableOfflineRegistration']);
     });
     Route::group(['middleware' => 'auth.admin:root'], function(){
+        // List of visible prizes
+        Route::get('prizes/list', ['as' => 'prizes.list', 'uses' => 'AdminPagesController@editPrizeList']);
+        Route::post('prizes/list', 'AdminPagesController@updatePrizeList');
+        Route::get('prizes', ['as' => 'prizes.index', 'uses' => 'PagesController@prizes']);
         // Route to get the list of admins emails in json
         Route::get('get_admins', ['as' =>'admins', 'uses' => 'AdminPagesController@getAdmins']);
         // Manual event confirmation and unconfirmation by admin        
@@ -117,8 +122,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','a
         Route::resource('events', 'EventsController', ['except' => ['show']]);      
         // Nested resource for adding prizes
         Route::resource('events.prizes', 'PrizesController', ['except' => ['show', 'index', 'edit', 'update', 'destroy']]);
-        Route::get('events/{event_id}/prizes/edit', ['as' => 'events.prizes.edit', 'uses' => 'PrizesController@edit']);
-        Route::put('events/{event_id}/prizes', ['as' => 'events.prizes.update', 'uses' => 'PrizesController@update']);
+        Route::get('events/{event}/prizes/edit', ['as' => 'events.prizes.edit', 'uses' => 'PrizesController@edit']);
+        Route::put('events/{event}/prizes', ['as' => 'events.prizes.update', 'uses' => 'PrizesController@update']);
         Route::get('events/{event_id}/prizes', ['as' => 'events.prizes.show', 'uses' => 'PrizesController@show']);
     });
     // For viewing the organizer specific details

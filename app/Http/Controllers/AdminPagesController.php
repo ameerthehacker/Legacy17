@@ -50,6 +50,30 @@ class AdminPagesController extends Controller
         }
         return redirect()->route('admin::registrations.edit', ['user_id' => $user->id]);
     }
+    function editPrizeList(){
+        $events = Event::all();
+        return view('pages.admin.prize_list')->with('events', $events);
+    }
+    function updatePrizeList(Request $request){
+        $inputs = Request::all();
+        if(!isset($inputs['prize-list'])){
+            $inputs['prize-list'] = [];
+        }
+        $events = Event::all()->whereIn('id', $inputs['prize-list']);
+        foreach($events as $event){
+            $event->show_prize = true;
+            $event->update();
+        }
+        $events = Event::all()->whereNotIn('id', $inputs['prize-list']);        
+        foreach($events as $event){
+            if($event->show_prize){
+                $event->show_prize = false;              
+                $event->update();               
+            }
+        }
+        Session::flash('success', 'The prize list was updated');
+        return redirect()->route('admin::prizes.list');
+    }
     function registerAccomodation($user_id){
         $user = User::findOrFail($user_id);
         $accomodation = new Accomodation();
