@@ -120,6 +120,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','a
         // Enable or disable offline registration forms
         Route::get('registrations/offline/enable', ['as' => 'registrations.offline.enable', 'uses' => 'AdminPagesController@enableOfflineRegistration']);
         Route::get('registrations/offline/disable', ['as' => 'registrations.offline.disable', 'uses' => 'AdminPagesController@disableOfflineRegistration']);
+        // Manual event confirmation and unconfirmation by admin        
+        Route::get('registrations/{user_id}/confirm', ['as' => 'registrations.confirm', 'uses' => 'AdminPagesController@confirmRegistration']); 
+        Route::get('registrations/{user_id}/unconfirm', ['as' => 'registrations.unconfirm', 'uses' => 'AdminPagesController@unconfirmRegistration']); 
+        // Manual payment on the spot by the admin
+        Route::get('registrations/{user_id}/payments/confirm', ['as' => 'registrations.payments.confirm', 'uses' => 'AdminPagesController@confirmPayment']); 
+        Route::get('registrations/{user_id}/payments/unconfirm', ['as' => 'registrations.payments.unconfirm', 'uses' => 'AdminPagesController@unconfirmPayment']); 
+
     });
     Route::group(['middleware' => 'auth.admin:root'], function(){
         // List of visible prizes
@@ -128,12 +135,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin::', 'middleware' => ['auth','a
         Route::get('prizes', ['as' => 'prizes.index', 'uses' => 'PagesController@prizes']);
         // Route to get the list of admins emails in json
         Route::get('get_admins', ['as' =>'admins', 'uses' => 'AdminPagesController@getAdmins']);
-        // Manual event confirmation and unconfirmation by admin        
-        Route::get('registrations/{user_id}/confirm', ['as' => 'registrations.confirm', 'uses' => 'AdminPagesController@confirmRegistration']); 
-        Route::get('registrations/{user_id}/unconfirm', ['as' => 'registrations.unconfirm', 'uses' => 'AdminPagesController@unconfirmRegistration']); 
-        // Manual payment on the spot by the admin
-        Route::get('registrations/{user_id}/payments/confirm', ['as' => 'registrations.payments.confirm', 'uses' => 'AdminPagesController@confirmPayment']); 
-        Route::get('registrations/{user_id}/payments/unconfirm', ['as' => 'registrations.payments.unconfirm', 'uses' => 'AdminPagesController@unconfirmPayment']); 
 
         Route::get('requests/all', ['as' => 'requests.all', 'uses' => 'AdminPagesController@allRequests']);
         Route::get('requests', ['as' => 'requests', 'uses' => 'AdminPagesController@requests']);

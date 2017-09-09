@@ -8,9 +8,9 @@
                     <td>{{ $user->LGId() }}</td>
                 </tr>
                 <tr>
-                    <td>
+                    <th>
                         Attendence
-                    </td>
+                    </th>
                     <td>
                         <div class="switch">
                             <label>
