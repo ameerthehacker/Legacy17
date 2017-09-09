@@ -102,7 +102,7 @@
                                     <ul>
                                         <li>
                                             <a href="{{ route('admin::prizes.index') }}">
-                                                Visible Prizes
+                                                Prize List
                                             </a>
                                         </li> 
                                         <li>

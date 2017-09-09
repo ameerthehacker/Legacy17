@@ -1,11 +1,17 @@
 @extends($layout)
 
 @section('content')
-    @if(App\Event::where('show_prize', true)->count() > 0 && App\Prize::all()->count() > 0)
+    @if((Auth::check() && Auth::user()->type == 'admin') || (App\Event::where('show_prize', true)->count() > 0 && App\Prize::all()->count() > 0))
         @foreach($events as $event)
-            @if($event->show_prize && $event->hasPrizes())
-                @include('prizes.partials.prize_details', ['event' => $event])
-            @endif  
+            @if(Auth::check() && Auth::user()->type == 'admin')
+                @if($event->hasPrizes())
+                    @include('prizes.partials.prize_details', ['event' => $event])
+                @endif  
+            @else
+                @if($event->show_prize && $event->hasPrizes())
+                    @include('prizes.partials.prize_details', ['event' => $event])
+                @endif  
+            @endif
         @endforeach
     @else
         <div class="row">
