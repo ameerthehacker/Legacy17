@@ -83,7 +83,7 @@
                         </td>
                     </tr>
                 @endif
-                @if($registration->accomodation && $registration->accomodation->status == 'ack')
+                @if($registration->hasRequestedAccomodation() && $registration->accomodation->status == 'ack')
                     <tr>
                         <th>Accomodation Payment Status</th>
                         <td>

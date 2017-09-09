@@ -34,29 +34,4 @@
     </div>
 </div>
 
-<script>
-    $(function(){
-        $('.attendance').on('change', function(){
-            var user = $(this).attr('data-id');            
-            if($(this).is(' :checked')){
-                var url = "/legacy17/public/admin/registrations/" + user + "/present";
-            }
-            else{
-                var url = "/legacy17/public/admin/registrations/" + user + "/absent";                
-            }
-            $.ajax({
-                url: url,
-                success: function(response){
-                    if(response.error){
-                        Materialize.toast('Something went wrong in updating!', 2000);                        
-                    }
-                },
-                error: function(){
-                    Materialize.toast('Something went wrong!', 2000);
-                }
-            });
-        });
-    });
-</script>
-
 @endsection

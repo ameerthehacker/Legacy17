@@ -93,6 +93,28 @@
                             <a href="{{ route('admin::colleges.index') }}"><i class="fa fa-2x fa-graduation-cap"></i>  Manage Colleges</a>
                         </li>   
                     </li>
+                    <li class="no-padding">
+                        <ul class="collapsible collapsible-accordion">
+                            <li>
+                                <a class="collapsible-header"><i class="fa fa-gift"></i> Prizes <i class="material-icons right">arrow_drop_down
+                                </i></a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li>
+                                            <a href="{{ route('admin::prizes.index') }}">
+                                                Visible Prizes
+                                            </a>
+                                        </li> 
+                                        <li>
+                                            <a href="{{ route('admin::prizes.list') }}">
+                                                Manage Prize List
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
                 @endif
                 @if(Auth::user()->hasRole('hospitality'))
                     <li class="no-padding">

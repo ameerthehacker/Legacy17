@@ -89,6 +89,7 @@ $(function () {
             });
         });
     }
+    $('.dropdown-button').dropdown();
     pulsate($('.pulsing'));
 });
 

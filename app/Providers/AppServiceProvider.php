@@ -85,6 +85,32 @@ class AppServiceProvider extends ServiceProvider
             $invalid_emails = implode(',', $invalid_emails);
             return str_replace(':invalid_emails', $invalid_emails, ':invalid_emails has/have not registered yet');
         });
+        // Validator for checking team members have registered
+        Validator::extend('isParticipating', function($attribute, $value, $parameters, $validator){
+            $user = User::find($value);
+            $event = Event::find($parameters[0]);
+            if($event->isGroupEvent()){
+                if(!$user->teamLeaderFor($event->id)){
+                    return false;
+                }
+            }
+            else{
+                if(!$user->isParticipating($event->id)){
+                    return false;
+                }
+            }
+            return true;
+        });
+        Validator::replacer('isParticipating', function($message, $attribute, $rule, $parameters, $validator){
+            $event = Event::find($parameters[0]);
+            $value = array_get($validator->getData(), $attribute);            
+            if($event->isGroupEvent()){
+                return str_replace(':invalid_ids', $value, 'LG:invalid_ids is not a team leader participating in this event');            
+            }   
+            else{
+                return str_replace(':invalid_ids', $value, 'LLG:invalid_ids is not participating in this event');                            
+            }         
+        });
         // Validator for checking team members are from same college
         Validator::extend('isCollegeMate', function($attribute, $value, $parameters, $validator){
             $team_members_emails = explode(',', $value);

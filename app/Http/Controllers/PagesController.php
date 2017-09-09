@@ -35,6 +35,11 @@ class PagesController extends Controller
     function help(){
         return view('pages.help');
     }
+    function prizes(){
+        $layout = Auth::check() && Auth::user()->type == 'admin' ? 'layouts.admin' : 'layouts.default';      
+        $events = Event::all();
+        return view('pages.prizes')->with('events', $events)->with('layout', $layout);
+    }
     function offlineRegistration(){
         return view('pages.offline_registration');
     }
